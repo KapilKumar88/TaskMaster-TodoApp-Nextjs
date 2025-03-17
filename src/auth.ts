@@ -1,21 +1,36 @@
 import NextAuth from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
+import { createUser } from "./services/user.service";
+import getPrismaInstance from "./lib/prisma";
+import serverSideConfig from "./config/server.config";
+const prismaInstance = await getPrismaInstance();
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  debug: serverSideConfig.NODE_ENV !== "production",
+  adapter: PrismaAdapter(prismaInstance),
   providers: [
-    // For the Register process
+    // For the Registration process
     Credentials({
       id: "credentialsSignUp",
       name: "credentialsSignUp",
       credentials: {
         email: {},
         password: {},
-        name: {},
-        confirmPassword: {},
+        fullName: {},
       },
       async authorize(credentials) {
-        console.log(credentials, ">>>>>>>>>>>>register>>>>>>>>>credentialsss");
-        return null;
+        const user = await createUser({
+          name: credentials.fullName as string,
+          email: credentials.email as string,
+          password: credentials.password as string,
+        });
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.profileImage,
+        };
       },
     }),
 
@@ -27,7 +42,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         let user = null;
-        console.log(credentials, '>>>>>>>>>>>>>>>>>>>>>>>>login ')
 
         // logic to salt and hash password
         // const pwHash = saltAndHashPassword(credentials.password)

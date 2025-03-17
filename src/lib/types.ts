@@ -1,10 +1,17 @@
 export type FormState =
   | {
       errors?: {
-        name?: string[];
+        fullName?: string[];
         email?: string[];
         password?: string[];
+        confirmPassword?: string[];
+        general?: string[] | string;
       };
-      message?: string;
+      formValues?: {
+        fullName: string;
+        email: string;
+      };
+      message: string;
+      success: boolean;
     }
   | undefined;

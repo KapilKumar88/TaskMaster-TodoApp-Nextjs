@@ -1,35 +1,60 @@
 "use server";
 
+import { signIn } from "@/auth";
 import { FormState } from "@/lib/types";
 import { registerSchema } from "@/validationsSchemas/auth.validation";
 
-export async function registerServerAction(
+export async function registerUserServerAction(
   state: FormState,
   formData: FormData
-) {
-  // Validate form fields
-  const validatedFields = registerSchema.safeParse({
-    fullName: formData.get("fullName") ?? "",
-    email: formData.get("email") ?? "",
-    password: formData.get("password") ?? "",
-    confirmPassword: formData.get("confirmPassword") ?? "",
-  });
+): Promise<FormState> {
+  try {
+    const getFormPayload = {
+      fullName: formData.get("fullName") as string,
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+      confirmPassword: formData.get("confirmPassword") as string,
+    };
 
-  console.log(state, ">>>>>>>>>>>>lklkkllkklstate");
+    const validatedFields = registerSchema.safeParse({
+      fullName: getFormPayload.fullName,
+      email: getFormPayload.email,
+      password: getFormPayload.password,
+      confirmPassword: getFormPayload.confirmPassword,
+    });
 
-  // console.log(validatedFields?.error, formData, ">>>>>>>>>>>>>>>lklkkllkkl");
+    if (!validatedFields.success) {
+      return {
+        ...state,
+        errors: validatedFields.error.flatten().fieldErrors,
+        formValues: {
+          fullName: getFormPayload.fullName,
+          email: getFormPayload.email,
+        },
+        success: false,
+        message: "Validation error",
+      };
+    }
 
-  // If any form fields are invalid, return early
-  if (!validatedFields.success) {
-    const tempErrors = validatedFields.error.flatten().fieldErrors;
-    console.log(tempErrors, ">>>>>>>>>tempErrors>>>>>>>>>>>>>>>>>>");
+    await signIn("credentialsSignUp", {
+      fullName: getFormPayload.fullName,
+      email: getFormPayload.email,
+      password: getFormPayload.password,
+      redirect: false,
+    });
+
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      success: true,
+      message: "Registered successfully",
+    };
+  } catch (error) {
+    return {
+      ...state,
+      errors: {
+        general: "Something went wrong. Please try again",
+      },
+      success: false,
+      message: "Server error",
     };
   }
-
-  console.log(
-    validatedFields.data,
-    ">>>>>>>>>validatedFields.data>>>>>>>>>>>>>>>>>>"
-  );
 }

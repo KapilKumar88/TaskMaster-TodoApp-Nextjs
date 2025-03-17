@@ -1,25 +1,84 @@
 "use client";
 
-import { registerServerAction } from "@/actions/auth.actions";
+import { registerUserServerAction } from "@/actions/auth.actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { FormState } from "@/lib/types";
 import { LoaderPinwheel } from "lucide-react";
-import { useActionState } from "react";
+import { redirect } from "next/navigation";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function RegisterForm() {
-  const [state, action, pending] = useActionState(registerServerAction, {
-    errors: {},
+  const [state, action, pending] = useActionState<FormState, FormData>(
+    registerUserServerAction,
+    {
+      errors: {},
+      formValues: {
+        fullName: "",
+        email: "",
+      },
+      message: "",
+      success: false,
+    }
+  );
+
+  const [formErrors, setFormErrors] = useState<{
+    fullName?: string;
+    email?: string;
+    confirmPassword?: string;
+    password?: string;
+  }>({
+    fullName: undefined,
+    email: undefined,
+    confirmPassword: undefined,
+    password: undefined,
   });
 
-  console.log(state, ">>>>>>>>>>>>>>>>lklkklklklllk");
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormErrors({
+      ...formErrors,
+      [e.target.name]: undefined,
+    });
+  };
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   // action({ [e.target.name]: e.target.value });
-  //   if (state && state?.errors && state.errors) {
-  //     state?.errors?.fullName = [];
-  //   }
-  // };
+  useEffect(() => {
+    if (state?.errors) {
+      setFormErrors({
+        ...formErrors,
+        fullName:
+          Array.isArray(state?.errors?.fullName) &&
+          state.errors.fullName?.length > 0
+            ? state.errors.fullName[0]
+            : undefined,
+        email:
+          Array.isArray(state?.errors?.email) && state.errors.email?.length > 0
+            ? state.errors.email[0]
+            : undefined,
+        confirmPassword:
+          Array.isArray(state?.errors?.confirmPassword) &&
+          state.errors.confirmPassword?.length > 0
+            ? state.errors.confirmPassword[0]
+            : undefined,
+        password:
+          Array.isArray(state?.errors?.password) &&
+          state.errors.password?.length > 0
+            ? state.errors.password[0]
+            : undefined,
+      });
+
+      if (state.errors?.general) {
+        toast.error(state.errors.general);
+        return;
+      }
+    }
+
+    if (state?.success) {
+      toast.success(state.message);
+      redirect("/dashboard");
+    }
+  }, [state]);
 
   return (
     <form action={action} className="space-y-4">
@@ -31,12 +90,13 @@ export default function RegisterForm() {
           id="fullName"
           type="text"
           name="fullName"
-          placeholder="Full Name"
+          placeholder="Enter your full name"
           className="bg-white/40 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
-          // onChange={handleInputChange}
+          defaultValue={state?.formValues?.fullName ?? ""}
+          onChange={handleInputChange}
         />
-        {state?.errors?.fullName && (
-          <p className="text-red-500 text-sm">{state.errors.fullName[0]}</p>
+        {formErrors?.fullName && (
+          <p className="text-red-500 text-sm">{formErrors.fullName}</p>
         )}
       </div>
       <div className="space-y-2">
@@ -49,10 +109,11 @@ export default function RegisterForm() {
           name="email"
           placeholder="your@email.com"
           className="bg-white/40 border-white/40 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
-          // onChange={handleInputChange}
+          defaultValue={state?.formValues?.email ?? ""}
+          onChange={handleInputChange}
         />
-        {state?.errors?.email && (
-          <p className="text-red-500 text-sm">{state.errors.email[0]}</p>
+        {formErrors?.email && (
+          <p className="text-red-500 text-sm">{formErrors?.email}</p>
         )}
       </div>
       <div className="space-y-2">
@@ -63,11 +124,12 @@ export default function RegisterForm() {
           id="password"
           type="password"
           name="password"
+          placeholder="********"
           className="bg-white/40 border-white/40 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
-          // onChange={handleInputChange}
+          onChange={handleInputChange}
         />
-        {state?.errors?.password && (
-          <p className="text-red-500 text-sm">{state.errors.password[0]}</p>
+        {formErrors?.password && (
+          <p className="text-red-500 text-sm">{formErrors.password}</p>
         )}
       </div>
       <div className="space-y-2">
@@ -81,13 +143,12 @@ export default function RegisterForm() {
           id="confirmPassword"
           type="password"
           name="confirmPassword"
+          placeholder="********"
           className="bg-white/40 border-white/40 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
-          // onChange={handleInputChange}
+          onChange={handleInputChange}
         />
-        {state?.errors?.confirmPassword && (
-          <p className="text-red-500 text-sm">
-            {state.errors.confirmPassword[0]}
-          </p>
+        {formErrors?.confirmPassword && (
+          <p className="text-red-500 text-sm">{formErrors.confirmPassword}</p>
         )}
       </div>
       <Button
