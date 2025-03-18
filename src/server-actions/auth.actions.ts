@@ -1,4 +1,5 @@
 "use server";
+import "server-only";
 
 import { signIn } from "@/auth";
 import { LoginFormState, RegisterFormState } from "@/lib/interface";
@@ -6,6 +7,7 @@ import {
   loginSchema,
   registerSchema,
 } from "@/validationsSchemas/auth.validation";
+import { AuthError } from "next-auth";
 
 export async function registerUserServerAction(
   state: RegisterFormState,
@@ -40,9 +42,9 @@ export async function registerUserServerAction(
     }
 
     await signIn("credentialsSignUp", {
-      fullName: getFormPayload.fullName,
-      email: getFormPayload.email,
-      password: getFormPayload.password,
+      fullName: validatedFields.data.fullName,
+      email: validatedFields.data.email,
+      password: validatedFields.data.password,
       redirect: false,
     });
 
@@ -76,7 +78,6 @@ export async function loginUserServerAction(
       email: getFormPayload.email,
       password: getFormPayload.password,
     });
-    console.log(validatedFields, '>>>>>>>>>validatedFields>>>>>>');
 
     if (!validatedFields.success) {
       return {
@@ -91,8 +92,8 @@ export async function loginUserServerAction(
     }
 
     await signIn("credentials", {
-      email: getFormPayload.email,
-      password: getFormPayload.password,
+      email: validatedFields.data.email,
+      password: validatedFields.data.password,
       redirect: false,
     });
 
@@ -101,10 +102,21 @@ export async function loginUserServerAction(
       message: "Login successful",
     };
   } catch (error) {
+
+    let errorMsg = "Something went wrong. Please try again";
+    if (error instanceof AuthError) {
+      if (error.cause?.err instanceof Error) {
+        errorMsg = error.cause.err.message;
+      }
+      if (error.type == "CredentialsSignin") {
+        errorMsg = "Invalid credentials";
+      }
+    }
+
     return {
       ...state,
       errors: {
-        general: "Something went wrong. Please try again",
+        general: errorMsg,
       },
       success: false,
       message: "Server error",

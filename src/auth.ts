@@ -1,9 +1,10 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
-import { createUser } from "./services/user.service";
+import { createUser, getUserDetailsByEmailId } from "./services/user.service";
 import getPrismaInstance from "./lib/prisma";
 import serverSideConfig from "./config/server.config";
+import { verifyHash } from "./lib/utils";
 const prismaInstance = await getPrismaInstance();
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -26,7 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           password: credentials.password as string,
         });
         return {
-          id: user.id,
+          id: user.id.toString(),
           name: user.name,
           email: user.email,
           image: user.profileImage,
@@ -41,22 +42,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: {},
       },
       authorize: async (credentials) => {
-        let user = null;
+        const user = await getUserDetailsByEmailId(credentials.email as string);
 
-        // logic to salt and hash password
-        // const pwHash = saltAndHashPassword(credentials.password)
-
-        // logic to verify if the user exists
-        // user = await getUserFromDb(credentials.email, pwHash)
-
-        if (!user) {
-          // No user found, so this is their first attempt to login
-          // Optionally, this is also the place you could do a user registration
+        if (user === null) {
           throw new Error("Invalid credentials.");
         }
 
-        // return user object with their profile data
-        return user;
+        const isValidPassword = await verifyHash(
+          credentials.password as string,
+          user.password
+        );
+
+        if (!isValidPassword) {
+          throw new Error("Invalid credentials.");
+        }
+
+        return {
+          id: user.id.toString(),
+          name: user.name,
+          email: user.email,
+          image: user.profileImage,
+        };
       },
     }),
   ],
