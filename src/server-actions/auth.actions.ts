@@ -1,13 +1,16 @@
 "use server";
 
 import { signIn } from "@/auth";
-import { FormState } from "@/lib/types";
-import { registerSchema } from "@/validationsSchemas/auth.validation";
+import { LoginFormState, RegisterFormState } from "@/lib/interface";
+import {
+  loginSchema,
+  registerSchema,
+} from "@/validationsSchemas/auth.validation";
 
 export async function registerUserServerAction(
-  state: FormState,
+  state: RegisterFormState,
   formData: FormData
-): Promise<FormState> {
+): Promise<RegisterFormState> {
   try {
     const getFormPayload = {
       fullName: formData.get("fullName") as string,
@@ -46,6 +49,56 @@ export async function registerUserServerAction(
     return {
       success: true,
       message: "Registered successfully",
+    };
+  } catch (error) {
+    return {
+      ...state,
+      errors: {
+        general: "Something went wrong. Please try again",
+      },
+      success: false,
+      message: "Server error",
+    };
+  }
+}
+
+export async function loginUserServerAction(
+  state: LoginFormState,
+  formData: FormData
+): Promise<LoginFormState> {
+  try {
+    const getFormPayload = {
+      email: formData.get("email") as string,
+      password: formData.get("password") as string,
+    };
+
+    const validatedFields = loginSchema.safeParse({
+      email: getFormPayload.email,
+      password: getFormPayload.password,
+    });
+    console.log(validatedFields, '>>>>>>>>>validatedFields>>>>>>');
+
+    if (!validatedFields.success) {
+      return {
+        ...state,
+        errors: validatedFields.error.flatten().fieldErrors,
+        formValues: {
+          email: getFormPayload.email,
+        },
+        success: false,
+        message: "Validation error",
+      };
+    }
+
+    await signIn("credentials", {
+      email: getFormPayload.email,
+      password: getFormPayload.password,
+      redirect: false,
+    });
+
+    return {
+      success: true,
+      message: "Login successful",
     };
   } catch (error) {
     return {

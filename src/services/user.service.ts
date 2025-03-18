@@ -18,3 +18,11 @@ export async function createUser(payload: {
     },
   });
 }
+
+export async function getUserDetailsByEmailId(email: string) {
+  return await prismaInstance.user.findFirst({
+    where: {
+      email: email,
+    },
+  });
+}
