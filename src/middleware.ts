@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import serverSideConfig from "./config/server.config";
 import { cookies } from "next/headers";
 
-const authPaths = ["/login", "/signup", "/forgot-password", "/reset-password"];
+const authPaths = ["/login", "/register", "/forgot-password", "/reset-password"];
 const COOKIES_NAME =
   serverSideConfig.NODE_ENV === "production"
     ? "__Secure-next-auth.session-token"
