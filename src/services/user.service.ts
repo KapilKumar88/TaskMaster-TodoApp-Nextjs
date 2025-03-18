@@ -1,9 +1,6 @@
-"use server";
 import "server-only";
 import { generateHashedValue } from "@/lib/utils";
-import getPrismaInstance from "@/lib/prisma";
-
-const prismaInstance = await getPrismaInstance();
+import { prisma } from "@/lib/prisma";
 
 export async function createUser(payload: {
   name: string;
@@ -11,7 +8,7 @@ export async function createUser(payload: {
   password: string;
 }) {
   const hashedPassword = await generateHashedValue(payload.password);
-  return await prismaInstance.user.create({
+  return await prisma.user.create({
     data: {
       ...payload,
       password: hashedPassword,
@@ -20,7 +17,7 @@ export async function createUser(payload: {
 }
 
 export async function getUserDetailsByEmailId(email: string) {
-  return await prismaInstance.user.findFirst({
+  return await prisma.user.findFirst({
     where: {
       email: email,
     },

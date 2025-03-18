@@ -2,14 +2,18 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import { createUser, getUserDetailsByEmailId } from "./services/user.service";
-import getPrismaInstance from "./lib/prisma";
+import { prisma } from "./lib/prisma";
 import serverSideConfig from "./config/server.config";
 import { verifyHash } from "./lib/utils";
-const prismaInstance = await getPrismaInstance();
+
+const newPrismaAdapter = PrismaAdapter(prisma);
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: serverSideConfig.NODE_ENV !== "production",
-  adapter: PrismaAdapter(prismaInstance),
+  adapter: newPrismaAdapter,
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     // For the Registration process
     Credentials({

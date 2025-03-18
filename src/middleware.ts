@@ -1,17 +1,28 @@
 import { NextResponse } from "next/server";
-import { auth } from "./auth";
+import type { NextRequest } from "next/server";
+import serverSideConfig from "./config/server.config";
+import { cookies } from "next/headers";
 
 const authPaths = ["/login", "/signup", "/forgot-password", "/reset-password"];
+const COOKIES_NAME =
+  serverSideConfig.NODE_ENV === "production"
+    ? "__Secure-next-auth.session-token"
+    : "authjs.session-token";
 
-export default auth((request) => {
-  if (!request.auth && !authPaths.includes(request.nextUrl.pathname)) {
+export default async function middleware(request: NextRequest) {
+  const c = await cookies();
+  const cookieToken = c?.get(COOKIES_NAME)?.value;
+
+  if (!cookieToken && !authPaths.includes(request.nextUrl.pathname) && request.nextUrl.pathname !== "/") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (request.auth && authPaths.includes(request.nextUrl.pathname)) {
+  if (cookieToken && authPaths.includes(request.nextUrl.pathname) && request.nextUrl.pathname !== "/") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
-});
+
+  return NextResponse.next();
+}
 
 export const config = {
   /*
