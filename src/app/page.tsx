@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +11,9 @@ import {
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const session = await auth();
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-500/30 to-indigo-600/30 p-4">
       {/* Background shapes */}
@@ -52,7 +55,11 @@ export default function LandingPage() {
             asChild
             className="w-full bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"
           >
-            <Link href="/login">Login</Link>
+            {session ? (
+              <Link href="/dashboard">Dashboard</Link>
+            ) : (
+              <Link href="/login">Login</Link>
+            )}
           </Button>
         </CardFooter>
       </Card>
