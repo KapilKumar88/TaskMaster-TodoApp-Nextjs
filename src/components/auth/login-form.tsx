@@ -101,7 +101,6 @@ export default function LoginForm() {
         )}
       </div>
       <Button
-        // type="submit"
         className="w-full bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"
         disabled={pending}
       >

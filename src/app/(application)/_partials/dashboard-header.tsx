@@ -5,13 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Bell, Menu, Plus, Search } from "lucide-react"
 import { NotificationPanel } from "@/components/notification-panel"
+import { useSideBarContext } from "@/contextApis/side-bar"
 
-interface DashboardHeaderProps {
-  sidebarOpen: boolean
-  setSidebarOpen: (open: boolean) => void
-}
-
-export function DashboardHeader({ sidebarOpen, setSidebarOpen }: DashboardHeaderProps) {
+export function DashboardHeader() {
+  const { setSidebarOpen } = useSideBarContext();
   const [notificationOpen, setNotificationOpen] = useState(false)
 
   return (
@@ -20,7 +17,11 @@ export function DashboardHeader({ sidebarOpen, setSidebarOpen }: DashboardHeader
         variant="ghost"
         size="icon"
         className="md:hidden text-slate-900 dark:text-white"
-        onClick={() => setSidebarOpen(!sidebarOpen)}
+        onClick={() => {
+          setSidebarOpen((previousState) => {
+            return !!previousState;
+          })
+        }}
       >
         <Menu className="h-5 w-5" />
         <span className="sr-only">Toggle sidebar</span>

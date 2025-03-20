@@ -11,7 +11,7 @@ import { Slider } from "@/components/ui/slider"
 import { Separator } from "@/components/ui/separator"
 import { AlertCircle, Check, Moon, Palette, Save, Sun, Trash2 } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { useTheme } from "@/components/theme-provider"
+import { useTheme } from "@/providers/theme-provider"
 
 export default function SettingsPage() {
     const [sidebarOpen, setSidebarOpen] = useState(true)
