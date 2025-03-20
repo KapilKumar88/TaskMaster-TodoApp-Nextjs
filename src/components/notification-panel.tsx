@@ -50,6 +50,7 @@ export function NotificationPanel({ onClose }: NotificationPanelProps) {
 
   // Handle clicking outside to close the panel
   useEffect(() => {
+
     function handleClickOutside(event: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
         onClose()

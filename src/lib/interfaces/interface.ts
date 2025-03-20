@@ -1,3 +1,5 @@
+import { TaskPriority } from "@prisma/client";
+
 export interface ServerActionInterface {
   message: string;
   success: boolean;
@@ -27,5 +29,25 @@ export interface LoginFormState extends ServerActionInterface {
   };
   formValues?: {
     email: string;
+  };
+}
+
+export interface CreateTaskFormState extends ServerActionInterface {
+  errors?: {
+    title?: string[];
+    description?: string[];
+    categoryId?: string[];
+    priority?: string[];
+    dueDate?: string[];
+    dueTime?: string[];
+    general?: string[] | string;
+  };
+  formValues?: {
+    title: string;
+    description: string;
+    categoryId: string;
+    priority: TaskPriority;
+    dueDate: string;
+    dueTime?: string;
   };
 }
