@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { MoreHorizontal, Star } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { API_ENDPOINTS } from "@/lib/constants"
 
 type Priority = "low" | "medium" | "high"
 type Category = "work" | "personal" | "study" | "health"
@@ -92,7 +93,7 @@ interface TaskListProps {
   filter?: "all" | "today" | "upcoming" | "completed"
 }
 
-export function TaskList({ filter = "all" }: TaskListProps) {
+export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
 
   const toggleTaskCompletion = (id: string) => {
@@ -100,10 +101,10 @@ export function TaskList({ filter = "all" }: TaskListProps) {
       tasks.map((task) =>
         task.id === id
           ? {
-              ...task,
-              completed: !task.completed,
-              status: !task.completed ? "completed" : "active",
-            }
+            ...task,
+            completed: !task.completed,
+            status: !task.completed ? "completed" : "active",
+          }
           : task,
       ),
     )
@@ -173,6 +174,15 @@ export function TaskList({ filter = "all" }: TaskListProps) {
         return true
     }
   })
+
+  useEffect(() => {
+    const fetchTaskList = async () => {
+      const apiResponse = await fetch(API_ENDPOINTS.TASK.LIST);
+      const apiResponseJson = await apiResponse.json();
+      setTasks(apiResponseJson?.data);
+    }
+    fetchTaskList();
+  }, [filter])
 
   return (
     <div className="space-y-3">

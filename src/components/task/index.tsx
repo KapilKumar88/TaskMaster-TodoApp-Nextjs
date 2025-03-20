@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TaskList } from "@/components/task-list";
 import { TaskForm } from "@/components/task/task-form";
 import { Filter, Plus, Search, SlidersHorizontal } from "lucide-react";
 import {
@@ -17,9 +16,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import TaskListCard from "./task-list-card";
+import TaskStatsByCategory from "./task-stats-by-category";
 
-export default function Task({categories}: Readonly<{
-  categories: {id: number, name: string}[]
+export default function Task({ categories }: Readonly<{
+  categories: { id: number, name: string }[]
 }>) {
   const [showTaskForm, setShowTaskForm] = useState(false);
   return (
@@ -138,55 +139,19 @@ export default function Task({categories}: Readonly<{
         <div className="grid gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
             <TabsContent value="all" className="mt-0">
-              <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
-                <CardHeader>
-                  <CardTitle className="text-slate-900 dark:text-white">
-                    All Tasks
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <TaskList />
-                </CardContent>
-              </Card>
+              <TaskListCard cardTitle="All Tasks" />
             </TabsContent>
 
             <TabsContent value="today" className="mt-0">
-              <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
-                <CardHeader>
-                  <CardTitle className="text-slate-900 dark:text-white">
-                    Today's Tasks
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <TaskList filter="today" />
-                </CardContent>
-              </Card>
+              <TaskListCard cardTitle="Today&apos;s Tasks" filter="today" />
             </TabsContent>
 
             <TabsContent value="upcoming" className="mt-0">
-              <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
-                <CardHeader>
-                  <CardTitle className="text-slate-900 dark:text-white">
-                    Upcoming Tasks
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <TaskList filter="upcoming" />
-                </CardContent>
-              </Card>
+              <TaskListCard cardTitle="Upcoming Tasks" filter="upcoming" />
             </TabsContent>
 
             <TabsContent value="completed" className="mt-0">
-              <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
-                <CardHeader>
-                  <CardTitle className="text-slate-900 dark:text-white">
-                    Completed Tasks
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <TaskList filter="completed" />
-                </CardContent>
-              </Card>
+              <TaskListCard cardTitle="Completed Tasks" filter="completed" />
             </TabsContent>
           </div>
 
@@ -202,52 +167,7 @@ export default function Task({categories}: Readonly<{
                   <TaskForm categories={categories} onClose={() => setShowTaskForm(false)} />
                 ) : (
                   <div className="space-y-4">
-                    <div className="grid gap-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full bg-indigo-500"></div>
-                          <span className="text-sm font-medium text-slate-900 dark:text-white">
-                            Work
-                          </span>
-                        </div>
-                        <span className="text-sm text-slate-700 dark:text-slate-300">
-                          10
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full bg-violet-500"></div>
-                          <span className="text-sm font-medium text-slate-900 dark:text-white">
-                            Personal
-                          </span>
-                        </div>
-                        <span className="text-sm text-slate-700 dark:text-slate-300">
-                          6
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                          <span className="text-sm font-medium text-slate-900 dark:text-white">
-                            Study
-                          </span>
-                        </div>
-                        <span className="text-sm text-slate-700 dark:text-slate-300">
-                          5
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className="w-3 h-3 rounded-full bg-teal-500"></div>
-                          <span className="text-sm font-medium text-slate-900 dark:text-white">
-                            Health
-                          </span>
-                        </div>
-                        <span className="text-sm text-slate-700 dark:text-slate-300">
-                          3
-                        </span>
-                      </div>
-                    </div>
+                    <TaskStatsByCategory />
 
                     <div className="pt-4 border-t border-white/30">
                       <h3 className="text-sm font-medium text-slate-900 dark:text-white mb-2">

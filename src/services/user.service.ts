@@ -2,7 +2,7 @@ import "server-only";
 import { generateHashedValue } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 import { createCategoryBulk } from "./category.service";
-import { defaultCategories } from "@/lib/constants";
+import { DEFAULT_CATEGORIES } from "@/lib/constants";
 
 export async function createUser(payload: {
   name: string;
@@ -17,7 +17,7 @@ export async function createUser(payload: {
     },
   });
   createCategoryBulk(
-    defaultCategories.map((c) => ({ name: c, userId: user.id }))
+    DEFAULT_CATEGORIES.map((c) => ({ name: c.name, color: c.color, userId: user.id }))
   );
   return user;
 }

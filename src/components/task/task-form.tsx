@@ -21,14 +21,14 @@ import { CalendarIcon, X } from "lucide-react";
 import { format } from "date-fns";
 import { capitalizeFirstLetters, cn } from "@/lib/utils";
 import { useActionState, useEffect, useState } from "react";
-import { CreateTaskFormState } from "@/lib/interfaces/interface";
+import { CreateTaskFormState } from "@/lib/interfaces/server-action.interface";
 import { createTaskServerAction } from "@/server-actions/task.actions";
 import { TaskPriority } from "@prisma/client";
 import { toast } from "sonner";
 
 interface TaskFormProps {
   onClose: () => void;
-  categories: { id: string; name: string }[];
+  categories: { id: number; name: string }[];
 }
 
 const formDataInitialState = {

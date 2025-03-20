@@ -1,7 +1,7 @@
 "use server";
 import "server-only";
 
-import { CreateTaskFormState } from "@/lib/interfaces/interface";
+import { CreateTaskFormState } from "@/lib/interfaces/server-action.interface";
 import { createTaskSchema } from "@/validationsSchemas/task.validation";
 import { TaskPriority, TaskStatus } from "@prisma/client";
 import { createTask } from "@/services/task.service";
@@ -49,7 +49,7 @@ export async function createTaskServerAction(
     await createTask({
       title: validatedFields.data.title,
       description: validatedFields.data.description,
-      categoryId:validatedFields.data.categoryId,
+      categoryId: validatedFields.data.categoryId,
       priority: validatedFields.data.priority,
       dueDate: validatedFields.data.dueDate,
       status: TaskStatus.ACTIVE,
@@ -59,7 +59,7 @@ export async function createTaskServerAction(
     return {
       success: true,
       message: "Task Created Successfully",
-      formvalues: {
+      formValues: {
         title: "",
         description: "",
         categoryId: "",
