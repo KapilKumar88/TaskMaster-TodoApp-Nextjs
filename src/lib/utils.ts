@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+import { TaskPriority, TaskStatus } from "@prisma/client";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -36,4 +37,26 @@ export function sendResponse({
 }) {
   const resSchema = { status, statusCode, message, data };
   return NextResponse.json(resSchema, { status: statusCode });
+}
+
+export const getPriorityColor = (priority: TaskPriority) => {
+  switch (priority) {
+    case TaskPriority.HIGH:
+      return "bg-red-500/80 hover:bg-red-500"
+    case TaskPriority.MEDIUM:
+      return "bg-amber-500/80 hover:bg-amber-500"
+    case TaskPriority.LOW:
+      return "bg-emerald-500/80 hover:bg-emerald-500"
+  }
+}
+
+export const getStatusColor = (status: TaskStatus) => {
+  switch (status) {
+    case TaskStatus.ACTIVE:
+      return "bg-blue-500/80 hover:bg-blue-500"
+    case TaskStatus.COMPLETED:
+      return "bg-emerald-500/80 hover:bg-emerald-500"
+    case TaskStatus.OVERDUE:
+      return "bg-red-500/80 hover:bg-red-500"
+  }
 }

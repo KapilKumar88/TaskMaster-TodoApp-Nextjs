@@ -1,6 +1,7 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
 import { Prisma, TaskPriority, TaskStatus } from "@prisma/client";
+import { endOfDay, startOfDay } from "date-fns";
 
 export async function createTask(payload: {
   title: string;
@@ -31,5 +32,53 @@ export async function createTask(payload: {
   };
   return await prisma.task.create({
     data: input,
+  });
+}
+
+export async function getUserTaskList({
+  userId,
+  filter,
+}: {
+  userId: string;
+  filter?: string;
+}) {
+  const conditions: {
+    where: {
+      userId: string;
+      dueDate?: {
+        gte?: Date;
+        lte?: Date;
+      };
+      status?: TaskStatus;
+    };
+  } = {
+    where: {
+      userId: userId,
+      dueDate: undefined,
+    },
+  };
+
+  if (filter === "today") {
+    conditions.where["dueDate"] = {
+      gte: startOfDay(new Date()),
+      lte: endOfDay(new Date()),
+    };
+  }
+
+  if (filter === "upcoming") {
+    conditions.where["dueDate"] = {
+      gte: endOfDay(new Date()),
+    };
+  }
+
+  if (filter === "completed") {
+    conditions.where["status"] = TaskStatus.COMPLETED;
+  }
+
+  return await prisma.task.findMany({
+    include: {
+      category: true,
+    },
+    ...conditions,
   });
 }
