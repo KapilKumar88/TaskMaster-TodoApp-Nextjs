@@ -10,8 +10,8 @@ datasource db {
 enum TaskStatus {
   COMPLETED
   ACTIVE
-  INACTIVE
   DRAFT
+  OVERDUE
 }
 
 enum TaskPriority {
@@ -21,11 +21,13 @@ enum TaskPriority {
 }
 
 model User {
-  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email        String     @unique
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String   @unique
   name         String?
   password     String
   profileImage String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   categories Category[]
   tasks      Task[]
@@ -39,18 +41,23 @@ model Task {
   dueDate     DateTime
   dueTime     DateTime?
   status      TaskStatus   @default(ACTIVE)
-  
-  userId      String       @db.Uuid
-  categoryId  Int
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  userId     String @db.Uuid
+  categoryId Int
 
   category Category @relation(fields: [categoryId], references: [id])
   user     User     @relation(fields: [userId], references: [id])
 }
 
 model Category {
-  id     Int    @id @default(autoincrement())
-  name   String
-  userId String @db.Uuid
+  id        Int      @id @default(autoincrement())
+  name      String
+  color     String
+  userId    String   @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   tasks Task[]
   user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
