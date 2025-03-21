@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal, Star } from "lucide-react";
-import { useEffect, useState } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,34 +23,60 @@ import { TaskStatus } from "@prisma/client";
 import { TaskInterface } from "@/lib/interfaces/task.interface";
 import TaskPagination from "./task-pagination";
 import { useTaskContext } from "@/contextApis/task";
-import { set } from "date-fns";
+import {
+  makeTaskCompleted,
+  markTaskImportant,
+} from "@/server-actions/task.actions";
 
 interface TaskListProps {
   filter?: "all" | "today" | "upcoming" | "completed";
 }
 
 export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
+  const [
+    markTaskImportState,
+    markTaskImportantAction,
+    markTaskImportantPending,
+  ] = useActionState(markTaskImportant, {
+    message: "",
+    success: false,
+  });
+  const [
+    markTaskCompleteState,
+    markTaskCompleteAction,
+    markTaskCompletePending,
+  ] = useActionState(makeTaskCompleted, {
+    message: "",
+    success: false,
+  });
   const { pagination, setPagination } = useTaskContext();
   const [totalNumberOfRecords, setTotalNumberOfRecords] = useState(0);
   const [tasks, setTasks] = useState<TaskInterface[]>([]);
 
+  const fetchTaskList = async () => {
+    const apiResponse = await fetch(
+      `${API_ENDPOINTS.TASK.LIST}?filter=${encodeURIComponent(filter)}&page=${
+        pagination.page
+      }&limit=${pagination.pageSize}`
+    );
+    const apiResponseJson = await apiResponse.json();
+    setTasks((previousState) => {
+      return apiResponseJson?.data?.totalRecordsCount > 0
+        ? apiResponseJson.data.records
+        : previousState;
+    });
+    setTotalNumberOfRecords(apiResponseJson?.data?.totalRecordsCount ?? 0);
+  };
+
   useEffect(() => {
-    const fetchTaskList = async () => {
-      const apiResponse = await fetch(
-        `${API_ENDPOINTS.TASK.LIST}?filter=${encodeURIComponent(filter)}&page=${
-          pagination.page
-        }&limit=${pagination.pageSize}`
-      );
-      const apiResponseJson = await apiResponse.json();
-      setTasks((previousState) => {
-        return apiResponseJson?.data?.totalRecordsCount > 0
-          ? apiResponseJson.data.records
-          : previousState;
-      });
-      setTotalNumberOfRecords(apiResponseJson?.data?.totalRecordsCount ?? 0);
-    };
     fetchTaskList();
   }, [filter, pagination]);
+
+  if (markTaskImportState.success || markTaskCompleteState.success) {
+    fetchTaskList();
+    markTaskImportState.success = false;
+    markTaskCompleteState.success = false;
+  }
 
   return (
     <div className="space-y-3">
@@ -67,7 +93,19 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
             <div className="flex items-start gap-3 flex-1">
               <Checkbox
                 checked={task?.status === TaskStatus.COMPLETED}
-                // onCheckedChange={() => toggleTaskCompletion(task.id)}
+                onCheckedChange={() => {
+                  startTransition(() => {
+                    const formData = new FormData();
+                    formData.append("taskId", task.id.toString());
+                    formData.append(
+                      "status",
+                      task.status === TaskStatus.COMPLETED
+                        ? TaskStatus.ACTIVE
+                        : TaskStatus.COMPLETED
+                    );
+                    markTaskCompleteAction(formData);
+                  });
+                }}
                 className="mt-1 border-slate-400 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
               />
               <div className="min-w-0 flex-1">
@@ -124,11 +162,21 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
                 variant="ghost"
                 size="icon"
                 className="text-slate-700 dark:text-slate-300 hover:text-amber-500"
-                // onClick={() => toggleStarred(task.id)}
+                onClick={() => {
+                  startTransition(() => {
+                    const formData = new FormData();
+                    formData.append("taskId", task.id.toString());
+                    formData.append(
+                      "isImportant",
+                      (!task?.markAsImportant)?.toString()
+                    );
+                    markTaskImportantAction(formData);
+                  });
+                }}
               >
                 <Star
                   className={`h-4 w-4 ${
-                    task.starred ? "fill-amber-400 text-amber-400" : ""
+                    task.markAsImportant ? "fill-amber-400 text-amber-400" : ""
                   }`}
                 />
                 <span className="sr-only">Star task</span>

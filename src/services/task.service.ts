@@ -100,3 +100,39 @@ export async function getUserTaskList({
     totalRecordsCount: totalRecords,
   };
 }
+
+export async function deleteTask(taskId: number, userId: string) {
+  return await prisma.task.delete({ where: { id: taskId, userId: userId } });
+}
+
+export async function markTaskImportant(
+  taskId: number,
+  isImportant: boolean,
+  userId: string
+) {
+  return await prisma.task.update({
+    where: {
+      id: taskId,
+      userId: userId,
+    },
+    data: {
+      markAsImportant: isImportant,
+    },
+  });
+}
+
+export async function changeTaskStatus(
+  taskId: number,
+  userId: string,
+  status: TaskStatus
+) {
+  return await prisma.task.update({
+    where: {
+      id: taskId,
+      userId: userId,
+    },
+    data: {
+      status: status,
+    },
+  });
+}

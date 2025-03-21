@@ -28,3 +28,22 @@ export const GET = auth(async function GET(req) {
     message: "Data retrieved successfully",
   });
 });
+
+export const PATCH = auth(async function PATCH(req) {
+  if (!req.auth) {
+    return sendResponse({
+      status: "error",
+      statusCode: 401,
+      message: "Unauthorized",
+    });
+  }
+
+  const bodyData = req.body;
+
+  console.log(bodyData);
+
+  return sendResponse({
+    data: [],
+    message: "Task updated successfully",
+  });
+});

@@ -1,10 +1,17 @@
 "use server";
 import "server-only";
 
-import { CreateTaskFormState } from "@/lib/interfaces/server-action.interface";
+import {
+  CreateTaskFormState,
+  UpdateTaskFormState,
+} from "@/lib/interfaces/server-action.interface";
 import { createTaskSchema } from "@/validationsSchemas/task.validation";
 import { TaskPriority, TaskStatus } from "@prisma/client";
-import { createTask } from "@/services/task.service";
+import {
+  changeTaskStatus,
+  createTask,
+  markTaskImportant as starTask,
+} from "@/services/task.service";
 import { auth } from "@/auth";
 
 export async function createTaskServerAction(
@@ -79,3 +86,70 @@ export async function createTaskServerAction(
     };
   }
 }
+
+export async function makeTaskCompleted(
+  state: UpdateTaskFormState,
+  formData: FormData
+): Promise<UpdateTaskFormState> {
+  try {
+    const userSession = await auth();
+    const getFormPayload = {
+      taskId: parseInt(formData.get("taskId") as string),
+      status: formData.get("status") as string,
+    };
+    await changeTaskStatus(
+      getFormPayload.taskId,
+      userSession?.user.id,
+      getFormPayload.status,
+    );
+    return {
+      success: true,
+      message: "Task marked as completed",
+    };
+  } catch (error) {
+    return {
+      ...state,
+      errors: {
+        general:
+          (error as Error)?.message ?? "Something went wrong. Please try again",
+      },
+      success: false,
+      message: "Server error",
+    };
+  }
+}
+
+export async function markTaskImportant(
+  state: UpdateTaskFormState,
+  formData: FormData
+): Promise<UpdateTaskFormState> {
+  try {
+    const userSession = await auth();
+    const getFormPayload = {
+      taskId: parseInt(formData.get("taskId") as string),
+      isImportant:
+        (formData.get("isImportant") as string) === "true" ? true : false,
+    };
+    await starTask(
+      getFormPayload.taskId,
+      getFormPayload.isImportant,
+      userSession?.user.id
+    );
+    return {
+      success: true,
+      message: "Task marked as important",
+    };
+  } catch (error) {
+    return {
+      ...state,
+      errors: {
+        general:
+          (error as Error)?.message ?? "Something went wrong. Please try again",
+      },
+      success: false,
+      message: "Server error",
+    };
+  }
+}
+
+export async function deleteTas(taskId: string) {}
