@@ -42,21 +42,29 @@ export function sendResponse({
 export const getPriorityColor = (priority: TaskPriority) => {
   switch (priority) {
     case TaskPriority.HIGH:
-      return "bg-red-500/80 hover:bg-red-500"
+      return "bg-red-500/80 hover:bg-red-500";
     case TaskPriority.MEDIUM:
-      return "bg-amber-500/80 hover:bg-amber-500"
+      return "bg-amber-500/80 hover:bg-amber-500";
     case TaskPriority.LOW:
-      return "bg-emerald-500/80 hover:bg-emerald-500"
+      return "bg-emerald-500/80 hover:bg-emerald-500";
   }
-}
+};
 
 export const getStatusColor = (status: TaskStatus) => {
   switch (status) {
     case TaskStatus.ACTIVE:
-      return "bg-blue-500/80 hover:bg-blue-500"
+      return "bg-blue-500/80 hover:bg-blue-500";
     case TaskStatus.COMPLETED:
-      return "bg-emerald-500/80 hover:bg-emerald-500"
+      return "bg-emerald-500/80 hover:bg-emerald-500";
     case TaskStatus.OVERDUE:
-      return "bg-red-500/80 hover:bg-red-500"
+      return "bg-red-500/80 hover:bg-red-500";
   }
-}
+};
+
+export const generateRandomNumber = (min: number, max: number) => {
+  if (min > max) throw new Error("Min must be less than or equal to Max");
+  const range = max - min + 1;
+  const array = new Uint32Array(10);
+  window.crypto?.getRandomValues(array);
+  return (array[0] % range) + 1;
+};
