@@ -18,13 +18,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import TaskListCard from "./task-list-card";
 import TaskStatsByCategory from "./task-stats-by-category";
+import { TaskContextProvider } from "@/contextApis/task";
 
 export default function Task({ categories }: Readonly<{
   categories: { id: number, name: string }[]
 }>) {
   const [showTaskForm, setShowTaskForm] = useState(false);
   return (
-    <>
+    <TaskContextProvider>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 md:mb-0">
           Tasks
@@ -188,6 +189,6 @@ export default function Task({ categories }: Readonly<{
           </div>
         </div>
       </Tabs>
-    </>
+    </TaskContextProvider>
   );
 }

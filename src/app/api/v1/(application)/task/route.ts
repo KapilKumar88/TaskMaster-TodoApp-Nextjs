@@ -11,12 +11,16 @@ export const GET = auth(async function GET(req) {
     });
   }
 
-  const searchParams = req.nextUrl.searchParams
-  const query = searchParams.get('filter')
+  const searchParams = req.nextUrl.searchParams;
+  const query = searchParams.get("filter");
+  const pageNumber = searchParams.get("page");
+  const pageLimit = searchParams.get("limit");
 
   const taskList = await getUserTaskList({
     userId: req.auth.user.id,
-    filter: query
+    filter: query,
+    pageNumber: parseInt(pageNumber ?? "1"),
+    pageLimit: parseInt(pageLimit ?? "10"),
   });
 
   return sendResponse({

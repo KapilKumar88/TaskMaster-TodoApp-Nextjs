@@ -38,9 +38,13 @@ export async function createTask(payload: {
 export async function getUserTaskList({
   userId,
   filter,
+  pageNumber,
+  pageLimit,
 }: {
   userId: string;
   filter?: string;
+  pageNumber?: number;
+  pageLimit?: number;
 }) {
   const conditions: {
     where: {
@@ -75,10 +79,24 @@ export async function getUserTaskList({
     conditions.where["status"] = TaskStatus.COMPLETED;
   }
 
-  return await prisma.task.findMany({
+  const omitRecords =
+    pageNumber && pageLimit ? (pageNumber - 1) * pageLimit : 0;
+
+  const totalRecords = await prisma.task.count({
+    where: conditions.where,
+  });
+
+  const records = await prisma.task.findMany({
+    take: pageLimit,
+    skip: omitRecords,
     include: {
       category: true,
     },
     ...conditions,
   });
+
+  return {
+    records,
+    totalRecordsCount: totalRecords,
+  };
 }

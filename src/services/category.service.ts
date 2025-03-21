@@ -53,6 +53,7 @@ export async function getUserCategories(userId: string) {
 
 export async function allCategoryTaskCount(userId: string) {
   return await prisma.category.findMany({
+    take: 20,
     select: {
       name: true,
       id: true,
