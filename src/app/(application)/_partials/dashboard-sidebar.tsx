@@ -11,15 +11,19 @@ import {
   Settings,
   User,
 } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
-export function DashboardSidebar() {
+export function DashboardSidebar({
+  userSession,
+}: {
+  userSession: Session | null;
+}) {
   const { setSidebarOpen, sidebarOpen } = useSideBarContext();
   const pathname = usePathname();
-  const { data: userSession } = useSession();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const routes = [
@@ -93,7 +97,7 @@ export function DashboardSidebar() {
                 className={cn(
                   "justify-start gap-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-white/40 dark:hover:text-white",
                   route.active &&
-                  "bg-white/40 text-slate-900 dark:text-white font-medium"
+                    "bg-white/40 text-slate-900 dark:text-white font-medium"
                 )}
               >
                 <Link href={route.href}>
