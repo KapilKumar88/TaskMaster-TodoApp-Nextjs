@@ -33,32 +33,41 @@ interface TaskListProps {
 }
 
 export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
-  const [
-    markTaskImportState,
-    markTaskImportantAction,
-    markTaskImportantPending,
-  ] = useActionState(markTaskImportant, {
-    message: "",
-    success: false,
-  });
-  const [
-    markTaskCompleteState,
-    markTaskCompleteAction,
-    markTaskCompletePending,
-  ] = useActionState(makeTaskCompleted, {
-    message: "",
-    success: false,
-  });
-  const { pagination, setPagination } = useTaskContext();
+  const [markTaskImportState, markTaskImportantAction] = useActionState(
+    markTaskImportant,
+    {
+      message: "",
+      success: false,
+    }
+  );
+  const [markTaskCompleteState, markTaskCompleteAction] = useActionState(
+    makeTaskCompleted,
+    {
+      message: "",
+      success: false,
+    }
+  );
+  const { pagination, taskFilter, taskSorting, searchText } = useTaskContext();
   const [totalNumberOfRecords, setTotalNumberOfRecords] = useState(0);
   const [tasks, setTasks] = useState<TaskInterface[]>([]);
 
   const fetchTaskList = async () => {
-    const apiResponse = await fetch(
-      `${API_ENDPOINTS.TASK.LIST}?filter=${encodeURIComponent(filter)}&page=${
-        pagination.page
-      }&limit=${pagination.pageSize}`
-    );
+    let apiUrl = `${API_ENDPOINTS.TASK.LIST}?filter=${encodeURIComponent(
+      filter
+    )}&page=${pagination.page}&limit=${pagination.pageSize}`;
+    if (taskFilter) {
+      apiUrl += `?status=${taskFilter.status}&priority=${taskFilter.priority}`;
+    }
+
+    if (taskSorting) {
+      apiUrl += `&sort=${taskSorting.sortBy}&order=${taskSorting.sortDirection}`;
+    }
+
+    if (searchText && searchText?.length > 0) {
+      apiUrl += `&searchText=${searchText}`;
+    }
+
+    const apiResponse = await fetch(apiUrl);
     const apiResponseJson = await apiResponse.json();
     setTasks((previousState) => {
       return apiResponseJson?.data?.totalRecordsCount > 0
@@ -70,7 +79,7 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
 
   useEffect(() => {
     fetchTaskList();
-  }, [filter, pagination]);
+  }, [filter, pagination, taskFilter, taskSorting, searchText]);
 
   if (markTaskImportState.success || markTaskCompleteState.success) {
     fetchTaskList();

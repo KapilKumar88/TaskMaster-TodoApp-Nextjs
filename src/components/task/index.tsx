@@ -3,25 +3,20 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TaskForm } from "@/components/task/task-form";
-import { Filter, Plus, Search, SlidersHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import {  Plus } from "lucide-react";
 import TaskListCard from "./task-list-card";
 import TaskStatsByCategory from "./task-stats-by-category";
 import { TaskContextProvider } from "@/contextApis/task";
+import FilterButton from "./filter-button";
+import SortButton from "./sort-button";
+import SearchInput from "./search-input";
 
-export default function Task({ categories }: Readonly<{
-  categories: { id: number, name: string }[]
+export default function Task({
+  categories,
+}: Readonly<{
+  categories: { id: number; name: string }[];
 }>) {
   const [showTaskForm, setShowTaskForm] = useState(false);
   return (
@@ -31,73 +26,11 @@ export default function Task({ categories }: Readonly<{
           Tasks
         </h1>
         <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative w-full sm:w-auto">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-500 dark:text-slate-400" />
-            <Input
-              type="search"
-              placeholder="Search tasks..."
-              className="w-full sm:w-64 pl-8 bg-white/40 border-white/30 text-slate-900 dark:text-white"
-            />
-          </div>
+          <SearchInput />
 
           <div className="flex gap-2 flex-wrap sm:flex-nowrap">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-white/30 bg-white/40"
-                >
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filter
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-white/90 backdrop-blur-xl border-white/30">
-                <DropdownMenuLabel>Filter Tasks</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-xs text-slate-500">
-                    Status
-                  </DropdownMenuLabel>
-                  <DropdownMenuItem>All</DropdownMenuItem>
-                  <DropdownMenuItem>Active</DropdownMenuItem>
-                  <DropdownMenuItem>Completed</DropdownMenuItem>
-                  <DropdownMenuItem>Overdue</DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="text-xs text-slate-500">
-                    Priority
-                  </DropdownMenuLabel>
-                  <DropdownMenuItem>All</DropdownMenuItem>
-                  <DropdownMenuItem>High</DropdownMenuItem>
-                  <DropdownMenuItem>Medium</DropdownMenuItem>
-                  <DropdownMenuItem>Low</DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-white/30 bg-white/40"
-                >
-                  <SlidersHorizontal className="h-4 w-4 mr-2" />
-                  Sort
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-white/90 backdrop-blur-xl border-white/30">
-                <DropdownMenuLabel>Sort Tasks</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Due Date (Ascending)</DropdownMenuItem>
-                <DropdownMenuItem>Due Date (Descending)</DropdownMenuItem>
-                <DropdownMenuItem>Priority (High to Low)</DropdownMenuItem>
-                <DropdownMenuItem>Priority (Low to High)</DropdownMenuItem>
-                <DropdownMenuItem>Alphabetical (A-Z)</DropdownMenuItem>
-                <DropdownMenuItem>Alphabetical (Z-A)</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
+            <FilterButton />
+            <SortButton />
             <Button
               className="bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white sm:whitespace-nowrap"
               onClick={() => setShowTaskForm(true)}
@@ -165,7 +98,10 @@ export default function Task({ categories }: Readonly<{
               </CardHeader>
               <CardContent>
                 {showTaskForm ? (
-                  <TaskForm categories={categories} onClose={() => setShowTaskForm(false)} />
+                  <TaskForm
+                    categories={categories}
+                    onClose={() => setShowTaskForm(false)}
+                  />
                 ) : (
                   <div className="space-y-4">
                     <TaskStatsByCategory />

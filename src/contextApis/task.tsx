@@ -11,8 +11,8 @@ import {
 } from "react";
 
 type TaskFilter = {
-  status?: TaskStatus;
-  priority?: TaskPriority;
+  status?: TaskStatus | "all";
+  priority?: TaskPriority | "all";
 };
 
 type TaskSort = {
@@ -33,6 +33,8 @@ export type TaskContextType = {
   setTaskSorting: Dispatch<SetStateAction<TaskSort>>;
   pagination: TaskPagination;
   setPagination: Dispatch<SetStateAction<TaskPagination>>;
+  searchText: string | null | undefined;
+  setSearchText: Dispatch<SetStateAction<string | null | undefined>>;
 };
 
 export const TaskContext = createContext<TaskContextType | null>(null);
@@ -42,15 +44,23 @@ export const TaskContextProvider = ({
 }: {
   children: React.ReactNode;
 }): JSX.Element => {
-  const [taskFilter, setTaskFilter] = useState<TaskFilter>({});
+  const [taskFilter, setTaskFilter] = useState<TaskFilter>({
+    status: "all",
+    priority: "all",
+  });
 
-  const [taskSorting, setTaskSorting] = useState<TaskSort>({});
+  const [taskSorting, setTaskSorting] = useState<TaskSort>({
+    sortBy: "dueDate",
+    sortDirection: "asc",
+  });
 
   const [pagination, setPagination] = useState<TaskPagination>({
     page: 1,
     pageSize: 10,
     totalNumberOfRecords: 0,
   });
+
+  const [searchText, setSearchText] = useState<string | null | undefined>(null);
 
   const value = useMemo(
     () => ({
@@ -60,6 +70,8 @@ export const TaskContextProvider = ({
       setTaskSorting,
       pagination,
       setPagination,
+      setSearchText,
+      searchText,
     }),
     [
       taskFilter,
@@ -68,6 +80,8 @@ export const TaskContextProvider = ({
       setTaskSorting,
       pagination,
       setPagination,
+      setSearchText,
+      searchText,
     ]
   );
 
