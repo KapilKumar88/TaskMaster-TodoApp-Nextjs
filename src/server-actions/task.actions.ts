@@ -11,6 +11,7 @@ import {
   changeTaskStatus,
   createTask,
   markTaskImportant as starTask,
+  deleteTask as deleteTaskQuery,
 } from "@/services/task.service";
 import { auth } from "@/auth";
 
@@ -100,7 +101,7 @@ export async function makeTaskCompleted(
     await changeTaskStatus(
       getFormPayload.taskId,
       userSession?.user.id,
-      getFormPayload.status,
+      getFormPayload.status
     );
     return {
       success: true,
@@ -152,4 +153,29 @@ export async function markTaskImportant(
   }
 }
 
-export async function deleteTas(taskId: string) {}
+export async function deleteTask(
+  state: UpdateTaskFormState,
+  formData: FormData
+): Promise<UpdateTaskFormState> {
+  try {
+    const userSession = await auth();
+    const getFormPayload = {
+      taskId: parseInt(formData.get("taskId") as string),
+    };
+    await deleteTaskQuery(getFormPayload.taskId, userSession?.user.id);
+    return {
+      success: true,
+      message: "Task deleted successfully",
+    };
+  } catch (error) {
+    return {
+      ...state,
+      errors: {
+        general:
+          (error as Error)?.message ?? "Something went wrong. Please try again",
+      },
+      success: false,
+      message: "Server error",
+    };
+  }
+}

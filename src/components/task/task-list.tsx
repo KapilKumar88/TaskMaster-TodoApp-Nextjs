@@ -24,6 +24,7 @@ import { TaskInterface } from "@/lib/interfaces/task.interface";
 import TaskPagination from "./task-pagination";
 import { useTaskContext } from "@/contextApis/task";
 import {
+  deleteTask,
   makeTaskCompleted,
   markTaskImportant,
 } from "@/server-actions/task.actions";
@@ -42,6 +43,13 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
   );
   const [markTaskCompleteState, markTaskCompleteAction] = useActionState(
     makeTaskCompleted,
+    {
+      message: "",
+      success: false,
+    }
+  );
+  const [deleteTaskState, deleteTaskAction] = useActionState(
+    deleteTask,
     {
       message: "",
       success: false,
@@ -81,10 +89,15 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
     fetchTaskList();
   }, [filter, pagination, taskFilter, taskSorting, searchText]);
 
-  if (markTaskImportState.success || markTaskCompleteState.success) {
+  if (
+    markTaskImportState.success ||
+    markTaskCompleteState.success ||
+    deleteTaskState.success
+  ) {
     fetchTaskList();
     markTaskImportState.success = false;
     markTaskCompleteState.success = false;
+    deleteTaskState.success = false;
   }
 
   return (
@@ -205,11 +218,17 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
                   <DropdownMenuLabel>Task Actions</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Edit Task</DropdownMenuItem>
-                  <DropdownMenuItem>Set Priority</DropdownMenuItem>
-                  <DropdownMenuItem>Change Category</DropdownMenuItem>
-                  <DropdownMenuItem>Change Due Date</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-600">
+                  <DropdownMenuItem
+                    className="text-red-600"
+                    onClick={() => {
+                      startTransition(() => {
+                        const formData = new FormData();
+                        formData.append("taskId", task.id.toString());
+                        deleteTaskAction(formData);
+                      });
+                    }}
+                  >
                     Delete Task
                   </DropdownMenuItem>
                 </DropdownMenuContent>
