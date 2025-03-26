@@ -6,12 +6,23 @@ import TopStats from "@/components/dashboard/top-stats";
 import WeeklyProgressChart from "@/components/dashboard/weekly-progress-chart";
 import TaskCompletionChart from "@/components/dashboard/task-completion-chart";
 import { auth } from "@/auth";
-import { taskCompletionChartStats, weeklyProgressChartStats } from "@/services/task.service";
+import {
+  getCategoryDistributionTaskStats,
+  taskCompletionChartStats,
+  weeklyProgressChartStats,
+} from "@/services/task.service";
 
 export default async function DashboardPage() {
   const userSession = await auth();
-  const weeklyProgressChatData = await weeklyProgressChartStats(userSession?.user.id);
-  const taskCompletionChartData = await taskCompletionChartStats(userSession?.user.id);
+  const weeklyProgressChatData = await weeklyProgressChartStats(
+    userSession?.user.id
+  );
+  const taskCompletionChartData = await taskCompletionChartStats(
+    userSession?.user.id
+  );
+  const categoryDistributionTaskData = await getCategoryDistributionTaskStats(
+    userSession?.user.id
+  );
 
   return (
     <main className="p-6">
@@ -24,7 +35,9 @@ export default async function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <WeeklyProgressChart weeklyProgressChatData={weeklyProgressChatData} />
+            <WeeklyProgressChart
+              weeklyProgressChatData={weeklyProgressChatData}
+            />
           </CardContent>
         </Card>
 
@@ -35,7 +48,9 @@ export default async function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <TaskCompletionChart taskCompletionChartData={taskCompletionChartData} />
+            <TaskCompletionChart
+              taskCompletionChartData={taskCompletionChartData}
+            />
           </CardContent>
         </Card>
       </div>
@@ -48,7 +63,9 @@ export default async function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <CategoryDistributionChart />
+            <CategoryDistributionChart
+              categoryDistributionTaskData={categoryDistributionTaskData}
+            />
           </CardContent>
         </Card>
 

@@ -9,6 +9,7 @@ import {
   startOfWeek,
   subWeeks,
 } from "date-fns";
+import { capitalizeFirstLetters } from "@/lib/utils";
 
 export async function createTask(payload: {
   title: string;
@@ -381,5 +382,49 @@ export async function taskCompletionChartStats(userId: string) {
     }, // Red
   ];
 
+  return data;
+}
+
+export async function getCategoryDistributionTaskStats(userId: string) {
+  const result = await prisma.task.findMany({
+    select: {
+      category: {
+        select: {
+          name: true,
+          color: true,
+        },
+      },
+    },
+    where: {
+      userId: userId,
+      dueDate: {
+        gte: startOfWeek(new Date()),
+        lte: endOfWeek(new Date()),
+      },
+    },
+  });
+  const data = result.reduce(
+    (acc: Array<{ name: string; value: number; color: string }>, curr) => {
+      const findIndex = acc.findIndex(
+        (item) => item.name.toLowerCase() == curr.category.name.toLowerCase()
+      );
+
+      if (findIndex !== -1) {
+        acc[findIndex] = {
+          ...acc[findIndex],
+          value: acc[findIndex].value + 1,
+        };
+      } else {
+        acc.push({
+          name: capitalizeFirstLetters(curr.category.name),
+          value: 1,
+          color: curr.category.color,
+        });
+      }
+
+      return acc;
+    },
+    []
+  );
   return data;
 }
