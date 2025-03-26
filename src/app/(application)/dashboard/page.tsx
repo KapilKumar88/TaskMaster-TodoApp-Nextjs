@@ -6,10 +6,10 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TodoList } from "@/components/todo-list";
-import { TaskCompletionChart } from "@/components/task-completion-chart";
 import { CategoryDistributionChart } from "@/components/category-distribution-chart";
-import { WeeklyProgressChart } from "@/components/weekly-progress-chart";
 import TopStats from "@/components/dashboard/top-stats";
+import WeeklyProgressChart from "@/components/dashboard/weekly-progress-chart";
+import TaskCompletionChart from "@/components/dashboard/task-completion-chart";
 
 export default function DashboardPage() {
   return (
