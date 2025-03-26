@@ -6,16 +6,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "../ui/progress";
-import { auth } from "@/auth";
 import {
   totalCompletedTaskStatsForDashboard,
   totalInprogressTaskStatsForDashboard,
   totalOverDueTaskStatsForDashboard,
   totalTaskStatsForDashboard,
 } from "@/services/task.service";
+import { Session } from "next-auth";
 
-export default async function TopStats() {
-  const userSession = await auth();
+export default async function TopStats({
+  userSession,
+}: {
+  userSession: Session | null;
+}) {
   const totalsTaskCount = await totalTaskStatsForDashboard(
     userSession?.user.id
   );

@@ -9,22 +9,20 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function WeeklyProgressChart() {
-  const data = [
-    { day: "Mon", completed: 3, created: 5 },
-    { day: "Tue", completed: 5, created: 4 },
-    { day: "Wed", completed: 4, created: 6 },
-    { day: "Thu", completed: 6, created: 3 },
-    { day: "Fri", completed: 4, created: 5 },
-    { day: "Sat", completed: 2, created: 1 },
-    { day: "Sun", completed: 1, created: 2 },
-  ];
-
+export default function WeeklyProgressChart({
+  weeklyProgressChatData,
+}: {
+  weeklyProgressChatData: Array<{
+    day: string;
+    completed: number;
+    created: number;
+  }>;
+}) {
   return (
     <div style={{ width: "100%", height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          data={data}
+          data={weeklyProgressChatData}
           margin={{ top: 10, right: 10, bottom: 30, left: 10 }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />

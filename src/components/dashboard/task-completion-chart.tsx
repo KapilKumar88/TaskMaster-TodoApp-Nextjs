@@ -8,19 +8,21 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function TaskCompletionChart() {
-  const data = [
-    { name: "Completed", value: 16, color: "rgb(16, 185, 129)" }, // Emerald
-    { name: "In Progress", value: 5, color: "rgb(79, 70, 229)" }, // Indigo
-    { name: "Overdue", value: 3, color: "rgb(239, 68, 68)" }, // Red
-  ];
-
+export default function TaskCompletionChart({
+  taskCompletionChartData,
+}: {
+  taskCompletionChartData: Array<{
+    name: string;
+    value: number;
+    color: string;
+  }>;
+}) {
   return (
     <div style={{ width: "100%", height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={data}
+            data={taskCompletionChartData}
             cx="50%"
             cy="50%"
             innerRadius={60}
@@ -28,7 +30,7 @@ export default function TaskCompletionChart() {
             paddingAngle={5}
             dataKey="value"
           >
-            {data.map((entry, index) => (
+            {taskCompletionChartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>

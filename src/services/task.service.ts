@@ -4,6 +4,7 @@ import { Prisma, TaskPriority, TaskStatus } from "@prisma/client";
 import {
   endOfDay,
   endOfWeek,
+  format,
   startOfDay,
   startOfWeek,
   subWeeks,
@@ -301,4 +302,84 @@ export async function totalOverDueTaskStatsForDashboard(userId: string) {
     lastWeekCount,
     percentageDifference: percentageDifference,
   };
+}
+
+export async function weeklyProgressChartStats(userId: string) {
+  const result = await prisma.task.findMany({
+    where: {
+      userId: userId,
+      dueDate: {
+        gte: startOfWeek(new Date()),
+        lte: endOfWeek(new Date()),
+      },
+    },
+  });
+  const finalOutput = result.reduce(
+    (acc, curr) => {
+      const getCurrentDay = format(curr.createdAt, "EEE");
+      const findDayIndex = acc.findIndex(
+        (item) => item.day.toLowerCase() == getCurrentDay.toLowerCase()
+      );
+      if (acc[findDayIndex] !== undefined) {
+        acc[findDayIndex] = {
+          ...acc[findDayIndex],
+          completed:
+            acc[findDayIndex].completed +
+            (curr.status == TaskStatus.COMPLETED ? 1 : 0),
+          created: acc[findDayIndex].created + 1,
+        };
+        return acc;
+      }
+      return acc;
+    },
+    [
+      { day: "Mon", completed: 0, created: 0 },
+      { day: "Tue", completed: 0, created: 0 },
+      { day: "Wed", completed: 0, created: 0 },
+      { day: "Thu", completed: 0, created: 0 },
+      { day: "Fri", completed: 0, created: 0 },
+      { day: "Sat", completed: 0, created: 0 },
+      { day: "Sun", completed: 0, created: 0 },
+    ]
+  );
+  return finalOutput;
+}
+
+export async function taskCompletionChartStats(userId: string) {
+  const result = await prisma.task.groupBy({
+    by: ["status"],
+    _count: true,
+    where: {
+      userId: userId,
+      dueDate: {
+        gte: startOfWeek(new Date()),
+        lte: endOfWeek(new Date()),
+      },
+    },
+  });
+
+  const data = [
+    {
+      name: "Draft",
+      value: result.find((x) => x.status == TaskStatus.DRAFT)?._count ?? 0,
+      color: "rgba(59, 68, 65, 0.73)",
+    }, // grey
+    {
+      name: "Completed",
+      value: result.find((x) => x.status == TaskStatus.COMPLETED)?._count ?? 0,
+      color: "rgb(16, 185, 129)",
+    }, // Emerald
+    {
+      name: "Active",
+      value: result.find((x) => x.status == TaskStatus.ACTIVE)?._count ?? 0,
+      color: "rgb(79, 70, 229)",
+    }, // Indigo
+    {
+      name: "Overdue",
+      value: result.find((x) => x.status == TaskStatus.OVERDUE)?._count ?? 0,
+      color: "rgb(239, 68, 68)",
+    }, // Red
+  ];
+
+  return data;
 }

@@ -2,12 +2,12 @@
 import "server-only";
 
 import { signIn } from "@/auth";
-import { LoginFormState, RegisterFormState } from "@/lib/interface";
 import {
   loginSchema,
   registerSchema,
 } from "@/validationsSchemas/auth.validation";
 import { AuthError } from "next-auth";
+import { LoginFormState, RegisterFormState } from "@/lib/interfaces/server-action.interface";
 
 export async function registerUserServerAction(
   state: RegisterFormState,
