@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import {
   avgCompletionTimeStats,
+  overdueRateStats,
   taskCompletionRateStats,
   totalTaskStats as totalTaskStatsQuery,
 } from "@/services/task.service";
@@ -24,24 +25,33 @@ export default async function TopSectionAnalytics({
     return <Unauthorized />;
   }
 
-  const [totalTaskStats, taskCompletionRate, avgCompletionStats] =
-    await Promise.all([
-      totalTaskStatsQuery(
-        userSession.user.id,
-        queryParams.startDate,
-        queryParams.endDate
-      ),
-      taskCompletionRateStats(
-        userSession.user.id,
-        queryParams.startDate,
-        queryParams.endDate
-      ),
-      avgCompletionTimeStats(
-        userSession.user.id,
-        queryParams.startDate,
-        queryParams.endDate
-      ),
-    ]);
+  const [
+    totalTaskStats,
+    taskCompletionRate,
+    avgCompletionStats,
+    overdueRateStatsData,
+  ] = await Promise.all([
+    totalTaskStatsQuery(
+      userSession.user.id,
+      queryParams.startDate,
+      queryParams.endDate
+    ),
+    taskCompletionRateStats(
+      userSession.user.id,
+      queryParams.startDate,
+      queryParams.endDate
+    ),
+    avgCompletionTimeStats(
+      userSession.user.id,
+      queryParams.startDate,
+      queryParams.endDate
+    ),
+    overdueRateStats(
+      userSession.user.id,
+      queryParams.startDate,
+      queryParams.endDate
+    ),
+  ]);
 
   return (
     <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
@@ -153,13 +163,35 @@ export default async function TopSectionAnalytics({
             Overdue Rate
           </CardDescription>
           <CardTitle className="text-2xl text-slate-900 dark:text-white">
-            12.5%
+            {overdueRateStatsData?.currentPeriodOverdueRate?.toFixed(2)}%
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-xs text-slate-700 dark:text-slate-300">
-            <span className="text-red-600 dark:text-red-400">↑2.5%</span> from
-            previous period
+            {overdueRateStatsData?.percentageDifference !== 0 &&
+              (overdueRateStatsData?.percentageDifference > 0 ? (
+                <>
+                  <span className="text-emerald-600 dark:text-emerald-400">
+                    ↑
+                    {(overdueRateStatsData?.percentageDifference / 24)?.toFixed(
+                      2
+                    ) ?? 0}
+                    %
+                  </span>
+                  {" from previous period"}
+                </>
+              ) : (
+                <>
+                  <span className="text-red-600 dark:text-red-400">
+                    ↓
+                    {(overdueRateStatsData?.percentageDifference / 24)?.toFixed(
+                      2
+                    ) ?? 0}{" "}
+                    days
+                  </span>
+                  {" from previous period"}
+                </>
+              ))}
           </div>
         </CardContent>
       </Card>

@@ -383,6 +383,74 @@ export async function avgCompletionTimeStats(
   };
 }
 
+export async function overdueRateStats(
+  userId: string,
+  startDate: Date | string,
+  endDate: string | Date
+) {
+  const previousPeriodDates = getThePreviousDuration(startDate, endDate);
+  const currentPeriodStartDate = startOfWeek(startDate);
+  const currentPeriodEndDate = endOfWeek(endDate);
+  const [
+    currentPeriodTaskCount,
+    previousPeriodTaskCount,
+    currentPeriodOverdueTaskCount,
+    previousPeriodOverdueTaskCount,
+  ] = await Promise.all([
+    prisma.task.count({
+      where: {
+        userId: userId,
+        dueDate: {
+          gte: currentPeriodStartDate,
+          lte: currentPeriodEndDate,
+        },
+      },
+    }),
+    prisma.task.count({
+      where: {
+        userId: userId,
+        dueDate: {
+          gte: previousPeriodDates.startDate,
+          lte: previousPeriodDates.endDate,
+        },
+      },
+    }),
+    prisma.task.count({
+      where: {
+        userId: userId,
+        dueDate: {
+          gte: currentPeriodStartDate,
+          lte: currentPeriodEndDate,
+        },
+        status: TaskStatus.OVERDUE,
+      },
+    }),
+    prisma.task.count({
+      where: {
+        userId: userId,
+        dueDate: {
+          gte: previousPeriodDates.startDate,
+          lte: previousPeriodDates.endDate,
+        },
+        status: TaskStatus.OVERDUE,
+      },
+    }),
+  ]);
+
+  const currentPeriodOverdueRate =
+    currentPeriodOverdueTaskCount / currentPeriodTaskCount / 100;
+  const previousPeriodOverdueRate =
+    previousPeriodOverdueTaskCount / previousPeriodTaskCount / 100;
+  const percentageDifference =
+    (currentPeriodOverdueRate - previousPeriodOverdueRate) /
+    previousPeriodOverdueRate;
+  return {
+    currentPeriodOverdueRate,
+    previousPeriodOverdueRate,
+    percentageDifference: percentageDifference,
+  };
+}
+
 export async function totalInprogressTaskStatsForDashboard(userId: string) {
   const currentWeekStartDate = startOfWeek(new Date());
   const currentWeekEndDate = endOfWeek(new Date());
