@@ -7,7 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { totalTaskStatsForDashboard } from "@/services/task.service";
+import {
+  taskCompletionRateStats,
+  totalTaskStats as totalTaskStatsQuery,
+} from "@/services/task.service";
 
 export default async function TopSectionAnalytics({
   searchParams,
@@ -20,12 +23,19 @@ export default async function TopSectionAnalytics({
     return <Unauthorized />;
   }
 
-  const totalTaskStats = await totalTaskStatsForDashboard(
-    userSession.user.id,
-    queryParams.startDate,
-    queryParams.endDate
-  );
-  console.log(queryParams, totalTaskStats, ">>>>>>>>>>>>>>>>>>>>");
+  const [totalTaskStats, taskCompletionRate] = await Promise.all([
+    totalTaskStatsQuery(
+      userSession.user.id,
+      queryParams.startDate,
+      queryParams.endDate
+    ),
+    taskCompletionRateStats(
+      userSession.user.id,
+      queryParams.startDate,
+      queryParams.endDate
+    ),
+  ]);
+
   return (
     <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
@@ -39,18 +49,19 @@ export default async function TopSectionAnalytics({
         </CardHeader>
         <CardContent>
           <div className="text-xs text-slate-700 dark:text-slate-300">
-            {totalTaskStats?.previousPeriodCount !== 0 &&
-              (totalTaskStats?.previousPeriodCount > 0 ? (
+            {totalTaskStats?.percentageDifference !== 0 &&
+              (totalTaskStats?.percentageDifference > 0 ? (
                 <>
                   <span className="text-emerald-600 dark:text-emerald-400">
-                    ↑{totalTaskStats?.previousPeriodCount?.toFixed(2) ?? 0}%
+                    ↑{totalTaskStats?.percentageDifference?.toFixed(2) ?? 0}%
                   </span>
                   {" from previous period"}
                 </>
               ) : (
                 <>
                   <span className="text-emerald-600 dark:text-emerald-400">
-                    ↓{totalTaskStats?.previousPeriodCount?.toFixed(2) ?? 0} days
+                    ↓{totalTaskStats?.percentageDifference?.toFixed(2) ?? 0}{" "}
+                    days
                   </span>
                   {" from previous period"}
                 </>
@@ -65,13 +76,29 @@ export default async function TopSectionAnalytics({
             Completion Rate
           </CardDescription>
           <CardTitle className="text-2xl text-slate-900 dark:text-white">
-            66%
+            {taskCompletionRate?.currentPeriodCompletionRate.toFixed(2) ?? 0}%
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-xs text-slate-700 dark:text-slate-300">
-            <span className="text-emerald-600 dark:text-emerald-400">↑8%</span>{" "}
-            from previous period
+            {taskCompletionRate?.percentageDifference !== 0 &&
+              (taskCompletionRate?.percentageDifference > 0 ? (
+                <>
+                  <span className="text-emerald-600 dark:text-emerald-400">
+                    ↑{taskCompletionRate?.percentageDifference?.toFixed(2) ?? 0}
+                    %
+                  </span>
+                  {" from previous period"}
+                </>
+              ) : (
+                <>
+                  <span className="text-emerald-600 dark:text-emerald-400">
+                    ↓{taskCompletionRate?.percentageDifference?.toFixed(2) ?? 0}{" "}
+                    days
+                  </span>
+                  {" from previous period"}
+                </>
+              ))}
           </div>
         </CardContent>
       </Card>

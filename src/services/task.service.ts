@@ -159,7 +159,7 @@ export async function totalUserTasksCountByDate(
   });
 }
 
-export async function totalTaskStatsForDashboard(
+export async function totalTaskStats(
   userId: string,
   startDate: Date | string,
   endDate: Date | string
@@ -196,7 +196,7 @@ export async function totalTaskStatsForDashboard(
   };
 }
 
-export async function totalCompletedTaskStatsForDashboard(userId: string) {
+export async function totalCompletedTaskStats(userId: string) {
   const currentWeekStartDate = startOfWeek(new Date());
   const currentWeekEndDate = endOfWeek(new Date());
   const lastWeek = subWeeks(currentWeekStartDate, 1);
@@ -229,6 +229,74 @@ export async function totalCompletedTaskStatsForDashboard(userId: string) {
   return {
     currentWeekCount,
     lastWeekCount,
+    percentageDifference: percentageDifference,
+  };
+}
+
+export async function taskCompletionRateStats(
+  userId: string,
+  startDate: Date | string,
+  endDate: Date | string
+) {
+  const previousPeriodDates = getThePreviousDuration(startDate, endDate);
+  const currentPeriodStartDate = startOfWeek(startDate);
+  const currentPeriodEndDate = endOfWeek(endDate);
+  const [
+    currentPeriodTaskCount,
+    previousPeriodTaskCount,
+    currentPeriodCompletedTask,
+    previousPeriodCompletedTask,
+  ] = await Promise.all([
+    prisma.task.count({
+      where: {
+        userId: userId,
+        dueDate: {
+          gte: currentPeriodStartDate,
+          lte: currentPeriodEndDate,
+        },
+      },
+    }),
+    prisma.task.count({
+      where: {
+        userId: userId,
+        dueDate: {
+          gte: previousPeriodDates.startDate,
+          lte: previousPeriodDates.endDate,
+        },
+      },
+    }),
+    prisma.task.count({
+      where: {
+        userId: userId,
+        dueDate: {
+          gte: currentPeriodStartDate,
+          lte: currentPeriodEndDate,
+        },
+        status: TaskStatus.COMPLETED,
+      },
+    }),
+    prisma.task.count({
+      where: {
+        userId: userId,
+        dueDate: {
+          gte: previousPeriodDates.startDate,
+          lte: previousPeriodDates.endDate,
+        },
+        status: TaskStatus.COMPLETED,
+      },
+    }),
+  ]);
+
+  const currentPeriodCompletionRate =
+    currentPeriodCompletedTask / currentPeriodTaskCount / 100;
+  const previousPeriodCompletionRate =
+    previousPeriodCompletedTask / previousPeriodTaskCount / 100;
+  const percentageDifference =
+    (currentPeriodCompletionRate - previousPeriodCompletionRate) /
+    previousPeriodCompletionRate;
+  return {
+    currentPeriodCompletionRate,
+    previousPeriodCompletionRate,
     percentageDifference: percentageDifference,
   };
 }

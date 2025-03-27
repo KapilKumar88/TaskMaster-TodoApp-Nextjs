@@ -7,18 +7,19 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "../ui/progress";
 import {
-  totalCompletedTaskStatsForDashboard,
+  totalCompletedTaskStats,
   totalInprogressTaskStatsForDashboard,
   totalOverDueTaskStatsForDashboard,
-  totalTaskStatsForDashboard,
+  totalTaskStats,
 } from "@/services/task.service";
 import { Session } from "next-auth";
 import { DashboardCardsSkeleton } from "../common/skeletons/dashboard-cards-skeleton";
+import { endOfWeek, startOfWeek } from "date-fns";
 
 export default async function TopSection({
   userSession,
 }: {
-  userSession: Session | null;
+  userSession: Session;
 }) {
   const [
     totalsTaskCount,
@@ -26,8 +27,12 @@ export default async function TopSection({
     totalsInProgressTaskCount,
     totalsOverDueTaskCount,
   ] = await Promise.all([
-    totalTaskStatsForDashboard(userSession?.user.id),
-    totalCompletedTaskStatsForDashboard(userSession?.user.id),
+    totalTaskStats(
+      userSession?.user.id,
+      startOfWeek(new Date()),
+      endOfWeek(new Date())
+    ),
+    totalCompletedTaskStats(userSession?.user.id),
     totalInprogressTaskStatsForDashboard(userSession?.user.id),
     totalOverDueTaskStatsForDashboard(userSession?.user.id),
   ]);
@@ -51,21 +56,28 @@ export default async function TopSection({
                   Total Tasks
                 </CardDescription>
                 <CardTitle className="text-2xl text-slate-900 dark:text-white">
-                  {totalsTaskCount.currentWeekCount}
+                  {totalsTaskCount?.currentPeriodCount ?? 0}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-slate-700 dark:text-slate-300">
-                  {totalsTaskCount.percentageDifference < 0 ? (
-                    <span className="text-red-600 dark:text-red-400">
-                      ↓{totalsTaskCount.percentageDifference?.toFixed(2)}%
-                    </span>
-                  ) : (
-                    <span className="text-emerald-600 dark:text-emerald-400">
-                      ↑{totalsTaskCount.percentageDifference?.toFixed(2)}%
-                    </span>
-                  )}{" "}
-                  from last week
+                  {totalsTaskCount.percentageDifference !== 0 &&
+                    (totalsTaskCount.percentageDifference < 0 ? (
+                      <>
+                        <span className="text-red-600 dark:text-red-400">
+                          ↓{totalsTaskCount.percentageDifference?.toFixed(2)}%
+                        </span>{" "}
+                        from last week
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-emerald-600 dark:text-emerald-400">
+                          ↑{totalsTaskCount.percentageDifference?.toFixed(2)}%
+                        </span>{" "}
+                        from last week
+                      </>
+                    ))}
+                  {}
                 </div>
               </CardContent>
             </Card>
