@@ -92,3 +92,21 @@ export const getThePreviousDuration = (
     endDate: previousEndDate,
   };
 };
+
+export const generateRandomDate = (
+  date?: string | Date,
+  numOfDaysInPast?: number,
+  numOfDaysInFuture?: number
+) => {
+  const dateToConsider = startOfDay(date ?? new Date());
+
+  if (numOfDaysInPast) {
+    return subDays(dateToConsider, numOfDaysInPast);
+  }
+
+  if (numOfDaysInFuture) {
+    return addDays(dateToConsider, numOfDaysInFuture);
+  }
+
+  return subDays(dateToConsider, generateRandomNumber(1, 1460)); // approx 4 years of dates
+};
