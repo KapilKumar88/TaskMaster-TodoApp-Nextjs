@@ -1,16 +1,16 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CategoryDistributionChart } from "@/components/category-distribution-chart";
 import { auth } from "@/auth";
-import { getCategoryDistributionTaskStats } from "@/services/task.service";
+import { CategoryDistributionChart } from "@/components/category-distribution-chart";
 import { ChartSkeleton } from "@/components/common/skeletons/chart-skeleton";
 import Unauthorized from "@/components/common/unauthorized";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getCategoryDistributionTaskStats } from "@/services/task.service";
 
-export default async function DashboardPage() {
+export default async function Default() {
   const userSession = await auth();
   if (userSession === null) {
     return <Unauthorized />;
   }
-
+  
   const categoryDistributionTaskData = await getCategoryDistributionTaskStats(
     userSession?.user.id
   );

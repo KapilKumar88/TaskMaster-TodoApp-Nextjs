@@ -1,13 +1,16 @@
 "use server";
 import "server-only";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import {
   loginSchema,
   registerSchema,
 } from "@/validationsSchemas/auth.validation";
 import { AuthError } from "next-auth";
-import { LoginFormState, RegisterFormState } from "@/lib/interfaces/server-action.interface";
+import {
+  LoginFormState,
+  RegisterFormState,
+} from "@/lib/interfaces/server-action.interface";
 
 export async function registerUserServerAction(
   state: RegisterFormState,
@@ -102,7 +105,6 @@ export async function loginUserServerAction(
       message: "Login successful",
     };
   } catch (error) {
-
     let errorMsg = "Something went wrong. Please try again";
     if (error instanceof AuthError) {
       if (error.cause?.err instanceof Error) {
@@ -122,4 +124,11 @@ export async function loginUserServerAction(
       message: "Server error",
     };
   }
+}
+
+export async function signoutServerAction(redirectTo?: string) {
+  await signOut({
+    redirect: true,
+    redirectTo: redirectTo ?? "/login",
+  });
 }

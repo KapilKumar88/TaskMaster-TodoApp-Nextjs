@@ -428,3 +428,38 @@ export async function getCategoryDistributionTaskStats(userId: string) {
   );
   return data;
 }
+
+export async function getTaskByStatusOfCurrentWeek(
+  userId: string,
+  status: TaskStatus
+) {
+  return prisma.task.findMany({
+    include: {
+      category: true,
+    },
+    where: {
+      userId: userId,
+      dueDate: {
+        gte: startOfWeek(new Date()),
+        lte: endOfWeek(new Date()),
+      },
+      status: status,
+    },
+  });
+}
+
+export async function getImportantTaskListOfCurrentWeek(userId: string) {
+  return prisma.task.findMany({
+    include: {
+      category: true,
+    },
+    where: {
+      userId: userId,
+      dueDate: {
+        gte: startOfWeek(new Date()),
+        lte: endOfWeek(new Date()),
+      },
+      markAsImportant: true,
+    },
+  });
+}
