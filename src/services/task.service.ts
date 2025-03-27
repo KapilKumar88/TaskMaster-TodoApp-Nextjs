@@ -9,7 +9,7 @@ import {
   startOfWeek,
   subWeeks,
 } from "date-fns";
-import { capitalizeFirstLetters } from "@/lib/utils";
+import { capitalizeFirstLetters, getThePreviousDuration } from "@/lib/utils";
 
 export async function createTask(payload: {
   title: string;
@@ -159,19 +159,21 @@ export async function totalUserTasksCountByDate(
   });
 }
 
-export async function totalTaskStatsForDashboard(userId: string) {
-  const currentWeekStartDate = startOfWeek(new Date());
-  const currentWeekEndDate = endOfWeek(new Date());
-  const lastWeek = subWeeks(currentWeekStartDate, 1);
-  const lastWeekStartDate = startOfWeek(lastWeek);
-  const lastWeekEndDate = endOfWeek(lastWeek);
-  const [currentWeekCount, lastWeekCount] = await Promise.all([
+export async function totalTaskStatsForDashboard(
+  userId: string,
+  startDate: Date | string,
+  endDate: Date | string
+) {
+  const previousPeriodDates = getThePreviousDuration(startDate, endDate);
+  const currentPeriodStartDate = startOfDay(startDate);
+  const currentPeriodEndDate = endOfDay(endDate);
+  const [currentPeriodCount, previousPeriodCount] = await Promise.all([
     prisma.task.count({
       where: {
         userId: userId,
         dueDate: {
-          gte: currentWeekStartDate,
-          lte: currentWeekEndDate,
+          gte: currentPeriodStartDate,
+          lte: currentPeriodEndDate,
         },
       },
     }),
@@ -179,17 +181,17 @@ export async function totalTaskStatsForDashboard(userId: string) {
       where: {
         userId: userId,
         dueDate: {
-          gte: lastWeekStartDate,
-          lte: lastWeekEndDate,
+          gte: previousPeriodDates.startDate,
+          lte: previousPeriodDates.endDate,
         },
       },
     }),
   ]);
   const percentageDifference =
-    ((currentWeekCount - lastWeekCount) / lastWeekCount) * 100;
+    ((currentPeriodCount - previousPeriodCount) / previousPeriodCount) * 100;
   return {
-    currentWeekCount,
-    lastWeekCount,
+    currentPeriodCount,
+    previousPeriodCount,
     percentageDifference: percentageDifference,
   };
 }

@@ -38,7 +38,7 @@ export function CategoryDistributionChart({
             }}
           />
           <Bar dataKey="value" radius={4}>
-            {categoryDistributionTaskData.map((entry, index) => (
+            {categoryDistributionTaskData?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Bar>

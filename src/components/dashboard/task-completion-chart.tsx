@@ -30,7 +30,7 @@ export default function TaskCompletionChart({
             paddingAngle={5}
             dataKey="value"
           >
-            {taskCompletionChartData.map((entry, index) => (
+            {taskCompletionChartData?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>

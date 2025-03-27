@@ -3,6 +3,13 @@ import { twMerge } from "tailwind-merge";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { TaskPriority, TaskStatus } from "@prisma/client";
+import {
+  addDays,
+  differenceInDays,
+  endOfDay,
+  startOfDay,
+  subDays,
+} from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -67,4 +74,21 @@ export const generateRandomNumber = (min: number, max: number) => {
   const array = new Uint32Array(10);
   window.crypto?.getRandomValues(array);
   return (array[0] % range) + 1;
+};
+
+export const getThePreviousDuration = (
+  startDate: string | Date,
+  endDate: string | Date
+) => {
+  const periodDuration = differenceInDays(
+    endOfDay(endDate),
+    startOfDay(startDate)
+  );
+  const previousStartDate = subDays(startDate, periodDuration);
+  const previousEndDate = addDays(previousStartDate, periodDuration);
+
+  return {
+    startDate: previousStartDate,
+    endDate: previousEndDate,
+  };
 };
