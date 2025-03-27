@@ -2,6 +2,7 @@ import "server-only";
 import { prisma } from "@/lib/prisma";
 import { Prisma, TaskPriority, TaskStatus } from "@prisma/client";
 import {
+  differenceInHours,
   endOfDay,
   endOfWeek,
   format,
@@ -298,6 +299,87 @@ export async function taskCompletionRateStats(
     currentPeriodCompletionRate,
     previousPeriodCompletionRate,
     percentageDifference: percentageDifference,
+  };
+}
+
+export async function avgCompletionTimeStats(
+  userId: string,
+  startDate: Date | string,
+  endDate: string | Date
+) {
+  const previousPeriodDates = getThePreviousDuration(startDate, endDate);
+  const currentPeriodStartDate = startOfWeek(startDate);
+  const currentPeriodEndDate = endOfWeek(endDate);
+  const [currentPeriodTasks, previousPeriodTask] = await Promise.all([
+    prisma.task.findMany({
+      select: {
+        createdAt: true,
+        updatedAt: true,
+        completedOn: true,
+      },
+      where: {
+        userId: userId,
+        dueDate: {
+          gte: currentPeriodStartDate,
+          lte: currentPeriodEndDate,
+        },
+        status: TaskStatus.COMPLETED,
+      },
+    }),
+    prisma.task.findMany({
+      select: {
+        createdAt: true,
+        updatedAt: true,
+        completedOn: true,
+      },
+      where: {
+        userId: userId,
+        dueDate: {
+          gte: previousPeriodDates.startDate,
+          lte: previousPeriodDates.endDate,
+        },
+        status: TaskStatus.COMPLETED,
+      },
+    }),
+  ]);
+
+  const currentPeriodCompletionTime = currentPeriodTasks.reduce((acc, curr) => {
+    const taskCompletionTime = differenceInHours(
+      curr.completedOn!,
+      curr.createdAt,
+      {
+        roundingMethod: "ceil",
+      }
+    );
+    return acc + taskCompletionTime;
+  }, 0);
+
+  const previousPeriodCompletionTime = previousPeriodTask.reduce(
+    (acc, curr) => {
+      const taskCompletionTime = differenceInHours(
+        curr.completedOn!,
+        curr.createdAt,
+        {
+          roundingMethod: "ceil",
+        }
+      );
+      return acc + taskCompletionTime;
+    },
+    0
+  );
+
+  const avgCurrentPeriodTime =
+    currentPeriodCompletionTime / currentPeriodTasks?.length;
+  const avgPreviousPeriodTime =
+    previousPeriodCompletionTime / previousPeriodTask?.length;
+
+  const percentageDifference =
+    ((avgCurrentPeriodTime - avgPreviousPeriodTime) / avgPreviousPeriodTime) *
+    100;
+  return {
+    avgCurrentPeriodTime: avgCurrentPeriodTime,
+    avgPreviousPeriodTime: avgPreviousPeriodTime,
+    percentageDifference,
   };
 }
 

@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  avgCompletionTimeStats,
   taskCompletionRateStats,
   totalTaskStats as totalTaskStatsQuery,
 } from "@/services/task.service";
@@ -23,18 +24,24 @@ export default async function TopSectionAnalytics({
     return <Unauthorized />;
   }
 
-  const [totalTaskStats, taskCompletionRate] = await Promise.all([
-    totalTaskStatsQuery(
-      userSession.user.id,
-      queryParams.startDate,
-      queryParams.endDate
-    ),
-    taskCompletionRateStats(
-      userSession.user.id,
-      queryParams.startDate,
-      queryParams.endDate
-    ),
-  ]);
+  const [totalTaskStats, taskCompletionRate, avgCompletionStats] =
+    await Promise.all([
+      totalTaskStatsQuery(
+        userSession.user.id,
+        queryParams.startDate,
+        queryParams.endDate
+      ),
+      taskCompletionRateStats(
+        userSession.user.id,
+        queryParams.startDate,
+        queryParams.endDate
+      ),
+      avgCompletionTimeStats(
+        userSession.user.id,
+        queryParams.startDate,
+        queryParams.endDate
+      ),
+    ]);
 
   return (
     <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
@@ -59,9 +66,8 @@ export default async function TopSectionAnalytics({
                 </>
               ) : (
                 <>
-                  <span className="text-emerald-600 dark:text-emerald-400">
+                  <span className="text-red-600 dark:text-red-400">
                     ↓{totalTaskStats?.percentageDifference?.toFixed(2) ?? 0}{" "}
-                    days
                   </span>
                   {" from previous period"}
                 </>
@@ -92,9 +98,8 @@ export default async function TopSectionAnalytics({
                 </>
               ) : (
                 <>
-                  <span className="text-emerald-600 dark:text-emerald-400">
+                  <span className="text-red-600 dark:text-red-400">
                     ↓{taskCompletionRate?.percentageDifference?.toFixed(2) ?? 0}{" "}
-                    days
                   </span>
                   {" from previous period"}
                 </>
@@ -109,15 +114,35 @@ export default async function TopSectionAnalytics({
             Avg. Completion Time
           </CardDescription>
           <CardTitle className="text-2xl text-slate-900 dark:text-white">
-            2.4 days
+            {(avgCompletionStats?.avgCurrentPeriodTime / 24).toFixed(2)} days
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-xs text-slate-700 dark:text-slate-300">
-            <span className="text-emerald-600 dark:text-emerald-400">
-              ↓0.5 days
-            </span>{" "}
-            from previous period
+            {avgCompletionStats?.percentageDifference !== 0 &&
+              (avgCompletionStats?.percentageDifference > 0 ? (
+                <>
+                  <span className="text-emerald-600 dark:text-emerald-400">
+                    ↑
+                    {(avgCompletionStats?.percentageDifference / 24)?.toFixed(
+                      2
+                    ) ?? 0}
+                    %
+                  </span>
+                  {" from previous period"}
+                </>
+              ) : (
+                <>
+                  <span className="text-red-600 dark:text-red-400">
+                    ↓
+                    {(avgCompletionStats?.percentageDifference / 24)?.toFixed(
+                      2
+                    ) ?? 0}{" "}
+                    days
+                  </span>
+                  {" from previous period"}
+                </>
+              ))}
           </div>
         </CardContent>
       </Card>
