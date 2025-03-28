@@ -7,12 +7,49 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import appConfig from "@/config/app.config";
 import {
   avgCompletionTimeStats,
   overdueRateStats,
   taskCompletionRateStats,
   totalTaskStats as totalTaskStatsQuery,
 } from "@/services/task.service";
+import {
+  endOfDay,
+  endOfMonth,
+  endOfWeek,
+  endOfYear,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
+} from "date-fns";
+
+export const getDefaultDateTime = () => {
+  const dateInstance = new Date();
+
+  if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === "weekly") {
+    return {
+      startDate: startOfWeek(dateInstance),
+      endDate: endOfWeek(dateInstance),
+    };
+  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === "daily") {
+    return {
+      startDate: startOfDay(dateInstance),
+      endDate: endOfDay(dateInstance),
+    };
+  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === "monthly") {
+    return {
+      startDate: startOfMonth(dateInstance),
+      endDate: endOfMonth(dateInstance),
+    };
+  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === "yearly") {
+    return {
+      startDate: startOfYear(dateInstance),
+      endDate: endOfYear(dateInstance),
+    };
+  }
+};
 
 export default async function TopSectionAnalytics({
   searchParams,
@@ -20,6 +57,9 @@ export default async function TopSectionAnalytics({
   searchParams: { startDate: string; endDate: string };
 }) {
   const [userSession, queryParams] = await Promise.all([auth(), searchParams]);
+  const defaultDateTime = getDefaultDateTime();
+  const startDate = queryParams?.startDate ?? defaultDateTime?.startDate;
+  const endDate = queryParams?.endDate ?? defaultDateTime?.endDate;
 
   if (userSession === null) {
     return <Unauthorized />;
@@ -31,26 +71,10 @@ export default async function TopSectionAnalytics({
     avgCompletionStats,
     overdueRateStatsData,
   ] = await Promise.all([
-    totalTaskStatsQuery(
-      userSession.user.id,
-      queryParams.startDate,
-      queryParams.endDate
-    ),
-    taskCompletionRateStats(
-      userSession.user.id,
-      queryParams.startDate,
-      queryParams.endDate
-    ),
-    avgCompletionTimeStats(
-      userSession.user.id,
-      queryParams.startDate,
-      queryParams.endDate
-    ),
-    overdueRateStats(
-      userSession.user.id,
-      queryParams.startDate,
-      queryParams.endDate
-    ),
+    totalTaskStatsQuery(userSession.user.id, startDate, endDate),
+    taskCompletionRateStats(userSession.user.id, startDate, endDate),
+    avgCompletionTimeStats(userSession.user.id, startDate, endDate),
+    overdueRateStats(userSession.user.id, startDate, endDate),
   ]);
 
   return (

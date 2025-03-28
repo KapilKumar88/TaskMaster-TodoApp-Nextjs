@@ -29,6 +29,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useRouter } from "next/navigation";
+import appConfig from "@/config/app.config";
 
 export default function AnalyticsFilter() {
   const router = useRouter();
@@ -39,7 +40,7 @@ export default function AnalyticsFilter() {
     }
   );
 
-  const [period, setPeriod] = useState<string>("weekly");
+  const [period, setPeriod] = useState<string>(appConfig.DEFAULT_PERIOD_FOR_COMPUTATION);
 
   useEffect(() => {
     let startDate = null;
