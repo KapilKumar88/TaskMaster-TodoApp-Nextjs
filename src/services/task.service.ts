@@ -714,6 +714,67 @@ export async function getCategoryDistributionTaskStats(
   return data;
 }
 
+export async function getTaskCompletionRate(
+  userId: string,
+  startDate: Date | string,
+  endDate: Date | string
+) {
+  const result = await prisma.task.findMany({
+    select: {
+      status: true,
+      createdAt: true,
+      completedOn: true,
+    },
+    where: {
+      userId: userId,
+      createdAt: {
+        gte: startOfDay(startDate),
+        lte: endOfDay(endDate),
+      },
+    },
+  });
+
+  const finalOutput = result.reduce(
+    (acc, curr) => {
+      const findIndex = acc.findIndex(
+        (item) =>
+          item.month.toLowerCase() ===
+          format(curr.createdAt, "MMM").toLowerCase()
+      );
+
+      if (findIndex !== -1) {
+        acc[findIndex] = {
+          ...acc[findIndex],
+          rate: acc[findIndex].rate + 1,
+        };
+      } else {
+        acc.push({
+          month: format(curr.createdAt, "MMM").toLowerCase(),
+          rate: 1,
+        });
+      }
+
+      return acc;
+    },
+    [
+      { month: "Jan", rate: 0 },
+      { month: "Feb", rate: 0 },
+      { month: "Mar", rate: 0 },
+      { month: "Apr", rate: 0 },
+      { month: "May", rate: 0 },
+      { month: "Jun", rate: 0 },
+      { month: "Jul", rate: 0 },
+      { month: "Aug", rate: 0 },
+      { month: "Sep", rate: 0 },
+      { month: "Oct", rate: 0 },
+      { month: "Nov", rate: 0 },
+      { month: "Dec", rate: 0 },
+    ]
+  );
+
+  return finalOutput;
+}
+
 export async function getTaskByStatusOfCurrentWeek(
   userId: string,
   status: TaskStatus

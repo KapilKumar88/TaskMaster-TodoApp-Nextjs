@@ -2,21 +2,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CategoryDistributionChart } from "@/components/category-distribution-chart";
 import { CompletionRateChart } from "@/components/completion-rate-chart";
 import TaskCompletionChart from "@/components/dashboard/task-completion-chart";
-import { ProductivityChart } from "@/components/productivity-chart";
-import WeeklyProgressChart from "@/components/dashboard/weekly-progress-chart";
 import { getDefaultDateTime } from "../@topSection/page";
 import { auth } from "@/auth";
 import Unauthorized from "@/components/common/unauthorized";
 import {
   getCategoryDistributionTaskStats,
+  getTaskCompletionRate,
   taskCompletionChartStats,
 } from "@/services/task.service";
 
 export default async function BottomSectionAnalytics({
   searchParams,
-}: {
+}: Readonly<{
   searchParams: { startDate: string; endDate: string };
-}) {
+}>) {
   const [userSession, queryParams] = await Promise.all([auth(), searchParams]);
   const defaultDateTime = getDefaultDateTime();
   const startDate = queryParams?.startDate ?? defaultDateTime?.startDate;
@@ -26,7 +25,7 @@ export default async function BottomSectionAnalytics({
     return <Unauthorized />;
   }
 
-  const [taskCompletionChartData, categoryDistributionTaskData] =
+  const [taskCompletionChartData, categoryDistributionTaskData, getTaskCompletionRateData] =
     await Promise.all([
       taskCompletionChartStats(userSession?.user.id, startDate, endDate),
       getCategoryDistributionTaskStats(
@@ -34,6 +33,7 @@ export default async function BottomSectionAnalytics({
         startDate,
         endDate
       ),
+      getTaskCompletionRate(userSession?.user.id, startDate, endDate),
     ]);
 
   return (
@@ -67,7 +67,7 @@ export default async function BottomSectionAnalytics({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <CompletionRateChart />
+          <CompletionRateChart data={getTaskCompletionRateData} />
         </CardContent>
       </Card>
     </div>
