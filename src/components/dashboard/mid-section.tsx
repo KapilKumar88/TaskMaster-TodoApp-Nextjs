@@ -21,7 +21,11 @@ export default async function MidSection({
       defaultDates?.startDate,
       defaultDates?.endDate
     ),
-    taskCompletionChartStats(userSession?.user.id),
+    taskCompletionChartStats(
+      userSession?.user.id,
+      defaultDates?.startDate,
+      defaultDates?.endDate
+    ),
   ]);
 
   return (
@@ -59,9 +63,7 @@ export default async function MidSection({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <TaskCompletionChart
-                taskCompletionChartData={taskCompletionChartData}
-              />
+              <TaskCompletionChart data={taskCompletionChartData} />
             </CardContent>
           </Card>
         </div>

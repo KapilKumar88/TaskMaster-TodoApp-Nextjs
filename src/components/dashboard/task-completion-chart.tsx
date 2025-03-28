@@ -9,9 +9,9 @@ import {
 } from "recharts";
 
 export default function TaskCompletionChart({
-  taskCompletionChartData,
+  data,
 }: {
-  taskCompletionChartData: Array<{
+  data: Array<{
     name: string;
     value: number;
     color: string;
@@ -22,7 +22,7 @@ export default function TaskCompletionChart({
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={taskCompletionChartData}
+            data={data}
             cx="50%"
             cy="50%"
             innerRadius={60}
@@ -30,7 +30,7 @@ export default function TaskCompletionChart({
             paddingAngle={5}
             dataKey="value"
           >
-            {taskCompletionChartData?.map((entry, index) => (
+            {data?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>

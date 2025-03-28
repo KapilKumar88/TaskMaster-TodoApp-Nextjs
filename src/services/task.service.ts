@@ -623,15 +623,19 @@ export async function productivityChartData(
   return finalOutput;
 }
 
-export async function taskCompletionChartStats(userId: string) {
+export async function taskCompletionChartStats(
+  userId: string,
+  startDate: Date | string,
+  endDate: Date | string
+) {
   const result = await prisma.task.groupBy({
     by: ["status"],
     _count: true,
     where: {
       userId: userId,
-      dueDate: {
-        gte: startOfWeek(new Date()),
-        lte: endOfWeek(new Date()),
+      createdAt: {
+        gte: startOfDay(startDate),
+        lte: endOfDay(endDate),
       },
     },
   });
