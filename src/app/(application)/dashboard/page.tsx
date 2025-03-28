@@ -4,15 +4,19 @@ import { auth } from "@/auth";
 import { getCategoryDistributionTaskStats } from "@/services/task.service";
 import { ChartSkeleton } from "@/components/common/skeletons/chart-skeleton";
 import Unauthorized from "@/components/common/unauthorized";
+import { getDefaultDateTime } from "../analytics/@topSection/page";
 
 export default async function DashboardPage() {
   const userSession = await auth();
   if (userSession === null) {
     return <Unauthorized />;
   }
+  const defaultDateTime = getDefaultDateTime();
 
   const categoryDistributionTaskData = await getCategoryDistributionTaskStats(
-    userSession?.user.id
+    userSession?.user.id,
+    defaultDateTime?.startDate,
+    defaultDateTime?.endDate
   );
 
   return (
@@ -26,9 +30,7 @@ export default async function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <CategoryDistributionChart
-              categoryDistributionTaskData={categoryDistributionTaskData}
-            />
+            <CategoryDistributionChart data={categoryDistributionTaskData} />
           </CardContent>
         </Card>
       )}

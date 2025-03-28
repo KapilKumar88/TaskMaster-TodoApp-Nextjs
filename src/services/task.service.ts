@@ -666,7 +666,11 @@ export async function taskCompletionChartStats(
   return data;
 }
 
-export async function getCategoryDistributionTaskStats(userId: string) {
+export async function getCategoryDistributionTaskStats(
+  userId: string,
+  startDate: Date | string,
+  endDate: Date | string
+) {
   const result = await prisma.task.findMany({
     select: {
       category: {
@@ -678,9 +682,9 @@ export async function getCategoryDistributionTaskStats(userId: string) {
     },
     where: {
       userId: userId,
-      dueDate: {
-        gte: startOfWeek(new Date()),
-        lte: endOfWeek(new Date()),
+      createdAt: {
+        gte: startOfDay(startDate),
+        lte: endOfDay(endDate),
       },
     },
   });

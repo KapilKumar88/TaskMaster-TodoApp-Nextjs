@@ -49,6 +49,10 @@ export const getDefaultDateTime = () => {
       endDate: endOfYear(dateInstance),
     };
   }
+  return {
+    startDate: startOfWeek(dateInstance),
+    endDate: endOfWeek(dateInstance),
+  };
 };
 
 export default async function TopSectionAnalytics({

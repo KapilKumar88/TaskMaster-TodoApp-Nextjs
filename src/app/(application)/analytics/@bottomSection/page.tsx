@@ -7,7 +7,10 @@ import WeeklyProgressChart from "@/components/dashboard/weekly-progress-chart";
 import { getDefaultDateTime } from "../@topSection/page";
 import { auth } from "@/auth";
 import Unauthorized from "@/components/common/unauthorized";
-import { taskCompletionChartStats } from "@/services/task.service";
+import {
+  getCategoryDistributionTaskStats,
+  taskCompletionChartStats,
+} from "@/services/task.service";
 
 export default async function BottomSectionAnalytics({
   searchParams,
@@ -23,10 +26,16 @@ export default async function BottomSectionAnalytics({
     return <Unauthorized />;
   }
 
-  const [taskCompletionChartData] = await Promise.all([
-    taskCompletionChartStats(userSession?.user.id, startDate, endDate),
-  ]);
-  
+  const [taskCompletionChartData, categoryDistributionTaskData] =
+    await Promise.all([
+      taskCompletionChartStats(userSession?.user.id, startDate, endDate),
+      getCategoryDistributionTaskStats(
+        userSession?.user.id,
+        startDate,
+        endDate
+      ),
+    ]);
+
   return (
     <div className="grid gap-4 md:gap-6 mt-4 md:mt-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
@@ -46,7 +55,9 @@ export default async function BottomSectionAnalytics({
             Categories
           </CardTitle>
         </CardHeader>
-        <CardContent>{/* <CategoryDistributionChart /> */}</CardContent>
+        <CardContent>
+          <CategoryDistributionChart data={categoryDistributionTaskData} />
+        </CardContent>
       </Card>
 
       <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
