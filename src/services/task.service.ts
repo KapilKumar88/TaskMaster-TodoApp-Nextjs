@@ -574,6 +574,55 @@ export async function weeklyProgressChartStats(
   return finalOutput;
 }
 
+export async function productivityChartData(
+  userId: string,
+  startDate: Date | string,
+  endDate: Date | string
+) {
+  const currentPeriodStartDate = startOfWeek(startDate);
+  const currentPeriodEndDate = endOfWeek(endDate);
+
+  const result = await prisma.task.findMany({
+    where: {
+      userId: userId,
+      createdAt: {
+        gte: currentPeriodStartDate,
+        lte: currentPeriodEndDate,
+      },
+      status: TaskStatus.COMPLETED,
+    },
+  });
+
+  const finalOutput = result.reduce(
+    (acc, curr) => {
+      const getCurrentDay = format(curr.createdAt, "EEE");
+      const findDayIndex = acc.findIndex(
+        (item) => item.day.toLowerCase() == getCurrentDay.toLowerCase()
+      );
+      if (acc[findDayIndex] !== undefined) {
+        acc[findDayIndex] = {
+          ...acc[findDayIndex],
+          Tasks:
+            acc[findDayIndex].Tasks +
+            (curr.status == TaskStatus.COMPLETED ? 1 : 0),
+        };
+        return acc;
+      }
+      return acc;
+    },
+    [
+      { day: "Mon", Tasks: 0 },
+      { day: "Tue", Tasks: 0 },
+      { day: "Wed", Tasks: 0 },
+      { day: "Thu", Tasks: 0 },
+      { day: "Fri", Tasks: 0 },
+      { day: "Sat", Tasks: 0 },
+      { day: "Sun", Tasks: 0 },
+    ]
+  );
+  return finalOutput;
+}
+
 export async function taskCompletionChartStats(userId: string) {
   const result = await prisma.task.groupBy({
     by: ["status"],
