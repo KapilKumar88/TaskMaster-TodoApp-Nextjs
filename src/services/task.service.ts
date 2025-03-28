@@ -240,8 +240,8 @@ export async function taskCompletionRateStats(
   endDate: Date | string
 ) {
   const previousPeriodDates = getThePreviousDuration(startDate, endDate);
-  const currentPeriodStartDate = startOfWeek(startDate);
-  const currentPeriodEndDate = endOfWeek(endDate);
+  const currentPeriodStartDate = startOfDay(startDate);
+  const currentPeriodEndDate = endOfDay(endDate);
   const [
     currentPeriodTaskCount,
     previousPeriodTaskCount,
@@ -525,16 +525,24 @@ export async function totalOverDueTaskStatsForDashboard(userId: string) {
   };
 }
 
-export async function weeklyProgressChartStats(userId: string) {
+export async function weeklyProgressChartStats(
+  userId: string,
+  startDate: Date | string,
+  endDate: Date | string
+) {
+  const currentPeriodStartDate = startOfDay(startDate);
+  const currentPeriodEndDate = endOfDay(endDate);
+
   const result = await prisma.task.findMany({
     where: {
       userId: userId,
-      dueDate: {
-        gte: startOfWeek(new Date()),
-        lte: endOfWeek(new Date()),
+      createdAt: {
+        gte: currentPeriodStartDate,
+        lte: currentPeriodEndDate,
       },
     },
   });
+
   const finalOutput = result.reduce(
     (acc, curr) => {
       const getCurrentDay = format(curr.createdAt, "EEE");

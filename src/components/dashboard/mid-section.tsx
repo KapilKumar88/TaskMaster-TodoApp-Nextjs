@@ -7,14 +7,20 @@ import {
 } from "@/services/task.service";
 import { Session } from "next-auth";
 import { ChartSkeleton } from "../common/skeletons/chart-skeleton";
+import { getDefaultDateTime } from "@/app/(application)/analytics/@topSection/page";
 
 export default async function MidSection({
   userSession,
 }: {
   userSession: Session | null;
 }) {
+  const defaultDates = getDefaultDateTime();
   const [weeklyProgressChatData, taskCompletionChartData] = await Promise.all([
-    weeklyProgressChartStats(userSession?.user.id),
+    weeklyProgressChartStats(
+      userSession?.user.id,
+      defaultDates?.startDate,
+      defaultDates?.endDate
+    ),
     taskCompletionChartStats(userSession?.user.id),
   ]);
 
