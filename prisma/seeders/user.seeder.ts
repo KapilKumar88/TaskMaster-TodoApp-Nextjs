@@ -17,6 +17,19 @@ export default async function seedUsers(prismaClient: PrismaClient) {
         profileImage: faker.image.avatar(),
       },
     });
+    await prismaClient.settings.create({
+      data: {
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+        timeZone: faker.location.timeZone(),
+        dateFormat: "MM/DD/YYYY",
+        autoArchiveTime: 30,
+        autoArchive: false,
+      },
+    });
     userIds.push(user.id);
   }
 
