@@ -21,21 +21,21 @@ enum TaskPriority {
 }
 
 enum WeekStartDay {
-  Sunday
-  Monday
-  Saturday
+  sunday
+  monday
+  saturday
 }
 
 enum TaskTimeFrequency {
-  Hour
-  Day
-  Min
+  hour
+  day
+  min
 }
 
 enum AppTheme {
-  Light
-  Dark
-  System
+  light
+  dark
+  system
 }
 
 model User {
@@ -90,17 +90,17 @@ model Settings {
 
   timeZone                 String
   dateFormat               String
-  weekStartDay             WeekStartDay      @default(Sunday)
+  weekStartDay             WeekStartDay      @default(sunday)
   autoArchive              Boolean           @default(false)
   autoArchiveTime          Int
-  autoArchiveTimeFrequency TaskTimeFrequency @default(Hour)
+  autoArchiveTimeFrequency TaskTimeFrequency @default(hour)
   emailNotifications       Boolean           @default(true)
   pushNotification         Boolean           @default(true)
   taskDueReminder          Boolean           @default(true)
   taskDueTime              Int               @default(1)
-  taskDueTimeFrequency     TaskTimeFrequency @default(Hour)
+  taskDueTimeFrequency     TaskTimeFrequency @default(hour)
   weeklySummary            Boolean           @default(false)
-  appTheme                 AppTheme          @default(System)
+  appTheme                 AppTheme          @default(system)
   accentColor              String?
   glassEffectIntensity     Int               @default(50)
 

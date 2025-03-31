@@ -11,11 +11,10 @@ import { Slider } from "@/components/ui/slider"
 import { Separator } from "@/components/ui/separator"
 import { AlertCircle, Check, Moon, Palette, Save, Sun, Trash2 } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { useTheme } from "@/providers/theme-provider"
+import { useUserSettingContext } from "@/contextApis/user-settings"
 
 export default function SettingsPage() {
-    const [sidebarOpen, setSidebarOpen] = useState(true)
-    const { theme, setTheme } = useTheme()
+    const { theme, setTheme } = useUserSettingContext()
     const [glassEffect, setGlassEffect] = useState(50)
     return (
         <main className="p-4 md:p-6">

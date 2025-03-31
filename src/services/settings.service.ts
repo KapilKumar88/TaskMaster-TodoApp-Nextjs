@@ -22,3 +22,13 @@ export async function createUserSettings(payload: {
     },
   });
 }
+
+export async function getUserSettings(userId: User["id"]) {
+  return await prisma.settings.findFirst({
+    where: {
+      user: {
+        id: userId,
+      },
+    },
+  });
+}
