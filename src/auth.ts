@@ -25,10 +25,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         fullName: {},
       },
       async authorize(credentials) {
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         const user = await createUser({
           name: credentials.fullName as string,
           email: credentials.email as string,
           password: credentials.password as string,
+          timeZone: timezone,
         });
         return {
           id: user.id.toString(),

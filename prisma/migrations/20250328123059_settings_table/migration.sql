@@ -15,7 +15,6 @@ CREATE TABLE "Settings" (
     "dateFormat" TEXT NOT NULL,
     "weekStartDay" "WeekStartDay" NOT NULL DEFAULT 'Sunday',
     "autoArchive" BOOLEAN NOT NULL DEFAULT false,
-    "authArchiveTime" INTEGER NOT NULL,
     "emailNotifications" BOOLEAN NOT NULL DEFAULT true,
     "pushNotification" BOOLEAN NOT NULL DEFAULT true,
     "taskDueReminder" BOOLEAN NOT NULL DEFAULT true,
