@@ -1,4 +1,4 @@
-import { TaskPriority } from "@prisma/client";
+import { TaskPriority, WeekStartDay } from "@prisma/client";
 
 export interface ServerActionInterface {
   message: string;
@@ -72,5 +72,24 @@ export interface UpdateTaskFormState extends ServerActionInterface {
     dueTime?: string;
     isImportant?: boolean;
     markAsCompleted?: boolean;
+  };
+}
+
+export interface GeneralSettingsFormState extends ServerActionInterface {
+  errors?: {
+    timeZone?: string[];
+    dateFormat?: string[];
+    weekStartDay?: string[];
+    autoArchive?: string[];
+    autoArchiveTime?: string[];
+    timeFrequency?: string[];
+    general?: string[] | string;
+  };
+  formValues?: {
+    timeZone: string;
+    dateFormat: string;
+    weekStartDay: WeekStartDay;
+    autoArchive: boolean;
+    autoArchiveTime: string | null;
   };
 }

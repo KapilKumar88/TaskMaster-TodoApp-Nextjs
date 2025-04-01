@@ -26,7 +26,7 @@ enum WeekStartDay {
   saturday
 }
 
-enum TaskTimeFrequency {
+enum TimeFrequency {
   hour
   day
   min
@@ -92,13 +92,13 @@ model Settings {
   dateFormat               String
   weekStartDay             WeekStartDay      @default(sunday)
   autoArchive              Boolean           @default(false)
-  autoArchiveTime          Int
-  autoArchiveTimeFrequency TaskTimeFrequency @default(hour)
+  autoArchiveTime          Int?              @default(30)
+  autoArchiveTimeFrequency TimeFrequency @default(day)
   emailNotifications       Boolean           @default(true)
   pushNotification         Boolean           @default(true)
   taskDueReminder          Boolean           @default(true)
   taskDueTime              Int               @default(1)
-  taskDueTimeFrequency     TaskTimeFrequency @default(hour)
+  taskDueTimeFrequency     TimeFrequency @default(hour)
   weeklySummary            Boolean           @default(false)
   appTheme                 AppTheme          @default(system)
   accentColor              String?

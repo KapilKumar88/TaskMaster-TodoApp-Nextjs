@@ -8,7 +8,7 @@ import { LoaderPinwheel } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { LoginFormState } from "@/lib/interface";
+import { LoginFormState } from "@/lib/interfaces/server-action.interface";
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState<LoginFormState, FormData>(

@@ -14,6 +14,8 @@ import {
 export type UserSettingContextType = {
   theme: AppTheme;
   setTheme: Dispatch<SetStateAction<AppTheme>>;
+  userSettings: Settings | null;
+  setUserSettings: Dispatch<SetStateAction<Settings | null>>;
 };
 
 const UserSettingContext = createContext<UserSettingContextType | null>(null);
@@ -26,6 +28,7 @@ export const UserSettingProvider = ({
   children: React.ReactNode;
 }) => {
   const [theme, setTheme] = useState<AppTheme>(AppTheme.system);
+  const [userSettings, setUserSettings] = useState<Settings | null>(settings);
 
   useEffect(() => {
     if (settings !== null) {
@@ -39,6 +42,7 @@ export const UserSettingProvider = ({
         setTheme(settings.appTheme);
       }
     }
+    setUserSettings(settings);
   }, [settings]);
 
   useEffect(() => {
@@ -66,8 +70,10 @@ export const UserSettingProvider = ({
     () => ({
       theme,
       setTheme,
+      userSettings,
+      setUserSettings,
     }),
-    [theme, setTheme]
+    [theme, setTheme, userSettings, setUserSettings]
   );
 
   return (

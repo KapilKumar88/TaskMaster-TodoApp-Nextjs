@@ -1,6 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
-import { TaskTimeFrequency, User } from "@prisma/client";
+import { TimeFrequency, User, WeekStartDay } from "@prisma/client";
 
 export async function createUserSettings(payload: {
   userId: User["id"];
@@ -17,7 +17,7 @@ export async function createUserSettings(payload: {
       timeZone: payload.timeZone,
       dateFormat: payload.dateFormat,
       autoArchiveTime: 30,
-      autoArchiveTimeFrequency: TaskTimeFrequency.Day,
+      autoArchiveTimeFrequency: TimeFrequency.day,
       autoArchive: false,
     },
   });
@@ -29,6 +29,30 @@ export async function getUserSettings(userId: User["id"]) {
       user: {
         id: userId,
       },
+    },
+  });
+}
+
+export async function updateUserGeneralSettings(payload: {
+  userId: User["id"];
+  timeZone: string;
+  dateFormat: string;
+  weekStartDay: WeekStartDay;
+  autoArchive: boolean;
+  autoArchiveTime?: number;
+  timeFrequency?: TimeFrequency;
+}) {
+  return await prisma.settings.update({
+    where: {
+      userId: payload.userId,
+    },
+    data: {
+      timeZone: payload.timeZone,
+      dateFormat: payload.dateFormat,
+      weekStartDay: payload.weekStartDay,
+      autoArchiveTime: payload.autoArchiveTime,
+      autoArchiveTimeFrequency: payload.timeFrequency,
+      autoArchive: payload.autoArchive,
     },
   });
 }
