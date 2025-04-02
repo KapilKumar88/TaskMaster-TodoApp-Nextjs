@@ -13,7 +13,7 @@ export interface RegisterFormState extends ServerActionInterface {
     email?: string[];
     password?: string[];
     confirmPassword?: string[];
-    general?: string[] | string;
+    general?: string;
   };
   formValues?: {
     fullName: string;
@@ -37,7 +37,7 @@ export interface ChangePasswordState extends ServerActionInterface {
     currentPassword?: string[];
     newPassword?: string[];
     confirmPassword?: string[];
-    general?: string[] | string;
+    general?: string;
   };
 }
 
@@ -49,7 +49,7 @@ export interface CreateTaskFormState extends ServerActionInterface {
     priority?: string[];
     dueDate?: string[];
     dueTime?: string[];
-    general?: string[] | string;
+    general?: string;
   };
   formValues?: {
     title: string;
@@ -69,7 +69,7 @@ export interface UpdateTaskFormState extends ServerActionInterface {
     priority?: string[];
     dueDate?: string[];
     dueTime?: string[];
-    general?: string[] | string;
+    general?: string;
   };
   formValues?: {
     taskId?: string;
@@ -92,7 +92,7 @@ export interface GeneralSettingsFormState extends ServerActionInterface {
     autoArchive?: string[];
     autoArchiveTime?: string[];
     timeFrequency?: string[];
-    general?: string[] | string;
+    general?: string;
   };
   formValues?: {
     timeZone: string;
@@ -105,12 +105,12 @@ export interface GeneralSettingsFormState extends ServerActionInterface {
 
 export interface AppearanceSettingsFormState extends ServerActionInterface {
   errors?: {
-    general?: string[] | string;
+    general?: string;
   };
 }
 
 export interface NotificationsSettingsFormState extends ServerActionInterface {
   errors?: {
-    general?: string[] | string;
+    general?: string;
   };
 }

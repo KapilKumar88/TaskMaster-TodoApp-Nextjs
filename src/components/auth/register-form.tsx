@@ -7,8 +7,9 @@ import { Label } from "@/components/ui/label";
 import { LoaderPinwheel } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
-import { toast } from "sonner";
-import { RegisterFormState } from "@/lib/interface";
+import { RegisterFormState } from "@/lib/interfaces/server-action.interface";
+import { toast } from "../common/sonner";
+import { ToastVariation } from "@/lib/enums";
 
 export default function RegisterForm() {
   const [state, action, pending] = useActionState<RegisterFormState, FormData>(
@@ -69,13 +70,19 @@ export default function RegisterForm() {
       });
 
       if (state.errors?.general) {
-        toast.error(state.errors.general);
+        toast({
+          message: state.errors.general,
+          variation: ToastVariation.ERROR,
+        });
         return;
       }
     }
 
     if (state?.success) {
-      toast.success(state.message);
+      toast({
+        message: state.message,
+        variation: ToastVariation.SUCCESS,
+      });
       redirect("/dashboard");
     }
   }, [state]);

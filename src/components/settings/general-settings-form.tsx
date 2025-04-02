@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -15,7 +15,6 @@ import { useUserSettingContext } from "@/contextApis/user-settings";
 import { TimeFrequency, WeekStartDay } from "@prisma/client";
 import { updateUserGeneralSettingsAction } from "@/server-actions/settings.actions";
 import { GeneralSettingsFormState } from "@/lib/interfaces/server-action.interface";
-import { toast } from "sonner";
 import moment from "moment-timezone";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
@@ -27,6 +26,8 @@ import {
   CommandList,
 } from "../ui/command";
 import { cn } from "@/lib/utils";
+import { ToastVariation } from "@/lib/enums";
+import { toast } from "../common/sonner";
 
 export default function GeneralSettingsForm() {
   const timeZoneList = moment.tz.names();
@@ -111,13 +112,19 @@ export default function GeneralSettingsForm() {
       });
 
       if (generalSettingsState.errors?.general) {
-        toast.error(generalSettingsState.errors.general);
+        toast({
+          variation: ToastVariation.ERROR,
+          message: generalSettingsState.errors.general,
+        });
         return;
       }
     }
 
     if (generalSettingsState?.success) {
-      toast.success(generalSettingsState.message);
+      toast({
+        variation: ToastVariation.SUCCESS,
+        message: generalSettingsState.message,
+      });
     }
   }, [generalSettingsState]);
 

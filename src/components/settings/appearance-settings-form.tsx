@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
@@ -7,8 +7,9 @@ import { useUserSettingContext } from "@/contextApis/user-settings";
 import { AppTheme } from "@prisma/client";
 import { useActionState, useEffect } from "react";
 import { saveAppearanceSettingsAction } from "@/server-actions/settings.actions";
-import { toast } from "sonner";
 import { ACCENT_COLORS } from "@/lib/constants";
+import { toast } from "../common/sonner";
+import { ToastVariation } from "@/lib/enums";
 
 export default function AppearanceSettingsForm() {
   const {
@@ -33,13 +34,19 @@ export default function AppearanceSettingsForm() {
   useEffect(() => {
     if (appearanceSettingsState?.errors) {
       if (appearanceSettingsState.errors?.general) {
-        toast.error(appearanceSettingsState.errors.general);
+        toast({
+          variation: ToastVariation.ERROR,
+          message: appearanceSettingsState.errors.general,
+        });
         return;
       }
     }
 
     if (appearanceSettingsState?.success) {
-      toast.success(appearanceSettingsState.message);
+      toast({
+        variation: ToastVariation.SUCCESS,
+        message: appearanceSettingsState.message,
+      });
     }
   }, [appearanceSettingsState]);
 

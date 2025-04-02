@@ -7,8 +7,9 @@ import { Label } from "@/components/ui/label";
 import { LoaderPinwheel } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
-import { toast } from "sonner";
 import { LoginFormState } from "@/lib/interfaces/server-action.interface";
+import { toast } from "../common/sonner";
+import { ToastVariation } from "@/lib/enums";
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState<LoginFormState, FormData>(
@@ -54,16 +55,22 @@ export default function LoginForm() {
       });
 
       if (state.errors?.general) {
-        toast.error(state.errors.general);
+        toast({
+          message: state.errors.general as string,
+          variation: ToastVariation.ERROR,
+        });
         return;
       }
     }
 
     if (state?.success) {
-      toast.success(state.message);
+      toast({
+        message: state.message,
+        variation: ToastVariation.SUCCESS,
+      });
       redirect("/dashboard");
     }
-  },[state]);
+  }, [state]);
 
   return (
     <form action={action} className="space-y-4">

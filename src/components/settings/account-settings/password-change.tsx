@@ -1,10 +1,11 @@
 "use client";
+import { toast } from "@/components/common/sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ToastVariation } from "@/lib/enums";
 import { changePasswordAction } from "@/server-actions/auth.actions";
 import { LoaderPinwheel } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export default function PasswordChange() {
   const [passwordChangeState, passwordChangeAction, passwordChangePending] =
@@ -46,13 +47,19 @@ export default function PasswordChange() {
       });
 
       if (passwordChangeState.errors?.general) {
-        toast.error(passwordChangeState.errors.general);
+        toast({
+          variation: ToastVariation.ERROR,
+          message: passwordChangeState.errors.general,
+        });
         return;
       }
     }
 
     if (passwordChangeState?.success) {
-      toast.success(passwordChangeState.message);
+      toast({
+        variation: ToastVariation.SUCCESS,
+        message: passwordChangeState.message,
+      });
     }
   }, [passwordChangeState]);
 

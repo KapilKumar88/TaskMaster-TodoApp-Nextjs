@@ -24,7 +24,8 @@ import { useActionState, useEffect, useState } from "react";
 import { CreateTaskFormState } from "@/lib/interfaces/server-action.interface";
 import { createTaskServerAction } from "@/server-actions/task.actions";
 import { TaskPriority } from "@prisma/client";
-import { toast } from "sonner";
+import { ToastVariation } from "@/lib/enums";
+import { toast } from "../common/sonner";
 
 interface TaskFormProps {
   onClose: () => void;
@@ -88,45 +89,52 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
         return {
           ...previousState,
           title:
-            Array.isArray(state?.errors?.title) && state.errors.title?.length > 0
+            Array.isArray(state?.errors?.title) &&
+            state.errors.title?.length > 0
               ? state.errors.title[0]
               : undefined,
           description:
             Array.isArray(state?.errors?.description) &&
-              state.errors.description?.length > 0
+            state.errors.description?.length > 0
               ? state.errors.description[0]
               : undefined,
           categoryId:
             Array.isArray(state?.errors?.categoryId) &&
-              state.errors.categoryId?.length > 0
+            state.errors.categoryId?.length > 0
               ? state.errors.categoryId[0]
               : undefined,
           priority:
             Array.isArray(state?.errors?.priority) &&
-              state.errors.priority?.length > 0
+            state.errors.priority?.length > 0
               ? state.errors.priority[0]
               : undefined,
           dueDate:
             Array.isArray(state?.errors?.dueDate) &&
-              state.errors.dueDate?.length > 0
+            state.errors.dueDate?.length > 0
               ? state.errors.dueDate[0]
               : undefined,
           dueTime:
             Array.isArray(state?.errors?.dueTime) &&
-              state.errors.dueTime?.length > 0
+            state.errors.dueTime?.length > 0
               ? state.errors.dueTime[0]
               : undefined,
-        }
+        };
       });
 
       if (state.errors?.general) {
-        toast.error(state.errors.general);
+        toast({
+          variation: ToastVariation.ERROR,
+          message: state.errors.general,
+        });
         return;
       }
     }
 
     if (state?.success) {
-      toast.success(state.message);
+      toast({
+        variation: ToastVariation.SUCCESS,
+        message: state.message,
+      });
       setFormData(formDataInitialState);
     }
   }, [state]);
@@ -205,7 +213,7 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
                     categoryId: value,
                   };
                 });
-                handleInputChange("categoryId")
+                handleInputChange("categoryId");
               }}
             >
               <SelectTrigger
@@ -216,11 +224,14 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent className="bg-white/90 backdrop-blur-xl border-white/30">
-                {
-                  categories?.map((category) => (
-                    <SelectItem key={`category-${category.id}`} value={`${category.id}`}>{capitalizeFirstLetters(category.name)}</SelectItem>
-                  ))
-                }
+                {categories?.map((category) => (
+                  <SelectItem
+                    key={`category-${category.id}`}
+                    value={`${category.id}`}
+                  >
+                    {capitalizeFirstLetters(category.name)}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             {formErrors?.categoryId && (
@@ -244,7 +255,7 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
                     priority: value as TaskPriority,
                   };
                 });
-                handleInputChange("priority")
+                handleInputChange("priority");
               }}
             >
               <SelectTrigger
@@ -299,7 +310,7 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
                       dueDate: payload,
                     };
                   });
-                  handleInputChange("dueDate")
+                  handleInputChange("dueDate");
                 }}
                 initialFocus
               />

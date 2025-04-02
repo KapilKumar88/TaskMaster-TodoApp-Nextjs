@@ -4,3 +4,12 @@ export enum TaskListTypes {
   UPCOMING = "upcoming",
   COMPLETED = "completed",
 }
+
+export enum ToastVariation {
+  SUCCESS = "success",
+  ERROR = "error",
+  INFO = "info",
+  WARNING = "warning",
+  ACTION = "action",
+  DEFAULT = "default",
+}

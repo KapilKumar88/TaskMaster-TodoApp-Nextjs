@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -13,7 +13,8 @@ import { LoaderPinwheel, Save } from "lucide-react";
 import { useUserSettingContext } from "@/contextApis/user-settings";
 import { useActionState, useEffect, useState } from "react";
 import { saveNotificationSettingsAction } from "@/server-actions/settings.actions";
-import { toast } from "sonner";
+import { toast } from "../common/sonner";
+import { ToastVariation } from "@/lib/enums";
 
 export default function NotificationSettingsForm() {
   const { userSettings } = useUserSettingContext();
@@ -46,13 +47,19 @@ export default function NotificationSettingsForm() {
   useEffect(() => {
     if (notificationSettingsState?.errors) {
       if (notificationSettingsState.errors?.general) {
-        toast.error(notificationSettingsState.errors.general);
+        toast({
+          message: notificationSettingsState.errors.general,
+          variation: ToastVariation.ERROR,
+        });
         return;
       }
     }
 
     if (notificationSettingsState?.success) {
-      toast.success(notificationSettingsState.message);
+      toast({
+        message: notificationSettingsState.message,
+        variation: ToastVariation.SUCCESS,
+      });
     }
   }, [notificationSettingsState]);
 

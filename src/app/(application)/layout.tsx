@@ -4,7 +4,7 @@ import { DashboardSidebar } from "./_partials/dashboard-sidebar";
 import { SidebarContextProvider } from "@/contextApis/side-bar";
 import { UserSettingProvider } from "@/contextApis/user-settings";
 import { getUserSettings } from "@/services/settings.service";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/common/sonner";
 
 export default async function ApplicationLayout({
   children,
