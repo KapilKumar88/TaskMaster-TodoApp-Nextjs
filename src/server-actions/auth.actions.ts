@@ -47,6 +47,13 @@ export async function registerUserServerAction(
       };
     }
 
+    await signIn("credentialsSignUp", {
+      fullName: validatedFields.data.fullName,
+      email: validatedFields.data.email,
+      password: validatedFields.data.password,
+      redirect: false,
+    });
+
     return {
       success: true,
       message: "Registered successfully",
