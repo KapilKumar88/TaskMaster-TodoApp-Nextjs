@@ -99,3 +99,9 @@ export interface AppearanceSettingsFormState extends ServerActionInterface {
     general?: string[] | string;
   };
 }
+
+export interface NotificationsSettingsFormState extends ServerActionInterface {
+  errors?: {
+    general?: string[] | string;
+  };
+}

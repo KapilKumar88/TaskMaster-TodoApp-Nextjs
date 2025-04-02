@@ -1,6 +1,12 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
-import { AppTheme, TimeFrequency, User, WeekStartDay } from "@prisma/client";
+import {
+  AppTheme,
+  Prisma,
+  TimeFrequency,
+  User,
+  WeekStartDay,
+} from "@prisma/client";
 
 export async function createUserSettings(payload: {
   userId: User["id"];
@@ -72,5 +78,34 @@ export async function updateUserAppearanceSettings(payload: {
       accentColor: payload.accentColor,
       glassEffectIntensity: payload.glassEffectIntensity,
     },
+  });
+}
+
+export async function updateUserNotificationSettings(payload: {
+  userId: User["id"];
+  emailNotification: boolean;
+  pushNotification: boolean;
+  taskDueReminder: boolean;
+  weeklySummary: boolean;
+  taskDueTime?: number;
+  taskDueTimeFrequency?: TimeFrequency;
+}) {
+  const data: Prisma.SettingsUpdateInput = {
+    emailNotifications: payload.emailNotification,
+    pushNotification: payload.pushNotification,
+    taskDueReminder: payload.taskDueReminder,
+    weeklySummary: payload.weeklySummary,
+  };
+
+  if (payload.taskDueReminder) {
+    data["taskDueTime"] = payload.taskDueTime;
+    data["taskDueTimeFrequency"] = payload.taskDueTimeFrequency;
+  }
+
+  return await prisma.settings.update({
+    where: {
+      userId: payload.userId,
+    },
+    data: data,
   });
 }

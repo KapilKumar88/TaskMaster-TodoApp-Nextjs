@@ -5,12 +5,14 @@ import { auth } from "@/auth";
 import {
   AppearanceSettingsFormState,
   GeneralSettingsFormState,
+  NotificationsSettingsFormState,
 } from "@/lib/interfaces/server-action.interface";
 import { generalTaskSchema } from "@/validationsSchemas/settings.validation";
-import { AppTheme, WeekStartDay } from "@prisma/client";
+import { AppTheme, TimeFrequency, WeekStartDay } from "@prisma/client";
 import {
   updateUserAppearanceSettings,
   updateUserGeneralSettings,
+  updateUserNotificationSettings,
 } from "@/services/settings.service";
 import { revalidatePath } from "next/cache";
 
@@ -130,6 +132,58 @@ export async function saveAppearanceSettingsAction(
       glassEffectIntensity: parseInt(
         formData.get("glassEffectIntensity") as string
       ),
+    });
+
+    revalidatePath("/settings");
+    return {
+      success: true,
+      message: "Settings updated successfully",
+    };
+  } catch (error) {
+    return {
+      ...state,
+      errors: {
+        general:
+          (error as Error)?.message ?? "Something went wrong. Please try again",
+      },
+      success: false,
+      message: "Server error",
+    };
+  }
+}
+
+export async function saveNotificationSettingsAction(
+  state: NotificationsSettingsFormState,
+  formData: FormData
+): Promise<NotificationsSettingsFormState> {
+  try {
+    const userSession = await auth();
+
+    if (!userSession?.user.id) {
+      return {
+        success: false,
+        message: "Unauthorized",
+      };
+    }
+
+    const taskDueReminder =
+      (formData.get("taskDueReminders") as string) === "on";
+    const tempTaskDueTime = formData.get("taskDueTime") as string;
+    const taskDueTime = taskDueReminder
+      ? parseInt(tempTaskDueTime.split(" ")[0])
+      : undefined;
+    const taskDueTimeFrequency = taskDueReminder
+      ? tempTaskDueTime.split(" ")[1]
+      : undefined;
+
+    await updateUserNotificationSettings({
+      userId: userSession.user.id,
+      emailNotification: formData.get("emailNotifications") === "on",
+      pushNotification: formData.get("pushNotifications") === "on",
+      taskDueReminder: taskDueReminder,
+      taskDueTime: taskDueTime,
+      taskDueTimeFrequency: taskDueTimeFrequency as TimeFrequency,
+      weeklySummary: formData.get("weeklySummary") === "on",
     });
 
     revalidatePath("/settings");

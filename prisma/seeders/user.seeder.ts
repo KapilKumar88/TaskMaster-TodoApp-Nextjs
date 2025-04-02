@@ -1,3 +1,4 @@
+import { ACCENT_COLORS } from "@/lib/constants";
 import { generateHashedValue } from "@/lib/utils";
 import { faker } from "@faker-js/faker";
 import { PrismaClient } from "@prisma/client";
@@ -28,6 +29,8 @@ export default async function seedUsers(prismaClient: PrismaClient) {
         dateFormat: "MM/DD/YYYY",
         autoArchiveTime: 30,
         autoArchive: false,
+        glassEffectIntensity: 50,
+        accentColor: ACCENT_COLORS[0].name,
       },
     });
     userIds.push(user.id);
