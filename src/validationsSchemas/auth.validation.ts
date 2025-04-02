@@ -33,3 +33,22 @@ export const registerSchema = object({
   message: "Passwords don't match",
   path: ["confirmPassword"], // path of error
 });
+
+export const changePasswordSchema = object({
+  currentPassword: string({ required_error: "Confirm Password is required" })
+    .trim()
+    .min(1, "Confirm Password is required"),
+  newPassword: string({ required_error: "Password is required" })
+    .trim()
+    .min(1, "Password is required")
+    .min(8, "Password must be more than 8 characters")
+    .max(32, "Password must be less than 32 characters"),
+  confirmPassword: string({ required_error: "Confirm Password is required" })
+    .trim()
+    .min(1, "Confirm Password is required")
+    .min(8, "Confirm Password must be more than 8 characters")
+    .max(32, "Confirm Password must be less than 32 characters"),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"], // path of error
+});

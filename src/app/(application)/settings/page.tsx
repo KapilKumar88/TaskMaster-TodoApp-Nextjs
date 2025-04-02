@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { AlertCircle, Trash2 } from "lucide-react";
@@ -15,6 +13,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import GeneralSettingsForm from "@/components/settings/general-settings-form";
 import NotificationSettingsForm from "@/components/settings/notification-settings-form";
 import AppearanceSettingsForm from "@/components/settings/appearance-settings-form";
+import EmailAddress from "@/components/settings/account-settings/email-address";
+import PasswordChange from "@/components/settings/account-settings/password-change";
 
 export default function SettingsPage() {
   return (
@@ -114,61 +114,9 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
-                    <div>
-                      <h3 className="text-sm font-medium text-slate-900 dark:text-white mb-2">
-                        Email Address
-                      </h3>
-                      <div className="flex gap-2 flex-col sm:flex-row">
-                        <Input
-                          value="john@example.com"
-                          className="bg-white/40 border-white/30 text-slate-900 dark:text-white flex-1"
-                        />
-                        <Button
-                          variant="outline"
-                          className="border-white/30 bg-white/40"
-                        >
-                          Change
-                        </Button>
-                      </div>
-                    </div>
-
+                    <EmailAddress />
                     <Separator className="bg-white/30" />
-
-                    <div>
-                      <h3 className="text-sm font-medium text-slate-900 dark:text-white mb-2">
-                        Password
-                      </h3>
-                      <div className="space-y-2">
-                        <div className="flex gap-2">
-                          <Input
-                            type="password"
-                            placeholder="Current password"
-                            className="bg-white/40 border-white/30 text-slate-900 dark:text-white"
-                          />
-                        </div>
-                        <div className="flex gap-2">
-                          <Input
-                            type="password"
-                            placeholder="New password"
-                            className="bg-white/40 border-white/30 text-slate-900 dark:text-white"
-                          />
-                        </div>
-                        <div className="flex gap-2 flex-col sm:flex-row">
-                          <Input
-                            type="password"
-                            placeholder="Confirm new password"
-                            className="bg-white/40 border-white/30 text-slate-900 dark:text-white flex-1"
-                          />
-                          <Button
-                            variant="outline"
-                            className="border-white/30 bg-white/40"
-                          >
-                            Update
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-
+                    <PasswordChange />
                     <Separator className="bg-white/30" />
 
                     <div>

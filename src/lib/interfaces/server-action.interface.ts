@@ -32,6 +32,15 @@ export interface LoginFormState extends ServerActionInterface {
   };
 }
 
+export interface ChangePasswordState extends ServerActionInterface {
+  errors?: {
+    currentPassword?: string[];
+    newPassword?: string[];
+    confirmPassword?: string[];
+    general?: string[] | string;
+  };
+}
+
 export interface CreateTaskFormState extends ServerActionInterface {
   errors?: {
     title?: string[];

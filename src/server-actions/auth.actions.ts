@@ -1,16 +1,19 @@
 "use server";
 import "server-only";
 
-import { signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import {
+  changePasswordSchema,
   loginSchema,
   registerSchema,
 } from "@/validationsSchemas/auth.validation";
 import { AuthError } from "next-auth";
 import {
+  ChangePasswordState,
   LoginFormState,
   RegisterFormState,
 } from "@/lib/interfaces/server-action.interface";
+import { changePassword } from "@/services/user.service";
 
 export async function registerUserServerAction(
   state: RegisterFormState,
@@ -43,13 +46,6 @@ export async function registerUserServerAction(
         message: "Validation error",
       };
     }
-
-    await signIn("credentialsSignUp", {
-      fullName: validatedFields.data.fullName,
-      email: validatedFields.data.email,
-      password: validatedFields.data.password,
-      redirect: false,
-    });
 
     return {
       success: true,
@@ -131,4 +127,64 @@ export async function signoutServerAction(redirectTo?: string) {
     redirect: true,
     redirectTo: redirectTo ?? "/login",
   });
+}
+
+export async function changePasswordAction(
+  state: ChangePasswordState,
+  formData: FormData
+): Promise<ChangePasswordState> {
+  try {
+    const userSession = await auth();
+
+    if (!userSession?.user.id) {
+      return {
+        success: false,
+        message: "Unauthorized",
+      };
+    }
+
+    const getFormPayload = {
+      currentPassword: formData.get("currentPassword") as string,
+      newPassword: formData.get("newPassword") as string,
+      confirmPassword: formData.get("confirmPassword") as string,
+    };
+
+    const validatedFields = changePasswordSchema.safeParse({
+      currentPassword: getFormPayload.currentPassword,
+      newPassword: getFormPayload.newPassword,
+      confirmPassword: getFormPayload.confirmPassword,
+    });
+
+    if (!validatedFields.success) {
+      return {
+        ...state,
+        errors: validatedFields.error.flatten().fieldErrors,
+        success: false,
+        message: "Validation error",
+      };
+    }
+
+    await changePassword({
+      userId: userSession?.user.id,
+      currentPassword: validatedFields.data.currentPassword,
+      newPassword: validatedFields.data.newPassword,
+    });
+
+    return {
+      success: true,
+      errors: {},
+      message: "Password changed successfully",
+    };
+  } catch (error) {
+    return {
+      ...state,
+      errors: {
+        general:
+          (error as { message: string })?.message ??
+          "Something went wrong. Please try again",
+      },
+      success: false,
+      message: "Server error",
+    };
+  }
 }
