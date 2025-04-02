@@ -1,5 +1,6 @@
 "use client";
 
+import { ACCENT_COLORS } from "@/lib/constants";
 import { AppTheme, Settings } from "@prisma/client";
 import {
   createContext,
@@ -16,6 +17,10 @@ export type UserSettingContextType = {
   setTheme: Dispatch<SetStateAction<AppTheme>>;
   userSettings: Settings | null;
   setUserSettings: Dispatch<SetStateAction<Settings | null>>;
+  accentColor: string;
+  setAccentColor: Dispatch<SetStateAction<string>>;
+  glassEffectIntensity: number;
+  setGlassEffectIntensity: Dispatch<SetStateAction<number>>;
 };
 
 const UserSettingContext = createContext<UserSettingContextType | null>(null);
@@ -28,19 +33,15 @@ export const UserSettingProvider = ({
   children: React.ReactNode;
 }) => {
   const [theme, setTheme] = useState<AppTheme>(AppTheme.system);
+  const [accentColor, setAccentColor] = useState<string>(ACCENT_COLORS[0].name);
+  const [glassEffectIntensity, setGlassEffectIntensity] = useState<number>(50);
   const [userSettings, setUserSettings] = useState<Settings | null>(settings);
 
   useEffect(() => {
     if (settings !== null) {
-      if (settings.appTheme === AppTheme.system) {
-        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-          .matches
-          ? AppTheme.dark
-          : AppTheme.light;
-        setTheme(systemTheme);
-      } else {
-        setTheme(settings.appTheme);
-      }
+      setTheme(settings.appTheme);
+      setAccentColor(settings.accentColor ?? ACCENT_COLORS[0].name);
+      setGlassEffectIntensity(settings.glassEffectIntensity);
     }
     setUserSettings(settings);
   }, [settings]);
@@ -52,14 +53,19 @@ export const UserSettingProvider = ({
       if (!root) {
         return;
       }
-
-      const isDark = theme === AppTheme.dark;
-      const isLight = theme === AppTheme.light;
+      let tempTheme = theme;
+      if (theme === AppTheme.system) {
+        tempTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? AppTheme.dark
+          : AppTheme.light;
+      }
+      const isDark = tempTheme === AppTheme.dark;
+      const isLight = tempTheme === AppTheme.light;
 
       root.classList.remove("dark", "light");
 
       if (isDark || isLight) {
-        root.classList.add(theme);
+        root.classList.add(tempTheme);
       }
     };
 
@@ -72,8 +78,21 @@ export const UserSettingProvider = ({
       setTheme,
       userSettings,
       setUserSettings,
+      accentColor,
+      setAccentColor,
+      glassEffectIntensity,
+      setGlassEffectIntensity,
     }),
-    [theme, setTheme, userSettings, setUserSettings]
+    [
+      theme,
+      setTheme,
+      userSettings,
+      setUserSettings,
+      accentColor,
+      glassEffectIntensity,
+      setAccentColor,
+      setGlassEffectIntensity,
+    ]
   );
 
   return (

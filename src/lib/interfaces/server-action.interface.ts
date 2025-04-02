@@ -93,3 +93,9 @@ export interface GeneralSettingsFormState extends ServerActionInterface {
     autoArchiveTime: string | null;
   };
 }
+
+export interface AppearanceSettingsFormState extends ServerActionInterface {
+  errors?: {
+    general?: string[] | string;
+  };
+}

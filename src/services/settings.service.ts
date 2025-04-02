@@ -1,6 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/prisma";
-import { TimeFrequency, User, WeekStartDay } from "@prisma/client";
+import { AppTheme, TimeFrequency, User, WeekStartDay } from "@prisma/client";
 
 export async function createUserSettings(payload: {
   userId: User["id"];
@@ -53,6 +53,24 @@ export async function updateUserGeneralSettings(payload: {
       autoArchiveTime: payload.autoArchiveTime,
       autoArchiveTimeFrequency: payload.timeFrequency,
       autoArchive: payload.autoArchive,
+    },
+  });
+}
+
+export async function updateUserAppearanceSettings(payload: {
+  userId: User["id"];
+  theme: AppTheme;
+  accentColor: string;
+  glassEffectIntensity: number;
+}) {
+  return await prisma.settings.update({
+    where: {
+      userId: payload.userId,
+    },
+    data: {
+      appTheme: payload.theme,
+      accentColor: payload.accentColor,
+      glassEffectIntensity: payload.glassEffectIntensity,
     },
   });
 }

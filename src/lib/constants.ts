@@ -126,3 +126,11 @@ export const API_ENDPOINTS = {
     LIST: "api/v1/task",
   },
 };
+
+export const ACCENT_COLORS = [
+  { name: "indigo", class: "bg-indigo-500" },
+  { name: "teal", class: "bg-teal-500" },
+  { name: "violet", class: "bg-violet-500" },
+  { name: "amber", class: "bg-amber-500" },
+  { name: "rose", class: "bg-rose-500" },
+];
