@@ -1,0 +1,6 @@
+.scannerwork
+coverage
+logs
+node_modules
+.vscode
+.next

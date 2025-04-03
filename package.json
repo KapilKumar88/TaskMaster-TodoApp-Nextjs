@@ -2,11 +2,18 @@
   "name": "taskmaster-nextjs",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "Kapil Kumar Saini",
+    "email": "kapil.saini6239@gmail.com"
+  },
   "scripts": {
     "dev": "next dev --turbopack -p 5175",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "prepare": "husky",
+    "prettier": "prettier --write ."
   },
   "prisma": {
     "seed": "tsx prisma/seeders/seed.ts"
@@ -58,6 +65,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.2.1",
+    "husky": "^9.1.7",
+    "prettier": "3.5.3",
     "prisma": "^6.5.0",
     "tailwindcss": "^4",
     "tsx": "^4.19.3",
