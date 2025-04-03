@@ -1,7 +1,7 @@
-"use client";
-import { toast as toastV2 } from "@/components/common/sonner";
-import { Button } from "@/components/ui/button";
-import { ToastVariation } from "@/lib/enums";
+'use client';
+import { toast as toastV2 } from '@/components/common/sonner';
+import { Button } from '@/components/ui/button';
+import { ToastVariation } from '@/lib/enums';
 
 export default function ExportData() {
   return (
@@ -17,7 +17,7 @@ export default function ExportData() {
         className="border-white/30 bg-white/40"
         onClick={() => {
           toastV2({
-            message: "Are you sure",
+            message: 'Are you sure',
             variation: ToastVariation.DEFAULT,
           });
         }}

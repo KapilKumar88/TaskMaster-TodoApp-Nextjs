@@ -6,14 +6,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { Filter } from "lucide-react";
-import { useTaskContext } from "@/contextApis/task";
-import { TaskPriority, TaskStatus } from "@prisma/client";
+} from '@/components/ui/dropdown-menu';
+import { Button } from '../ui/button';
+import { Filter } from 'lucide-react';
+import { useTaskContext } from '@/contextApis/task';
+import { TaskPriority, TaskStatus } from '@prisma/client';
 
 export default function FilterButton() {
-  const { taskFilter, setTaskFilter } = useTaskContext();
+  const { setTaskFilter } = useTaskContext();
 
   return (
     <DropdownMenu>
@@ -35,7 +35,7 @@ export default function FilterButton() {
               setTaskFilter((previousState) => {
                 return {
                   ...previousState,
-                  status: "all",
+                  status: 'all',
                 };
               })
             }
@@ -89,7 +89,7 @@ export default function FilterButton() {
               setTaskFilter((previousState) => {
                 return {
                   ...previousState,
-                  priority: "all",
+                  priority: 'all',
                 };
               })
             }

@@ -1,6 +1,6 @@
-import "server-only";
-import { prisma } from "@/lib/prisma";
-import { Prisma, TaskPriority, TaskStatus } from "@prisma/client";
+import 'server-only';
+import { prisma } from '@/lib/prisma';
+import { Prisma, TaskPriority, TaskStatus } from '@prisma/client';
 import {
   differenceInHours,
   endOfDay,
@@ -9,8 +9,8 @@ import {
   startOfDay,
   startOfWeek,
   subWeeks,
-} from "date-fns";
-import { capitalizeFirstLetters, getThePreviousDuration } from "@/lib/utils";
+} from 'date-fns';
+import { capitalizeFirstLetters, getThePreviousDuration } from '@/lib/utils';
 
 export async function createTask(payload: {
   title: string;
@@ -71,21 +71,21 @@ export async function getUserTaskList({
     },
   };
 
-  if (filter === "today") {
-    conditions.where["dueDate"] = {
+  if (filter === 'today') {
+    conditions.where['dueDate'] = {
       gte: startOfDay(new Date()),
       lte: endOfDay(new Date()),
     };
   }
 
-  if (filter === "upcoming") {
-    conditions.where["dueDate"] = {
+  if (filter === 'upcoming') {
+    conditions.where['dueDate'] = {
       gte: endOfDay(new Date()),
     };
   }
 
-  if (filter === "completed") {
-    conditions.where["status"] = TaskStatus.COMPLETED;
+  if (filter === 'completed') {
+    conditions.where['status'] = TaskStatus.COMPLETED;
   }
 
   const omitRecords =
@@ -117,7 +117,7 @@ export async function deleteTask(taskId: number, userId: string) {
 export async function markTaskImportant(
   taskId: number,
   isImportant: boolean,
-  userId: string
+  userId: string,
 ) {
   return await prisma.task.update({
     where: {
@@ -133,7 +133,7 @@ export async function markTaskImportant(
 export async function changeTaskStatus(
   taskId: number,
   userId: string,
-  status: TaskStatus
+  status: TaskStatus,
 ) {
   return await prisma.task.update({
     where: {
@@ -148,7 +148,7 @@ export async function changeTaskStatus(
 
 export async function totalUserTasksCountByDate(
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ) {
   return await prisma.task.count({
     where: {
@@ -163,7 +163,7 @@ export async function totalUserTasksCountByDate(
 export async function totalTaskStats(
   userId: string,
   startDate: Date | string,
-  endDate: Date | string
+  endDate: Date | string,
 ) {
   const previousPeriodDates = getThePreviousDuration(startDate, endDate);
   const currentPeriodStartDate = startOfDay(startDate);
@@ -237,7 +237,7 @@ export async function totalCompletedTaskStats(userId: string) {
 export async function taskCompletionRateStats(
   userId: string,
   startDate: Date | string,
-  endDate: Date | string
+  endDate: Date | string,
 ) {
   const previousPeriodDates = getThePreviousDuration(startDate, endDate);
   const currentPeriodStartDate = startOfDay(startDate);
@@ -305,7 +305,7 @@ export async function taskCompletionRateStats(
 export async function avgCompletionTimeStats(
   userId: string,
   startDate: Date | string,
-  endDate: string | Date
+  endDate: string | Date,
 ) {
   const previousPeriodDates = getThePreviousDuration(startDate, endDate);
   const currentPeriodStartDate = startOfWeek(startDate);
@@ -348,8 +348,8 @@ export async function avgCompletionTimeStats(
       curr.completedOn!,
       curr.createdAt,
       {
-        roundingMethod: "ceil",
-      }
+        roundingMethod: 'ceil',
+      },
     );
     return acc + taskCompletionTime;
   }, 0);
@@ -360,12 +360,12 @@ export async function avgCompletionTimeStats(
         curr.completedOn!,
         curr.createdAt,
         {
-          roundingMethod: "ceil",
-        }
+          roundingMethod: 'ceil',
+        },
       );
       return acc + taskCompletionTime;
     },
-    0
+    0,
   );
 
   const avgCurrentPeriodTime =
@@ -386,7 +386,7 @@ export async function avgCompletionTimeStats(
 export async function overdueRateStats(
   userId: string,
   startDate: Date | string,
-  endDate: string | Date
+  endDate: string | Date,
 ) {
   const previousPeriodDates = getThePreviousDuration(startDate, endDate);
   const currentPeriodStartDate = startOfWeek(startDate);
@@ -528,7 +528,7 @@ export async function totalOverDueTaskStatsForDashboard(userId: string) {
 export async function weeklyProgressChartStats(
   userId: string,
   startDate: Date | string,
-  endDate: Date | string
+  endDate: Date | string,
 ) {
   const currentPeriodStartDate = startOfDay(startDate);
   const currentPeriodEndDate = endOfDay(endDate);
@@ -545,9 +545,9 @@ export async function weeklyProgressChartStats(
 
   const finalOutput = result.reduce(
     (acc, curr) => {
-      const getCurrentDay = format(curr.createdAt, "EEE");
+      const getCurrentDay = format(curr.createdAt, 'EEE');
       const findDayIndex = acc.findIndex(
-        (item) => item.day.toLowerCase() == getCurrentDay.toLowerCase()
+        (item) => item.day.toLowerCase() == getCurrentDay.toLowerCase(),
       );
       if (acc[findDayIndex] !== undefined) {
         acc[findDayIndex] = {
@@ -562,14 +562,14 @@ export async function weeklyProgressChartStats(
       return acc;
     },
     [
-      { day: "Mon", completed: 0, created: 0 },
-      { day: "Tue", completed: 0, created: 0 },
-      { day: "Wed", completed: 0, created: 0 },
-      { day: "Thu", completed: 0, created: 0 },
-      { day: "Fri", completed: 0, created: 0 },
-      { day: "Sat", completed: 0, created: 0 },
-      { day: "Sun", completed: 0, created: 0 },
-    ]
+      { day: 'Mon', completed: 0, created: 0 },
+      { day: 'Tue', completed: 0, created: 0 },
+      { day: 'Wed', completed: 0, created: 0 },
+      { day: 'Thu', completed: 0, created: 0 },
+      { day: 'Fri', completed: 0, created: 0 },
+      { day: 'Sat', completed: 0, created: 0 },
+      { day: 'Sun', completed: 0, created: 0 },
+    ],
   );
   return finalOutput;
 }
@@ -577,7 +577,7 @@ export async function weeklyProgressChartStats(
 export async function productivityChartData(
   userId: string,
   startDate: Date | string,
-  endDate: Date | string
+  endDate: Date | string,
 ) {
   const currentPeriodStartDate = startOfWeek(startDate);
   const currentPeriodEndDate = endOfWeek(endDate);
@@ -595,9 +595,9 @@ export async function productivityChartData(
 
   const finalOutput = result.reduce(
     (acc, curr) => {
-      const getCurrentDay = format(curr.createdAt, "EEE");
+      const getCurrentDay = format(curr.createdAt, 'EEE');
       const findDayIndex = acc.findIndex(
-        (item) => item.day.toLowerCase() == getCurrentDay.toLowerCase()
+        (item) => item.day.toLowerCase() == getCurrentDay.toLowerCase(),
       );
       if (acc[findDayIndex] !== undefined) {
         acc[findDayIndex] = {
@@ -611,14 +611,14 @@ export async function productivityChartData(
       return acc;
     },
     [
-      { day: "Mon", Tasks: 0 },
-      { day: "Tue", Tasks: 0 },
-      { day: "Wed", Tasks: 0 },
-      { day: "Thu", Tasks: 0 },
-      { day: "Fri", Tasks: 0 },
-      { day: "Sat", Tasks: 0 },
-      { day: "Sun", Tasks: 0 },
-    ]
+      { day: 'Mon', Tasks: 0 },
+      { day: 'Tue', Tasks: 0 },
+      { day: 'Wed', Tasks: 0 },
+      { day: 'Thu', Tasks: 0 },
+      { day: 'Fri', Tasks: 0 },
+      { day: 'Sat', Tasks: 0 },
+      { day: 'Sun', Tasks: 0 },
+    ],
   );
   return finalOutput;
 }
@@ -626,10 +626,10 @@ export async function productivityChartData(
 export async function taskCompletionChartStats(
   userId: string,
   startDate: Date | string,
-  endDate: Date | string
+  endDate: Date | string,
 ) {
   const result = await prisma.task.groupBy({
-    by: ["status"],
+    by: ['status'],
     _count: true,
     where: {
       userId: userId,
@@ -642,24 +642,24 @@ export async function taskCompletionChartStats(
 
   const data = [
     {
-      name: "Draft",
+      name: 'Draft',
       value: result.find((x) => x.status == TaskStatus.DRAFT)?._count ?? 0,
-      color: "rgba(59, 68, 65, 0.73)",
+      color: 'rgba(59, 68, 65, 0.73)',
     }, // grey
     {
-      name: "Completed",
+      name: 'Completed',
       value: result.find((x) => x.status == TaskStatus.COMPLETED)?._count ?? 0,
-      color: "rgb(16, 185, 129)",
+      color: 'rgb(16, 185, 129)',
     }, // Emerald
     {
-      name: "Active",
+      name: 'Active',
       value: result.find((x) => x.status == TaskStatus.ACTIVE)?._count ?? 0,
-      color: "rgb(79, 70, 229)",
+      color: 'rgb(79, 70, 229)',
     }, // Indigo
     {
-      name: "Overdue",
+      name: 'Overdue',
       value: result.find((x) => x.status == TaskStatus.OVERDUE)?._count ?? 0,
-      color: "rgb(239, 68, 68)",
+      color: 'rgb(239, 68, 68)',
     }, // Red
   ];
 
@@ -669,7 +669,7 @@ export async function taskCompletionChartStats(
 export async function getCategoryDistributionTaskStats(
   userId: string,
   startDate: Date | string,
-  endDate: Date | string
+  endDate: Date | string,
 ) {
   const result = await prisma.task.findMany({
     select: {
@@ -691,7 +691,7 @@ export async function getCategoryDistributionTaskStats(
   const data = result.reduce(
     (acc: Array<{ name: string; value: number; color: string }>, curr) => {
       const findIndex = acc.findIndex(
-        (item) => item.name.toLowerCase() == curr.category.name.toLowerCase()
+        (item) => item.name.toLowerCase() == curr.category.name.toLowerCase(),
       );
 
       if (findIndex !== -1) {
@@ -709,7 +709,7 @@ export async function getCategoryDistributionTaskStats(
 
       return acc;
     },
-    []
+    [],
   );
   return data;
 }
@@ -717,7 +717,7 @@ export async function getCategoryDistributionTaskStats(
 export async function getTaskCompletionRate(
   userId: string,
   startDate: Date | string,
-  endDate: Date | string
+  endDate: Date | string,
 ) {
   const result = await prisma.task.findMany({
     select: {
@@ -739,7 +739,7 @@ export async function getTaskCompletionRate(
       const findIndex = acc.findIndex(
         (item) =>
           item.month.toLowerCase() ===
-          format(curr.createdAt, "MMM").toLowerCase()
+          format(curr.createdAt, 'MMM').toLowerCase(),
       );
 
       if (findIndex !== -1) {
@@ -749,7 +749,7 @@ export async function getTaskCompletionRate(
         };
       } else {
         acc.push({
-          month: format(curr.createdAt, "MMM").toLowerCase(),
+          month: format(curr.createdAt, 'MMM').toLowerCase(),
           rate: 1,
         });
       }
@@ -757,19 +757,19 @@ export async function getTaskCompletionRate(
       return acc;
     },
     [
-      { month: "Jan", rate: 0 },
-      { month: "Feb", rate: 0 },
-      { month: "Mar", rate: 0 },
-      { month: "Apr", rate: 0 },
-      { month: "May", rate: 0 },
-      { month: "Jun", rate: 0 },
-      { month: "Jul", rate: 0 },
-      { month: "Aug", rate: 0 },
-      { month: "Sep", rate: 0 },
-      { month: "Oct", rate: 0 },
-      { month: "Nov", rate: 0 },
-      { month: "Dec", rate: 0 },
-    ]
+      { month: 'Jan', rate: 0 },
+      { month: 'Feb', rate: 0 },
+      { month: 'Mar', rate: 0 },
+      { month: 'Apr', rate: 0 },
+      { month: 'May', rate: 0 },
+      { month: 'Jun', rate: 0 },
+      { month: 'Jul', rate: 0 },
+      { month: 'Aug', rate: 0 },
+      { month: 'Sep', rate: 0 },
+      { month: 'Oct', rate: 0 },
+      { month: 'Nov', rate: 0 },
+      { month: 'Dec', rate: 0 },
+    ],
   );
 
   return finalOutput;
@@ -777,7 +777,7 @@ export async function getTaskCompletionRate(
 
 export async function getTaskByStatusOfCurrentWeek(
   userId: string,
-  status: TaskStatus
+  status: TaskStatus,
 ) {
   return prisma.task.findMany({
     include: {

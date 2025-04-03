@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   LineChart,
   Line,
@@ -7,7 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 
 export default function WeeklyProgressChart({
   weeklyProgressChatData,
@@ -19,7 +19,7 @@ export default function WeeklyProgressChart({
   }>;
 }) {
   return (
-    <div style={{ width: "100%", height: 240 }}>
+    <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={weeklyProgressChatData}
@@ -30,10 +30,10 @@ export default function WeeklyProgressChart({
           <YAxis />
           <Tooltip
             contentStyle={{
-              backgroundColor: "rgba(255, 255, 255, 0.8)",
-              backdropFilter: "blur(8px)",
-              border: "1px solid rgba(255, 255, 255, 0.3)",
-              borderRadius: "0.5rem",
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              borderRadius: '0.5rem',
             }}
           />
           <Line
@@ -41,16 +41,16 @@ export default function WeeklyProgressChart({
             dataKey="completed"
             stroke="rgba(16, 185, 129, 0.8)" // Emerald
             strokeWidth={2}
-            dot={{ fill: "rgba(16, 185, 129, 0.8)", r: 4 }}
-            activeDot={{ r: 6, fill: "rgb(16, 185, 129)" }}
+            dot={{ fill: 'rgba(16, 185, 129, 0.8)', r: 4 }}
+            activeDot={{ r: 6, fill: 'rgb(16, 185, 129)' }}
           />
           <Line
             type="monotone"
             dataKey="created"
             stroke="rgba(79, 70, 229, 0.8)" // Indigo
             strokeWidth={2}
-            dot={{ fill: "rgba(79, 70, 229, 0.8)", r: 4 }}
-            activeDot={{ r: 6, fill: "rgb(79, 70, 229)" }}
+            dot={{ fill: 'rgba(79, 70, 229, 0.8)', r: 4 }}
+            activeDot={{ r: 6, fill: 'rgb(79, 70, 229)' }}
           />
         </LineChart>
       </ResponsiveContainer>

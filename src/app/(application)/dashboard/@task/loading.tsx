@@ -1,4 +1,4 @@
-import { TaskListSkeleton } from "@/components/common/skeletons/task-list-skeleton";
+import { TaskListSkeleton } from '@/components/common/skeletons/task-list-skeleton';
 
 export default function loading() {
   return (
@@ -9,7 +9,7 @@ export default function loading() {
           <div className="h-10 w-40 bg-slate-200/70 dark:bg-slate-700/40 rounded"></div>
         </div>
         <div className="p-6">
-        <TaskListSkeleton />
+          <TaskListSkeleton />
         </div>
       </div>
     </div>

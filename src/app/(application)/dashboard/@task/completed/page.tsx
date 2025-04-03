@@ -1,8 +1,8 @@
-import { auth } from "@/auth";
-import Unauthorized from "@/components/common/unauthorized";
-import { TodoList } from "@/components/dashboard/todo-list";
-import { getTaskByStatusOfCurrentWeek } from "@/services/task.service";
-import { TaskStatus } from "@prisma/client";
+import { auth } from '@/auth';
+import Unauthorized from '@/components/common/unauthorized';
+import { TodoList } from '@/components/dashboard/todo-list';
+import { getTaskByStatusOfCurrentWeek } from '@/services/task.service';
+import { TaskStatus } from '@prisma/client';
 
 export default async function CompletedTask() {
   const userSession = await auth();
@@ -13,7 +13,7 @@ export default async function CompletedTask() {
 
   const taskList = await getTaskByStatusOfCurrentWeek(
     userSession?.user.id,
-    TaskStatus.COMPLETED
+    TaskStatus.COMPLETED,
   );
   return <TodoList tasks={taskList} />;
 }

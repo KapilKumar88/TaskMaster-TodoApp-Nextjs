@@ -1,4 +1,4 @@
-import RegisterForm from "@/components/auth/register-form";
+import RegisterForm from '@/components/auth/register-form';
 import {
   Card,
   CardContent,
@@ -6,9 +6,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Metadata } from "next";
-import Link from "next/link";
+} from '@/components/ui/card';
+import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: `Register`,
@@ -35,7 +35,7 @@ export default function RegisterPage() {
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <div className="text-center text-slate-700 dark:text-slate-200 text-sm">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <Link
             href="/login"
             className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"

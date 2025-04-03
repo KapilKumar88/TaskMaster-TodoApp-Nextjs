@@ -1,6 +1,6 @@
-import { PrismaClient, TaskPriority, TaskStatus } from "@prisma/client";
-import { generateRandomNumber } from "./seed";
-import { faker } from "@faker-js/faker";
+import { PrismaClient, TaskPriority, TaskStatus } from '@prisma/client';
+import { generateRandomNumber } from './seed';
+import { faker } from '@faker-js/faker';
 
 const numberOfTask = 1000;
 const status = [
@@ -14,33 +14,33 @@ const priority = [TaskPriority.HIGH, TaskPriority.MEDIUM, TaskPriority.LOW];
 const generateRandomDate = (
   date?: string | Date,
   numOfDaysInPast?: number,
-  numOfDaysInFuture?: number
+  numOfDaysInFuture?: number,
 ) => {
   const dateToConsider = date ? new Date(date) : new Date();
 
   const startOfDayV2 = new Date(
     dateToConsider.getFullYear(),
     dateToConsider.getMonth(),
-    dateToConsider.getDate()
+    dateToConsider.getDate(),
   );
 
   if (numOfDaysInPast) {
     const pastDate = new Date(
-      startOfDayV2.getTime() - numOfDaysInPast * 24 * 60 * 60 * 1000
+      startOfDayV2.getTime() - numOfDaysInPast * 24 * 60 * 60 * 1000,
     );
     return pastDate;
   }
 
   if (numOfDaysInFuture) {
     const futureDate = new Date(
-      startOfDayV2.getTime() + numOfDaysInFuture * 24 * 60 * 60 * 1000
+      startOfDayV2.getTime() + numOfDaysInFuture * 24 * 60 * 60 * 1000,
     );
     return futureDate;
   }
 
   const randomDays = Math.floor(generateRandomNumber(1, 1460)); // approx 4 years of dates
   const randomDate = new Date(
-    startOfDayV2.getTime() - randomDays * 24 * 60 * 60 * 1000
+    startOfDayV2.getTime() - randomDays * 24 * 60 * 60 * 1000,
   );
   return randomDate;
 };
@@ -51,7 +51,7 @@ export default async function seedTasks(
   categoryIds: Array<{
     userId: string;
     categoryId: number[];
-  }>
+  }>,
 ) {
   for (let i = 0; i < userIds?.length; i++) {
     for (let j = 0; j < numberOfTask; j++) {
@@ -65,12 +65,12 @@ export default async function seedTasks(
       const dueDate = generateRandomDate(
         createdAtDate,
         undefined,
-        generateRandomNumber(1, 10)
+        generateRandomNumber(1, 10),
       );
       const completedOnDate = generateRandomDate(
         createdAtDate,
         undefined,
-        generateRandomNumber(1, 40)
+        generateRandomNumber(1, 40),
       );
 
       await prismaClient.task.create({

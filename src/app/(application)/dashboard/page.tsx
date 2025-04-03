@@ -1,10 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CategoryDistributionChart } from "@/components/category-distribution-chart";
-import { auth } from "@/auth";
-import { getCategoryDistributionTaskStats } from "@/services/task.service";
-import { ChartSkeleton } from "@/components/common/skeletons/chart-skeleton";
-import Unauthorized from "@/components/common/unauthorized";
-import { getDefaultDateTime } from "../analytics/@topSection/page";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CategoryDistributionChart } from '@/components/category-distribution-chart';
+import { auth } from '@/auth';
+import { getCategoryDistributionTaskStats } from '@/services/task.service';
+import { ChartSkeleton } from '@/components/common/skeletons/chart-skeleton';
+import Unauthorized from '@/components/common/unauthorized';
+import { getDefaultDateTime } from '../analytics/@topSection/page';
 
 export default async function DashboardPage() {
   const userSession = await auth();
@@ -16,7 +16,7 @@ export default async function DashboardPage() {
   const categoryDistributionTaskData = await getCategoryDistributionTaskStats(
     userSession?.user.id,
     defaultDateTime?.startDate,
-    defaultDateTime?.endDate
+    defaultDateTime?.endDate,
   );
 
   return (

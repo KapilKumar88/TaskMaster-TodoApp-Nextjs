@@ -1,5 +1,5 @@
-import { TaskListSkeleton } from "@/components/common/skeletons/task-list-skeleton";
+import { TaskListSkeleton } from '@/components/common/skeletons/task-list-skeleton';
 
-export default function Default () {
-    return <TaskListSkeleton />
+export default function Default() {
+  return <TaskListSkeleton />;
 }

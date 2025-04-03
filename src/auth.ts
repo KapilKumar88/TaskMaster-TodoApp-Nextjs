@@ -1,24 +1,24 @@
-import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import Credentials from "next-auth/providers/credentials";
-import { createUser, getUserDetailsByEmailId } from "./services/user.service";
-import { prisma } from "./lib/prisma";
-import serverSideConfig from "./config/server.config";
-import { verifyHash } from "./lib/utils";
+import NextAuth from 'next-auth';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import Credentials from 'next-auth/providers/credentials';
+import { createUser, getUserDetailsByEmailId } from './services/user.service';
+import { prisma } from './lib/prisma';
+import serverSideConfig from './config/server.config';
+import { verifyHash } from './lib/utils';
 
 const newPrismaAdapter = PrismaAdapter(prisma);
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  debug: serverSideConfig.NODE_ENV !== "production",
+  debug: serverSideConfig.NODE_ENV !== 'production',
   adapter: newPrismaAdapter,
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   providers: [
     // For the Registration process
     Credentials({
-      id: "credentialsSignUp",
-      name: "credentialsSignUp",
+      id: 'credentialsSignUp',
+      name: 'credentialsSignUp',
       credentials: {
         email: {},
         password: {},
@@ -51,16 +51,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const user = await getUserDetailsByEmailId(credentials.email as string);
 
         if (user === null) {
-          throw new Error("Invalid credentials.");
+          throw new Error('Invalid credentials.');
         }
 
         const isValidPassword = await verifyHash(
           credentials.password as string,
-          user.password
+          user.password,
         );
 
         if (!isValidPassword) {
-          throw new Error("Invalid credentials.");
+          throw new Error('Invalid credentials.');
         }
 
         return {

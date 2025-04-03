@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
-import { DashboardHeader } from "./_partials/dashboard-header";
-import { DashboardSidebar } from "./_partials/dashboard-sidebar";
-import { SidebarContextProvider } from "@/contextApis/side-bar";
-import { UserSettingProvider } from "@/contextApis/user-settings";
-import { getUserSettings } from "@/services/settings.service";
-import { Toaster } from "@/components/common/sonner";
+import { auth } from '@/auth';
+import { DashboardHeader } from './_partials/dashboard-header';
+import { DashboardSidebar } from './_partials/dashboard-sidebar';
+import { SidebarContextProvider } from '@/contextApis/side-bar';
+import { UserSettingProvider } from '@/contextApis/user-settings';
+import { getUserSettings } from '@/services/settings.service';
+import { Toaster } from '@/components/common/sonner';
 
 export default async function ApplicationLayout({
   children,

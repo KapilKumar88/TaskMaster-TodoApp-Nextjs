@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   BarChart,
   Bar,
@@ -8,7 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
-} from "recharts";
+} from 'recharts';
 
 export function CategoryDistributionChart({
   data,
@@ -20,7 +20,7 @@ export function CategoryDistributionChart({
   }>;
 }) {
   return (
-    <div style={{ width: "100%", height: 240 }}>
+    <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
@@ -31,10 +31,10 @@ export function CategoryDistributionChart({
           <YAxis />
           <Tooltip
             contentStyle={{
-              backgroundColor: "rgba(255, 255, 255, 0.8)",
-              backdropFilter: "blur(8px)",
-              border: "1px solid rgba(255, 255, 255, 0.3)",
-              borderRadius: "0.5rem",
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              borderRadius: '0.5rem',
             }}
           />
           <Bar dataKey="value" radius={4}>

@@ -1,5 +1,5 @@
-import { Toaster } from "@/components/common/sonner";
-import { AppTheme } from "@prisma/client";
+import { Toaster } from '@/components/common/sonner';
+import { AppTheme } from '@prisma/client';
 
 export default function AuthLayout({
   children,

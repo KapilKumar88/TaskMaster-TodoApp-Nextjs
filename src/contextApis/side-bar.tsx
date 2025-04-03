@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import {
   createContext,
   Dispatch,
@@ -7,7 +7,7 @@ import {
   useContext,
   useMemo,
   useState,
-} from "react";
+} from 'react';
 
 export type SideBarContextType = {
   sidebarOpen: boolean;
@@ -28,7 +28,7 @@ export const SidebarContextProvider = ({
       sidebarOpen,
       setSidebarOpen,
     }),
-    [sidebarOpen, setSidebarOpen]
+    [sidebarOpen, setSidebarOpen],
   );
 
   return (
@@ -40,7 +40,7 @@ export const useSideBarContext = (): SideBarContextType => {
   const context = useContext(SideBarContext);
   if (!context) {
     throw new Error(
-      "useSideBarContext must be used within an SidebarContextProvider"
+      'useSideBarContext must be used within an SidebarContextProvider',
     );
   }
   return context;

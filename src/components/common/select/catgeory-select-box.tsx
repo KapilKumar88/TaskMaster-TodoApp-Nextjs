@@ -1,3 +1,3 @@
 export default function CategorySelectBox() {
-    return <div>CategorySelectBox</div>;
+  return <div>CategorySelectBox</div>;
 }

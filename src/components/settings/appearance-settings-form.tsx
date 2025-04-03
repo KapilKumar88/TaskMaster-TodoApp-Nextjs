@@ -1,15 +1,15 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { Separator } from "@/components/ui/separator";
-import { Check, LoaderPinwheel, Moon, Palette, Save, Sun } from "lucide-react";
-import { useUserSettingContext } from "@/contextApis/user-settings";
-import { AppTheme } from "@prisma/client";
-import { useActionState, useEffect } from "react";
-import { saveAppearanceSettingsAction } from "@/server-actions/settings.actions";
-import { ACCENT_COLORS } from "@/lib/constants";
-import { toast } from "../common/sonner";
-import { ToastVariation } from "@/lib/enums";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
+import { Separator } from '@/components/ui/separator';
+import { Check, LoaderPinwheel, Moon, Palette, Save, Sun } from 'lucide-react';
+import { useUserSettingContext } from '@/contextApis/user-settings';
+import { AppTheme } from '@prisma/client';
+import { useActionState, useEffect } from 'react';
+import { saveAppearanceSettingsAction } from '@/server-actions/settings.actions';
+import { ACCENT_COLORS } from '@/lib/constants';
+import { toast } from '../common/sonner';
+import { ToastVariation } from '@/lib/enums';
 
 export default function AppearanceSettingsForm() {
   const {
@@ -27,7 +27,7 @@ export default function AppearanceSettingsForm() {
     appearanceSettingsPending,
   ] = useActionState(saveAppearanceSettingsAction, {
     errors: {},
-    message: "",
+    message: '',
     success: false,
   });
 
@@ -54,11 +54,11 @@ export default function AppearanceSettingsForm() {
     <form
       className="space-y-4"
       action={(formData: FormData) => {
-        formData.append("theme", theme);
-        formData.append("accentColor", accentColor);
+        formData.append('theme', theme);
+        formData.append('accentColor', accentColor);
         formData.append(
-          "glassEffectIntensity",
-          glassEffectIntensity.toString()
+          'glassEffectIntensity',
+          glassEffectIntensity.toString(),
         );
         appearanceSettingsAction(formData);
       }}
@@ -71,9 +71,9 @@ export default function AppearanceSettingsForm() {
           <div className="flex flex-wrap gap-4">
             <div
               className={`flex flex-col items-center gap-2 cursor-pointer p-3 rounded-lg ${
-                theme === "light"
-                  ? "bg-white/50 ring-2 ring-indigo-500"
-                  : "bg-white/20 hover:bg-white/30"
+                theme === 'light'
+                  ? 'bg-white/50 ring-2 ring-indigo-500'
+                  : 'bg-white/20 hover:bg-white/30'
               }`}
               onClick={() => setTheme(AppTheme.light)}
             >
@@ -83,16 +83,16 @@ export default function AppearanceSettingsForm() {
               <span className="text-sm font-medium text-slate-900 dark:text-white">
                 Light
               </span>
-              {theme === "light" && (
+              {theme === 'light' && (
                 <Check className="h-4 w-4 text-indigo-500" />
               )}
             </div>
 
             <div
               className={`flex flex-col items-center gap-2 cursor-pointer p-3 rounded-lg ${
-                theme === "dark"
-                  ? "bg-white/50 ring-2 ring-indigo-500"
-                  : "bg-white/20 hover:bg-white/30"
+                theme === 'dark'
+                  ? 'bg-white/50 ring-2 ring-indigo-500'
+                  : 'bg-white/20 hover:bg-white/30'
               }`}
               onClick={() => setTheme(AppTheme.dark)}
             >
@@ -102,16 +102,16 @@ export default function AppearanceSettingsForm() {
               <span className="text-sm font-medium text-slate-900 dark:text-white">
                 Dark
               </span>
-              {theme === "dark" && (
+              {theme === 'dark' && (
                 <Check className="h-4 w-4 text-indigo-500" />
               )}
             </div>
 
             <div
               className={`flex flex-col items-center gap-2 cursor-pointer p-3 rounded-lg ${
-                theme === "system"
-                  ? "bg-white/50 ring-2 ring-indigo-500"
-                  : "bg-white/20 hover:bg-white/30"
+                theme === 'system'
+                  ? 'bg-white/50 ring-2 ring-indigo-500'
+                  : 'bg-white/20 hover:bg-white/30'
               }`}
               onClick={() => setTheme(AppTheme.system)}
             >
@@ -121,7 +121,7 @@ export default function AppearanceSettingsForm() {
               <span className="text-sm font-medium text-slate-900 dark:text-white">
                 System
               </span>
-              {theme === "system" && (
+              {theme === 'system' && (
                 <Check className="h-4 w-4 text-indigo-500" />
               )}
             </div>
@@ -140,7 +140,7 @@ export default function AppearanceSettingsForm() {
                 key={`${index}-${color.name}-color`}
                 type="button"
                 className={`w-8 h-8 rounded-full ${color.class} ring-2 ${
-                  accentColor === color.name ? "ring-white" : "ring-white/0"
+                  accentColor === color.name ? 'ring-white' : 'ring-white/0'
                 } cursor-pointer transition-all hover:scale-110`}
                 onClick={() => setAccentColor(color.name)}
               ></button>
@@ -178,7 +178,7 @@ export default function AppearanceSettingsForm() {
             className="mt-3 p-4 rounded-lg border border-white/30 bg-white/30 backdrop-blur-sm"
             style={{
               backdropFilter: `blur(${Math.round(
-                glassEffectIntensity / 10
+                glassEffectIntensity / 10,
               )}px)`,
               backgroundColor: `rgba(255, 255, 255, ${
                 (glassEffectIntensity / 100) * 0.3

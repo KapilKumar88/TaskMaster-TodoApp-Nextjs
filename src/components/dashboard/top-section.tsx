@@ -4,17 +4,17 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "../ui/progress";
+} from '@/components/ui/card';
+import { Progress } from '../ui/progress';
 import {
   totalCompletedTaskStats,
   totalInprogressTaskStatsForDashboard,
   totalOverDueTaskStatsForDashboard,
   totalTaskStats,
-} from "@/services/task.service";
-import { Session } from "next-auth";
-import { DashboardCardsSkeleton } from "../common/skeletons/dashboard-cards-skeleton";
-import { endOfWeek, startOfWeek } from "date-fns";
+} from '@/services/task.service';
+import { Session } from 'next-auth';
+import { DashboardCardsSkeleton } from '../common/skeletons/dashboard-cards-skeleton';
+import { endOfWeek, startOfWeek } from 'date-fns';
 
 export default async function TopSection({
   userSession,
@@ -30,7 +30,7 @@ export default async function TopSection({
     totalTaskStats(
       userSession?.user.id,
       startOfWeek(new Date()),
-      endOfWeek(new Date())
+      endOfWeek(new Date()),
     ),
     totalCompletedTaskStats(userSession?.user.id),
     totalInprogressTaskStatsForDashboard(userSession?.user.id),
@@ -66,14 +66,14 @@ export default async function TopSection({
                       <>
                         <span className="text-red-600 dark:text-red-400">
                           ↓{totalsTaskCount.percentageDifference?.toFixed(2)}%
-                        </span>{" "}
+                        </span>{' '}
                         from last week
                       </>
                     ) : (
                       <>
                         <span className="text-emerald-600 dark:text-emerald-400">
                           ↑{totalsTaskCount.percentageDifference?.toFixed(2)}%
-                        </span>{" "}
+                        </span>{' '}
                         from last week
                       </>
                     ))}
@@ -146,7 +146,7 @@ export default async function TopSection({
                       ↑{totalsOverDueTaskCount.percentageDifference?.toFixed(2)}
                       %
                     </span>
-                  )}{" "}
+                  )}{' '}
                   from last week
                 </div>
               </CardContent>

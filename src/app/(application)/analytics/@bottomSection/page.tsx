@@ -1,15 +1,15 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CategoryDistributionChart } from "@/components/category-distribution-chart";
-import { CompletionRateChart } from "@/components/completion-rate-chart";
-import TaskCompletionChart from "@/components/dashboard/task-completion-chart";
-import { getDefaultDateTime } from "../@topSection/page";
-import { auth } from "@/auth";
-import Unauthorized from "@/components/common/unauthorized";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CategoryDistributionChart } from '@/components/category-distribution-chart';
+import { CompletionRateChart } from '@/components/completion-rate-chart';
+import TaskCompletionChart from '@/components/dashboard/task-completion-chart';
+import { getDefaultDateTime } from '../@topSection/page';
+import { auth } from '@/auth';
+import Unauthorized from '@/components/common/unauthorized';
 import {
   getCategoryDistributionTaskStats,
   getTaskCompletionRate,
   taskCompletionChartStats,
-} from "@/services/task.service";
+} from '@/services/task.service';
 
 export default async function BottomSectionAnalytics({
   searchParams,
@@ -25,16 +25,15 @@ export default async function BottomSectionAnalytics({
     return <Unauthorized />;
   }
 
-  const [taskCompletionChartData, categoryDistributionTaskData, getTaskCompletionRateData] =
-    await Promise.all([
-      taskCompletionChartStats(userSession?.user.id, startDate, endDate),
-      getCategoryDistributionTaskStats(
-        userSession?.user.id,
-        startDate,
-        endDate
-      ),
-      getTaskCompletionRate(userSession?.user.id, startDate, endDate),
-    ]);
+  const [
+    taskCompletionChartData,
+    categoryDistributionTaskData,
+    getTaskCompletionRateData,
+  ] = await Promise.all([
+    taskCompletionChartStats(userSession?.user.id, startDate, endDate),
+    getCategoryDistributionTaskStats(userSession?.user.id, startDate, endDate),
+    getTaskCompletionRate(userSession?.user.id, startDate, endDate),
+  ]);
 
   return (
     <div className="grid gap-4 md:gap-6 mt-4 md:mt-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,4 +1,4 @@
-import AnalyticsFilter from "./_ui/filters";
+import AnalyticsFilter from './_ui/filters';
 
 export default function AnalyticsLayout({
   topSection,

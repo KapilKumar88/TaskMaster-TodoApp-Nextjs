@@ -1,5 +1,5 @@
-import { auth } from "@/auth";
-import { Button } from "@/components/ui/button";
+import { auth } from '@/auth';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -7,9 +7,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { CheckCircle } from "lucide-react";
-import Link from "next/link";
+} from '@/components/ui/card';
+import { CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 
 export default async function LandingPage() {
   const session = await auth();

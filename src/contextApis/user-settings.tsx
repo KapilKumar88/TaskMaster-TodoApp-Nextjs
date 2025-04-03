@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { ACCENT_COLORS } from "@/lib/constants";
-import { AppTheme, Settings } from "@prisma/client";
+import { ACCENT_COLORS } from '@/lib/constants';
+import { AppTheme, Settings } from '@prisma/client';
 import {
   createContext,
   Dispatch,
@@ -10,7 +10,7 @@ import {
   useEffect,
   useMemo,
   useState,
-} from "react";
+} from 'react';
 
 export type UserSettingContextType = {
   theme: AppTheme;
@@ -55,14 +55,14 @@ export const UserSettingProvider = ({
       }
       let tempTheme = theme;
       if (theme === AppTheme.system) {
-        tempTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        tempTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
           ? AppTheme.dark
           : AppTheme.light;
       }
       const isDark = tempTheme === AppTheme.dark;
       const isLight = tempTheme === AppTheme.light;
 
-      root.classList.remove("dark", "light");
+      root.classList.remove('dark', 'light');
 
       if (isDark || isLight) {
         root.classList.add(tempTheme);
@@ -92,7 +92,7 @@ export const UserSettingProvider = ({
       glassEffectIntensity,
       setAccentColor,
       setGlassEffectIntensity,
-    ]
+    ],
   );
 
   return (
@@ -106,7 +106,7 @@ export const useUserSettingContext = (): UserSettingContextType => {
   const context = useContext(UserSettingContext);
   if (!context) {
     throw new Error(
-      "useUserSettingContext must be used within an UserSettingProvider"
+      'useUserSettingContext must be used within an UserSettingProvider',
     );
   }
   return context;

@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function TaskListSkeleton() {
   return (
@@ -28,6 +28,5 @@ export function TaskListSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }
-

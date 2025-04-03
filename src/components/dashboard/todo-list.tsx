@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal } from "lucide-react";
-import { TaskInterface } from "@/lib/interfaces/task.interface";
-import { TaskStatus } from "@prisma/client";
-import { getPriorityColor } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { MoreHorizontal } from 'lucide-react';
+import { TaskInterface } from '@/lib/interfaces/task.interface';
+import { TaskStatus } from '@prisma/client';
+import { getPriorityColor } from '@/lib/utils';
 
 export function TodoList({ tasks }: { tasks: TaskInterface[] }) {
   return (
@@ -32,8 +32,8 @@ export function TodoList({ tasks }: { tasks: TaskInterface[] }) {
                 <p
                   className={`text-sm font-medium ${
                     todo.status === TaskStatus.COMPLETED
-                      ? "text-slate-500 line-through"
-                      : "text-slate-900 dark:text-white"
+                      ? 'text-slate-500 line-through'
+                      : 'text-slate-900 dark:text-white'
                   }`}
                 >
                   {todo.title}
@@ -42,7 +42,7 @@ export function TodoList({ tasks }: { tasks: TaskInterface[] }) {
                   <Badge
                     variant="outline"
                     className={`text-xs text-white ${getPriorityColor(
-                      todo.priority
+                      todo.priority,
                     )}`}
                   >
                     {todo.priority}

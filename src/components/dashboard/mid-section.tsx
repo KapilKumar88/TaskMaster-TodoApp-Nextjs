@@ -1,13 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import WeeklyProgressChart from "@/components/dashboard/weekly-progress-chart";
-import TaskCompletionChart from "@/components/dashboard/task-completion-chart";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import WeeklyProgressChart from '@/components/dashboard/weekly-progress-chart';
+import TaskCompletionChart from '@/components/dashboard/task-completion-chart';
 import {
   taskCompletionChartStats,
   weeklyProgressChartStats,
-} from "@/services/task.service";
-import { Session } from "next-auth";
-import { ChartSkeleton } from "../common/skeletons/chart-skeleton";
-import { getDefaultDateTime } from "@/app/(application)/analytics/@topSection/page";
+} from '@/services/task.service';
+import { Session } from 'next-auth';
+import { ChartSkeleton } from '../common/skeletons/chart-skeleton';
+import { getDefaultDateTime } from '@/app/(application)/analytics/@topSection/page';
 
 export default async function MidSection({
   userSession,
@@ -19,12 +19,12 @@ export default async function MidSection({
     weeklyProgressChartStats(
       userSession?.user.id,
       defaultDates?.startDate,
-      defaultDates?.endDate
+      defaultDates?.endDate,
     ),
     taskCompletionChartStats(
       userSession?.user.id,
       defaultDates?.startDate,
-      defaultDates?.endDate
+      defaultDates?.endDate,
     ),
   ]);
 

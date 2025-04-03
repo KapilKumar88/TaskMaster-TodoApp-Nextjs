@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
-import "../styles/globals.css";
-import { Inter } from "next/font/google";
-import serverSideConfig from "@/config/server.config";
-import { SessionProvider } from "next-auth/react";
+import type { Metadata } from 'next';
+import '../styles/globals.css';
+import { Inter } from 'next/font/google';
+import serverSideConfig from '@/config/server.config';
+import { SessionProvider } from 'next-auth/react';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    default: serverSideConfig?.APP_NAME ?? "",
-    template: `%s | ${serverSideConfig?.APP_NAME ?? ""}`,
+    default: serverSideConfig?.APP_NAME ?? '',
+    template: `%s | ${serverSideConfig?.APP_NAME ?? ''}`,
   },
-  description: serverSideConfig?.APP_NAME ?? "",
+  description: serverSideConfig?.APP_NAME ?? '',
 };
 
 export default function RootLayout({

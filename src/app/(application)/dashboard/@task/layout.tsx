@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import NavButton from "./_ui/nav-button";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import NavButton from './_ui/nav-button';
 
 export default function DashboardTaskLayout({
   children,

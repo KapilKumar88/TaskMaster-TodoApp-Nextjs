@@ -1,30 +1,30 @@
-"use server";
-import "server-only";
+'use server';
+import 'server-only';
 
-import { auth, signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from '@/auth';
 import {
   changePasswordSchema,
   loginSchema,
   registerSchema,
-} from "@/validationsSchemas/auth.validation";
-import { AuthError } from "next-auth";
+} from '@/validationsSchemas/auth.validation';
+import { AuthError } from 'next-auth';
 import {
   ChangePasswordState,
   LoginFormState,
   RegisterFormState,
-} from "@/lib/interfaces/server-action.interface";
-import { changePassword } from "@/services/user.service";
+} from '@/lib/interfaces/server-action.interface';
+import { changePassword } from '@/services/user.service';
 
 export async function registerUserServerAction(
   state: RegisterFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<RegisterFormState> {
   try {
     const getFormPayload = {
-      fullName: formData.get("fullName") as string,
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
-      confirmPassword: formData.get("confirmPassword") as string,
+      fullName: formData.get('fullName') as string,
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
+      confirmPassword: formData.get('confirmPassword') as string,
     };
 
     const validatedFields = registerSchema.safeParse({
@@ -43,11 +43,11 @@ export async function registerUserServerAction(
           email: getFormPayload.email,
         },
         success: false,
-        message: "Validation error",
+        message: 'Validation error',
       };
     }
 
-    await signIn("credentialsSignUp", {
+    await signIn('credentialsSignUp', {
       fullName: validatedFields.data.fullName,
       email: validatedFields.data.email,
       password: validatedFields.data.password,
@@ -56,28 +56,31 @@ export async function registerUserServerAction(
 
     return {
       success: true,
-      message: "Registered successfully",
+      message: 'Registered successfully',
     };
   } catch (error) {
     return {
       ...state,
       errors: {
-        general: "Something went wrong. Please try again",
+        general:
+          error instanceof AuthError
+            ? error.message
+            : 'Something went wrong. Please try again',
       },
       success: false,
-      message: "Server error",
+      message: 'Server error',
     };
   }
 }
 
 export async function loginUserServerAction(
   state: LoginFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<LoginFormState> {
   try {
     const getFormPayload = {
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
     };
 
     const validatedFields = loginSchema.safeParse({
@@ -93,11 +96,11 @@ export async function loginUserServerAction(
           email: getFormPayload.email,
         },
         success: false,
-        message: "Validation error",
+        message: 'Validation error',
       };
     }
 
-    await signIn("credentials", {
+    await signIn('credentials', {
       email: validatedFields.data.email,
       password: validatedFields.data.password,
       redirect: false,
@@ -105,16 +108,16 @@ export async function loginUserServerAction(
 
     return {
       success: true,
-      message: "Login successful",
+      message: 'Login successful',
     };
   } catch (error) {
-    let errorMsg = "Something went wrong. Please try again";
+    let errorMsg = 'Something went wrong. Please try again';
     if (error instanceof AuthError) {
       if (error.cause?.err instanceof Error) {
         errorMsg = error.cause.err.message;
       }
-      if (error.type == "CredentialsSignin") {
-        errorMsg = "Invalid credentials";
+      if (error.type == 'CredentialsSignin') {
+        errorMsg = 'Invalid credentials';
       }
     }
 
@@ -124,7 +127,7 @@ export async function loginUserServerAction(
         general: errorMsg,
       },
       success: false,
-      message: "Server error",
+      message: 'Server error',
     };
   }
 }
@@ -132,13 +135,13 @@ export async function loginUserServerAction(
 export async function signoutServerAction(redirectTo?: string) {
   await signOut({
     redirect: true,
-    redirectTo: redirectTo ?? "/login",
+    redirectTo: redirectTo ?? '/login',
   });
 }
 
 export async function changePasswordAction(
   state: ChangePasswordState,
-  formData: FormData
+  formData: FormData,
 ): Promise<ChangePasswordState> {
   try {
     const userSession = await auth();
@@ -146,14 +149,14 @@ export async function changePasswordAction(
     if (!userSession?.user.id) {
       return {
         success: false,
-        message: "Unauthorized",
+        message: 'Unauthorized',
       };
     }
 
     const getFormPayload = {
-      currentPassword: formData.get("currentPassword") as string,
-      newPassword: formData.get("newPassword") as string,
-      confirmPassword: formData.get("confirmPassword") as string,
+      currentPassword: formData.get('currentPassword') as string,
+      newPassword: formData.get('newPassword') as string,
+      confirmPassword: formData.get('confirmPassword') as string,
     };
 
     const validatedFields = changePasswordSchema.safeParse({
@@ -167,7 +170,7 @@ export async function changePasswordAction(
         ...state,
         errors: validatedFields.error.flatten().fieldErrors,
         success: false,
-        message: "Validation error",
+        message: 'Validation error',
       };
     }
 
@@ -180,7 +183,7 @@ export async function changePasswordAction(
     return {
       success: true,
       errors: {},
-      message: "Password changed successfully",
+      message: 'Password changed successfully',
     };
   } catch (error) {
     return {
@@ -188,10 +191,10 @@ export async function changePasswordAction(
       errors: {
         general:
           (error as { message: string })?.message ??
-          "Something went wrong. Please try again",
+          'Something went wrong. Please try again',
       },
       success: false,
-      message: "Server error",
+      message: 'Server error',
     };
   }
 }

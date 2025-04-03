@@ -1,10 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getDefaultDateTime } from "../@topSection/page";
-import { auth } from "@/auth";
-import Unauthorized from "@/components/common/unauthorized";
-import { productivityChartData as productivityChartDataQuery, weeklyProgressChartStats } from "@/services/task.service";
-import WeeklyProgressChart from "@/components/dashboard/weekly-progress-chart";
-import { ProductivityChart } from "@/components/productivity-chart";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getDefaultDateTime } from '../@topSection/page';
+import { auth } from '@/auth';
+import Unauthorized from '@/components/common/unauthorized';
+import {
+  productivityChartData as productivityChartDataQuery,
+  weeklyProgressChartStats,
+} from '@/services/task.service';
+import WeeklyProgressChart from '@/components/dashboard/weekly-progress-chart';
+import { ProductivityChart } from '@/components/productivity-chart';
 
 export default async function MidSectionAnalytics({
   searchParams,
@@ -22,7 +25,7 @@ export default async function MidSectionAnalytics({
 
   const [weeklyProgressChatData, productivityChartData] = await Promise.all([
     weeklyProgressChartStats(userSession?.user.id, startDate, endDate),
-    productivityChartDataQuery(userSession?.user.id, startDate, endDate)
+    productivityChartDataQuery(userSession?.user.id, startDate, endDate),
   ]);
 
   return (
@@ -47,9 +50,7 @@ export default async function MidSectionAnalytics({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ProductivityChart
-          data={productivityChartData}
-          />
+          <ProductivityChart data={productivityChartData} />
         </CardContent>
       </Card>
     </div>

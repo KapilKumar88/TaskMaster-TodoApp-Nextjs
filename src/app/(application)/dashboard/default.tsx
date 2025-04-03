@@ -1,10 +1,10 @@
-import { auth } from "@/auth";
-import { CategoryDistributionChart } from "@/components/category-distribution-chart";
-import { ChartSkeleton } from "@/components/common/skeletons/chart-skeleton";
-import Unauthorized from "@/components/common/unauthorized";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCategoryDistributionTaskStats } from "@/services/task.service";
-import { getDefaultDateTime } from "../analytics/@topSection/page";
+import { auth } from '@/auth';
+import { CategoryDistributionChart } from '@/components/category-distribution-chart';
+import { ChartSkeleton } from '@/components/common/skeletons/chart-skeleton';
+import Unauthorized from '@/components/common/unauthorized';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getCategoryDistributionTaskStats } from '@/services/task.service';
+import { getDefaultDateTime } from '../analytics/@topSection/page';
 
 export default async function Default() {
   const userSession = await auth();
@@ -13,11 +13,11 @@ export default async function Default() {
   }
 
   const defaultDateTime = getDefaultDateTime();
-  
+
   const categoryDistributionTaskData = await getCategoryDistributionTaskStats(
     userSession?.user.id,
     defaultDateTime.startDate,
-    defaultDateTime.endDate
+    defaultDateTime.endDate,
   );
 
   return (
@@ -31,9 +31,7 @@ export default async function Default() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <CategoryDistributionChart
-              data={categoryDistributionTaskData}
-            />
+            <CategoryDistributionChart data={categoryDistributionTaskData} />
           </CardContent>
         </Card>
       )}

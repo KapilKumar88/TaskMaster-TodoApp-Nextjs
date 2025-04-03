@@ -1,15 +1,15 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Bell, Menu, Plus, Search } from "lucide-react"
-import { NotificationPanel } from "@/components/notification-panel"
-import { useSideBarContext } from "@/contextApis/side-bar"
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Bell, Menu, Plus, Search } from 'lucide-react';
+import { NotificationPanel } from '@/components/notification-panel';
+import { useSideBarContext } from '@/contextApis/side-bar';
 
 export function DashboardHeader() {
   const { setSidebarOpen } = useSideBarContext();
-  const [notificationOpen, setNotificationOpen] = useState(false)
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-white/30 bg-white/30 backdrop-blur-xl px-4 md:px-6">
@@ -20,14 +20,16 @@ export function DashboardHeader() {
         onClick={() => {
           setSidebarOpen((previousState) => {
             return !!previousState;
-          })
+          });
         }}
       >
         <Menu className="h-5 w-5" />
         <span className="sr-only">Toggle sidebar</span>
       </Button>
 
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white md:text-2xl">Dashboard</h1>
+      <h1 className="text-xl font-semibold text-slate-900 dark:text-white md:text-2xl">
+        Dashboard
+      </h1>
 
       <div className="relative ml-auto flex items-center gap-2 md:gap-4">
         <div className="relative hidden md:block">
@@ -53,7 +55,9 @@ export function DashboardHeader() {
             <span className="sr-only">Notifications</span>
           </Button>
 
-          {notificationOpen && <NotificationPanel onClose={() => setNotificationOpen(false)} />}
+          {notificationOpen && (
+            <NotificationPanel onClose={() => setNotificationOpen(false)} />
+          )}
         </div>
 
         <Button className="hidden bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white sm:flex">
@@ -62,6 +66,5 @@ export function DashboardHeader() {
         </Button>
       </div>
     </header>
-  )
+  );
 }
-

@@ -1,5 +1,5 @@
-"use client";
-import { TaskPriority, TaskStatus } from "@prisma/client";
+'use client';
+import { TaskPriority, TaskStatus } from '@prisma/client';
 import {
   createContext,
   Dispatch,
@@ -8,16 +8,16 @@ import {
   useContext,
   useMemo,
   useState,
-} from "react";
+} from 'react';
 
 type TaskFilter = {
-  status?: TaskStatus | "all";
-  priority?: TaskPriority | "all";
+  status?: TaskStatus | 'all';
+  priority?: TaskPriority | 'all';
 };
 
 type TaskSort = {
-  sortBy?: "dueDate" | "priority" | "alphabetical";
-  sortDirection?: "asc" | "desc";
+  sortBy?: 'dueDate' | 'priority' | 'alphabetical';
+  sortDirection?: 'asc' | 'desc';
 };
 
 type TaskPagination = {
@@ -45,13 +45,13 @@ export const TaskContextProvider = ({
   children: React.ReactNode;
 }): JSX.Element => {
   const [taskFilter, setTaskFilter] = useState<TaskFilter>({
-    status: "all",
-    priority: "all",
+    status: 'all',
+    priority: 'all',
   });
 
   const [taskSorting, setTaskSorting] = useState<TaskSort>({
-    sortBy: "dueDate",
-    sortDirection: "asc",
+    sortBy: 'dueDate',
+    sortDirection: 'asc',
   });
 
   const [pagination, setPagination] = useState<TaskPagination>({
@@ -82,7 +82,7 @@ export const TaskContextProvider = ({
       setPagination,
       setSearchText,
       searchText,
-    ]
+    ],
   );
 
   return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
@@ -92,7 +92,7 @@ export const useTaskContext = (): TaskContextType => {
   const context = useContext(TaskContext);
   if (!context) {
     throw new Error(
-      "useTaskContext must be used within an TaskContextProvider"
+      'useTaskContext must be used within an TaskContextProvider',
     );
   }
   return context;

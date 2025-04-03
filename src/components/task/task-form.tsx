@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
+} from '@/components/ui/select';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon, X } from "lucide-react";
-import { format } from "date-fns";
-import { capitalizeFirstLetters, cn } from "@/lib/utils";
-import { useActionState, useEffect, useState } from "react";
-import { CreateTaskFormState } from "@/lib/interfaces/server-action.interface";
-import { createTaskServerAction } from "@/server-actions/task.actions";
-import { TaskPriority } from "@prisma/client";
-import { ToastVariation } from "@/lib/enums";
-import { toast } from "../common/sonner";
+} from '@/components/ui/popover';
+import { CalendarIcon, X } from 'lucide-react';
+import { format } from 'date-fns';
+import { capitalizeFirstLetters, cn } from '@/lib/utils';
+import { useActionState, useEffect, useState } from 'react';
+import { CreateTaskFormState } from '@/lib/interfaces/server-action.interface';
+import { createTaskServerAction } from '@/server-actions/task.actions';
+import { TaskPriority } from '@prisma/client';
+import { ToastVariation } from '@/lib/enums';
+import { toast } from '../common/sonner';
 
 interface TaskFormProps {
   onClose: () => void;
@@ -34,7 +34,7 @@ interface TaskFormProps {
 
 const formDataInitialState = {
   dueDate: undefined,
-  categoryId: "",
+  categoryId: '',
   priority: TaskPriority.LOW,
 };
 
@@ -45,13 +45,13 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
   >(createTaskServerAction, {
     errors: {},
     formValues: {
-      title: "",
-      description: "",
-      categoryId: "0",
+      title: '',
+      description: '',
+      categoryId: '0',
       priority: TaskPriority.LOW,
-      dueDate: "",
+      dueDate: '',
     },
-    message: "",
+    message: '',
     success: false,
   });
   const [formData, setFormData] = useState<{
@@ -142,9 +142,9 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
   return (
     <form
       action={(payload) => {
-        payload.append("dueDate", formData.dueDate?.toDateString() || "");
-        payload.append("categoryId", formData?.categoryId?.toString() ?? "");
-        payload.append("priority", formData.priority?.toString() || "");
+        payload.append('dueDate', formData.dueDate?.toDateString() || '');
+        payload.append('categoryId', formData?.categoryId?.toString() ?? '');
+        payload.append('priority', formData.priority?.toString() || '');
         action(payload);
       }}
     >
@@ -169,7 +169,7 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
           placeholder="Enter task title"
           className="bg-white/40 border-white/30 text-slate-900 dark:text-white"
           defaultValue={state.formValues?.title}
-          onChange={() => handleInputChange("title")}
+          onChange={() => handleInputChange('title')}
         />
         {formErrors?.title && (
           <p className="text-red-500 text-sm">{formErrors?.title}</p>
@@ -188,7 +188,7 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
             placeholder="Enter task description"
             className="min-h-[80px] bg-white/40 border-white/30 text-slate-900 dark:text-white"
             defaultValue={state.formValues?.description}
-            onChange={() => handleInputChange("description")}
+            onChange={() => handleInputChange('description')}
           />
           {formErrors?.description && (
             <p className="text-red-500 text-sm">{formErrors?.description}</p>
@@ -213,7 +213,7 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
                     categoryId: value,
                   };
                 });
-                handleInputChange("categoryId");
+                handleInputChange('categoryId');
               }}
             >
               <SelectTrigger
@@ -255,7 +255,7 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
                     priority: value as TaskPriority,
                   };
                 });
-                handleInputChange("priority");
+                handleInputChange('priority');
               }}
             >
               <SelectTrigger
@@ -287,13 +287,13 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
                 id="due-date"
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal border-white/30 bg-white/40",
-                  !formData.dueDate && "text-muted-foreground"
+                  'w-full justify-start text-left font-normal border-white/30 bg-white/40',
+                  !formData.dueDate && 'text-muted-foreground',
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {formData.dueDate ? (
-                  format(formData.dueDate, "PPP")
+                  format(formData.dueDate, 'PPP')
                 ) : (
                   <span>Pick a date</span>
                 )}
@@ -310,7 +310,7 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
                       dueDate: payload,
                     };
                   });
-                  handleInputChange("dueDate");
+                  handleInputChange('dueDate');
                 }}
                 initialFocus
               />

@@ -1,8 +1,8 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-import seedUsers from "./user.seeder";
-import seedCategories from "./category.seeder";
+import { PrismaClient } from '@prisma/client';
+import seedUsers from './user.seeder';
+import seedCategories from './category.seeder';
 import crypto from 'crypto';
-import seedTasks from "./task.seeder";
+import seedTasks from './task.seeder';
 
 const prisma = new PrismaClient();
 
@@ -12,7 +12,6 @@ export function generateRandomNumber(min: number, max: number) {
   const randomNumber = parseInt(randomBytes.toString('hex'), 16) % range;
   return min + randomNumber;
 }
-
 
 export async function main() {
   const userIds = await seedUsers(prisma);

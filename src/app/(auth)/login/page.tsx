@@ -1,4 +1,4 @@
-import LoginForm from "@/components/auth/login-form";
+import LoginForm from '@/components/auth/login-form';
 import {
   Card,
   CardContent,
@@ -6,9 +6,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Metadata } from "next";
-import Link from "next/link";
+} from '@/components/ui/card';
+import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: `Login`,
@@ -35,7 +35,7 @@ export default function LoginPage() {
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">
         <div className="text-center text-slate-700 dark:text-slate-200 text-sm">
-          Don&apos;t have an account?{" "}
+          Don&apos;t have an account?{' '}
           <Link
             href="/register"
             className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"

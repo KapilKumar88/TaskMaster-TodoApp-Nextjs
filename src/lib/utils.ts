@@ -1,15 +1,15 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server";
-import { TaskPriority, TaskStatus } from "@prisma/client";
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import bcrypt from 'bcryptjs';
+import { NextResponse } from 'next/server';
+import { TaskPriority, TaskStatus } from '@prisma/client';
 import {
   addDays,
   differenceInDays,
   endOfDay,
   startOfDay,
   subDays,
-} from "date-fns";
+} from 'date-fns';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -26,13 +26,13 @@ export const verifyHash = async (value: string, hash: string) => {
 
 export function capitalizeFirstLetters(words: string): string {
   return words
-    .split(" ")
+    .split(' ')
     ?.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+    .join(' ');
 }
 
 export function sendResponse({
-  status = "success",
+  status = 'success',
   statusCode = 200,
   message,
   data,
@@ -49,27 +49,27 @@ export function sendResponse({
 export const getPriorityColor = (priority: TaskPriority) => {
   switch (priority) {
     case TaskPriority.HIGH:
-      return "bg-red-500/80 hover:bg-red-500";
+      return 'bg-red-500/80 hover:bg-red-500';
     case TaskPriority.MEDIUM:
-      return "bg-amber-500/80 hover:bg-amber-500";
+      return 'bg-amber-500/80 hover:bg-amber-500';
     case TaskPriority.LOW:
-      return "bg-emerald-500/80 hover:bg-emerald-500";
+      return 'bg-emerald-500/80 hover:bg-emerald-500';
   }
 };
 
 export const getStatusColor = (status: TaskStatus) => {
   switch (status) {
     case TaskStatus.ACTIVE:
-      return "bg-blue-500/80 hover:bg-blue-500";
+      return 'bg-blue-500/80 hover:bg-blue-500';
     case TaskStatus.COMPLETED:
-      return "bg-emerald-500/80 hover:bg-emerald-500";
+      return 'bg-emerald-500/80 hover:bg-emerald-500';
     case TaskStatus.OVERDUE:
-      return "bg-red-500/80 hover:bg-red-500";
+      return 'bg-red-500/80 hover:bg-red-500';
   }
 };
 
 export const generateRandomNumber = (min: number, max: number) => {
-  if (min > max) throw new Error("Min must be less than or equal to Max");
+  if (min > max) throw new Error('Min must be less than or equal to Max');
   const range = max - min + 1;
   const array = new Uint32Array(10);
   window.crypto?.getRandomValues(array);
@@ -78,11 +78,11 @@ export const generateRandomNumber = (min: number, max: number) => {
 
 export const getThePreviousDuration = (
   startDate: string | Date,
-  endDate: string | Date
+  endDate: string | Date,
 ) => {
   const periodDuration = differenceInDays(
     endOfDay(endDate),
-    startOfDay(startDate)
+    startOfDay(startDate),
   );
   const previousStartDate = subDays(startDate, periodDuration);
   const previousEndDate = addDays(previousStartDate, periodDuration);
@@ -96,7 +96,7 @@ export const getThePreviousDuration = (
 export const generateRandomDate = (
   date?: string | Date,
   numOfDaysInPast?: number,
-  numOfDaysInFuture?: number
+  numOfDaysInFuture?: number,
 ) => {
   const dateToConsider = startOfDay(date ?? new Date());
 

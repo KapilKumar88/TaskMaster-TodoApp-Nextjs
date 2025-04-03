@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, Star } from "lucide-react";
-import { startTransition, useActionState, useEffect, useState } from "react";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { MoreHorizontal, Star } from 'lucide-react';
+import { startTransition, useActionState, useEffect, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,56 +12,53 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { API_ENDPOINTS } from "@/lib/constants";
+} from '@/components/ui/dropdown-menu';
+import { API_ENDPOINTS } from '@/lib/constants';
 import {
   capitalizeFirstLetters,
   getPriorityColor,
   getStatusColor,
-} from "@/lib/utils";
-import { TaskStatus } from "@prisma/client";
-import { TaskInterface } from "@/lib/interfaces/task.interface";
-import TaskPagination from "./task-pagination";
-import { useTaskContext } from "@/contextApis/task";
+} from '@/lib/utils';
+import { TaskStatus } from '@prisma/client';
+import { TaskInterface } from '@/lib/interfaces/task.interface';
+import TaskPagination from './task-pagination';
+import { useTaskContext } from '@/contextApis/task';
 import {
   deleteTask,
   makeTaskCompleted,
   markTaskImportant,
-} from "@/server-actions/task.actions";
+} from '@/server-actions/task.actions';
 
 interface TaskListProps {
-  filter?: "all" | "today" | "upcoming" | "completed";
+  filter?: 'all' | 'today' | 'upcoming' | 'completed';
 }
 
-export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
+export function TaskList({ filter = 'all' }: Readonly<TaskListProps>) {
   const [markTaskImportState, markTaskImportantAction] = useActionState(
     markTaskImportant,
     {
-      message: "",
+      message: '',
       success: false,
-    }
+    },
   );
   const [markTaskCompleteState, markTaskCompleteAction] = useActionState(
     makeTaskCompleted,
     {
-      message: "",
+      message: '',
       success: false,
-    }
+    },
   );
-  const [deleteTaskState, deleteTaskAction] = useActionState(
-    deleteTask,
-    {
-      message: "",
-      success: false,
-    }
-  );
+  const [deleteTaskState, deleteTaskAction] = useActionState(deleteTask, {
+    message: '',
+    success: false,
+  });
   const { pagination, taskFilter, taskSorting, searchText } = useTaskContext();
   const [totalNumberOfRecords, setTotalNumberOfRecords] = useState(0);
   const [tasks, setTasks] = useState<TaskInterface[]>([]);
 
   const fetchTaskList = async () => {
     let apiUrl = `${API_ENDPOINTS.TASK.LIST}?filter=${encodeURIComponent(
-      filter
+      filter,
     )}&page=${pagination.page}&limit=${pagination.pageSize}`;
     if (taskFilter) {
       apiUrl += `?status=${taskFilter.status}&priority=${taskFilter.priority}`;
@@ -118,12 +115,12 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
                 onCheckedChange={() => {
                   startTransition(() => {
                     const formData = new FormData();
-                    formData.append("taskId", task.id.toString());
+                    formData.append('taskId', task.id.toString());
                     formData.append(
-                      "status",
+                      'status',
                       task.status === TaskStatus.COMPLETED
                         ? TaskStatus.ACTIVE
-                        : TaskStatus.COMPLETED
+                        : TaskStatus.COMPLETED,
                     );
                     markTaskCompleteAction(formData);
                   });
@@ -135,8 +132,8 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
                   <p
                     className={`text-sm font-medium ${
                       task.status === TaskStatus.COMPLETED
-                        ? "text-slate-500 line-through"
-                        : "text-slate-900 dark:text-white"
+                        ? 'text-slate-500 line-through'
+                        : 'text-slate-900 dark:text-white'
                     }`}
                   >
                     {task.title}
@@ -154,7 +151,7 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
                   <Badge
                     variant="outline"
                     className={`text-xs text-white ${getPriorityColor(
-                      task.priority
+                      task.priority,
                     )}`}
                   >
                     {task.priority}
@@ -163,12 +160,12 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
                     variant="outline"
                     className={`text-xs text-white ${task.category?.color}`}
                   >
-                    {capitalizeFirstLetters(task?.category?.name ?? "")}
+                    {capitalizeFirstLetters(task?.category?.name ?? '')}
                   </Badge>
                   <Badge
                     variant="outline"
                     className={`text-xs text-white ${getStatusColor(
-                      task.status
+                      task.status,
                     )}`}
                   >
                     {task.status}
@@ -187,10 +184,10 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
                 onClick={() => {
                   startTransition(() => {
                     const formData = new FormData();
-                    formData.append("taskId", task.id.toString());
+                    formData.append('taskId', task.id.toString());
                     formData.append(
-                      "isImportant",
-                      (!task?.markAsImportant)?.toString()
+                      'isImportant',
+                      (!task?.markAsImportant)?.toString(),
                     );
                     markTaskImportantAction(formData);
                   });
@@ -198,7 +195,7 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
               >
                 <Star
                   className={`h-4 w-4 ${
-                    task.markAsImportant ? "fill-amber-400 text-amber-400" : ""
+                    task.markAsImportant ? 'fill-amber-400 text-amber-400' : ''
                   }`}
                 />
                 <span className="sr-only">Star task</span>
@@ -224,7 +221,7 @@ export function TaskList({ filter = "all" }: Readonly<TaskListProps>) {
                     onClick={() => {
                       startTransition(() => {
                         const formData = new FormData();
-                        formData.append("taskId", task.id.toString());
+                        formData.append('taskId', task.id.toString());
                         deleteTaskAction(formData);
                       });
                     }}

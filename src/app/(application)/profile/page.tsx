@@ -1,23 +1,40 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { DashboardSidebar } from "@/components/dashboard-sidebar"
-import { DashboardHeader } from "@/components/dashboard-header"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { Progress } from "@/components/ui/progress"
-import { Camera, Check, Edit, Github, Instagram, Linkedin, Mail, Save, Twitter } from "lucide-react"
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { DashboardSidebar } from '@/components/dashboard-sidebar';
+import { DashboardHeader } from '@/components/dashboard-header';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Progress } from '@/components/ui/progress';
+import {
+  Camera,
+  Check,
+  Edit,
+  Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  Save,
+  Twitter,
+} from 'lucide-react';
 
 export default function ProfilePage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [editing, setEditing] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [editing, setEditing] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-500/20 to-indigo-600/20">
@@ -32,20 +49,33 @@ export default function ProfilePage() {
         <DashboardSidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
         <div className="flex-1 overflow-auto">
-          <DashboardHeader setSidebarOpen={setSidebarOpen} sidebarOpen={sidebarOpen} />
+          <DashboardHeader
+            setSidebarOpen={setSidebarOpen}
+            sidebarOpen={sidebarOpen}
+          />
 
           <main className="p-4 md:p-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 md:mb-0">Profile</h1>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 md:mb-0">
+                Profile
+              </h1>
 
               {!editing ? (
-                <Button variant="outline" className="border-white/30 bg-white/40" onClick={() => setEditing(true)}>
+                <Button
+                  variant="outline"
+                  className="border-white/30 bg-white/40"
+                  onClick={() => setEditing(true)}
+                >
                   <Edit className="h-4 w-4 mr-2" />
                   Edit Profile
                 </Button>
               ) : (
                 <div className="flex gap-2">
-                  <Button variant="outline" className="border-white/30 bg-white/40" onClick={() => setEditing(false)}>
+                  <Button
+                    variant="outline"
+                    className="border-white/30 bg-white/40"
+                    onClick={() => setEditing(false)}
+                  >
                     Cancel
                   </Button>
                   <Button
@@ -65,8 +95,13 @@ export default function ProfilePage() {
                   <CardHeader className="pb-2 text-center">
                     <div className="relative mx-auto mb-4">
                       <Avatar className="w-24 h-24 border-4 border-white">
-                        <AvatarImage src="/placeholder.svg?height=96&width=96" alt="John Doe" />
-                        <AvatarFallback className="bg-indigo-500 text-white text-xl">JD</AvatarFallback>
+                        <AvatarImage
+                          src="/placeholder.svg?height=96&width=96"
+                          alt="John Doe"
+                        />
+                        <AvatarFallback className="bg-indigo-500 text-white text-xl">
+                          JD
+                        </AvatarFallback>
                       </Avatar>
                       {editing && (
                         <Button
@@ -78,15 +113,25 @@ export default function ProfilePage() {
                         </Button>
                       )}
                     </div>
-                    <CardTitle className="text-xl text-slate-900 dark:text-white">John Doe</CardTitle>
-                    <CardDescription className="text-slate-700 dark:text-slate-300">Product Designer</CardDescription>
+                    <CardTitle className="text-xl text-slate-900 dark:text-white">
+                      John Doe
+                    </CardTitle>
+                    <CardDescription className="text-slate-700 dark:text-slate-300">
+                      Product Designer
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex justify-center gap-2 mb-4">
-                      <Badge variant="outline" className="bg-indigo-500/80 text-white border-0">
+                      <Badge
+                        variant="outline"
+                        className="bg-indigo-500/80 text-white border-0"
+                      >
                         Pro User
                       </Badge>
-                      <Badge variant="outline" className="bg-emerald-500/80 text-white border-0">
+                      <Badge
+                        variant="outline"
+                        className="bg-emerald-500/80 text-white border-0"
+                      >
                         Verified
                       </Badge>
                     </div>
@@ -98,19 +143,35 @@ export default function ProfilePage() {
                       </div>
 
                       <div className="flex justify-center gap-2">
-                        <Button size="icon" variant="outline" className="rounded-full border-white/30 bg-white/40">
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="rounded-full border-white/30 bg-white/40"
+                        >
                           <Twitter className="h-4 w-4 text-slate-700 dark:text-slate-300" />
                           <span className="sr-only">Twitter</span>
                         </Button>
-                        <Button size="icon" variant="outline" className="rounded-full border-white/30 bg-white/40">
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="rounded-full border-white/30 bg-white/40"
+                        >
                           <Linkedin className="h-4 w-4 text-slate-700 dark:text-slate-300" />
                           <span className="sr-only">LinkedIn</span>
                         </Button>
-                        <Button size="icon" variant="outline" className="rounded-full border-white/30 bg-white/40">
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="rounded-full border-white/30 bg-white/40"
+                        >
                           <Github className="h-4 w-4 text-slate-700 dark:text-slate-300" />
                           <span className="sr-only">GitHub</span>
                         </Button>
-                        <Button size="icon" variant="outline" className="rounded-full border-white/30 bg-white/40">
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className="rounded-full border-white/30 bg-white/40"
+                        >
                           <Instagram className="h-4 w-4 text-slate-700 dark:text-slate-300" />
                           <span className="sr-only">Instagram</span>
                         </Button>
@@ -122,31 +183,49 @@ export default function ProfilePage() {
                     <div className="space-y-3">
                       <div>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-slate-700 dark:text-slate-300">Productivity Score</span>
-                          <span className="font-medium text-slate-900 dark:text-white">85%</span>
+                          <span className="text-slate-700 dark:text-slate-300">
+                            Productivity Score
+                          </span>
+                          <span className="font-medium text-slate-900 dark:text-white">
+                            85%
+                          </span>
                         </div>
-                        <Progress value={85} className="h-2 bg-white/20" 
-                        // indicatorClassName="bg-indigo-500" 
+                        <Progress
+                          value={85}
+                          className="h-2 bg-white/20"
+                          // indicatorClassName="bg-indigo-500"
                         />
                       </div>
 
                       <div>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-slate-700 dark:text-slate-300">Task Completion</span>
-                          <span className="font-medium text-slate-900 dark:text-white">92%</span>
+                          <span className="text-slate-700 dark:text-slate-300">
+                            Task Completion
+                          </span>
+                          <span className="font-medium text-slate-900 dark:text-white">
+                            92%
+                          </span>
                         </div>
-                        <Progress value={92} className="h-2 bg-white/20" 
-                        // indicatorClassName="bg-emerald-500" 
+                        <Progress
+                          value={92}
+                          className="h-2 bg-white/20"
+                          // indicatorClassName="bg-emerald-500"
                         />
                       </div>
 
                       <div>
                         <div className="flex justify-between text-sm mb-1">
-                          <span className="text-slate-700 dark:text-slate-300">On-time Delivery</span>
-                          <span className="font-medium text-slate-900 dark:text-white">78%</span>
+                          <span className="text-slate-700 dark:text-slate-300">
+                            On-time Delivery
+                          </span>
+                          <span className="font-medium text-slate-900 dark:text-white">
+                            78%
+                          </span>
                         </div>
-                        <Progress value={78} className="h-2 bg-white/20" 
-                        // indicatorClassName="bg-amber-500" 
+                        <Progress
+                          value={78}
+                          className="h-2 bg-white/20"
+                          // indicatorClassName="bg-amber-500"
                         />
                       </div>
                     </div>
@@ -155,7 +234,9 @@ export default function ProfilePage() {
 
                 <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md mt-6">
                   <CardHeader>
-                    <CardTitle className="text-slate-900 dark:text-white">Achievements</CardTitle>
+                    <CardTitle className="text-slate-900 dark:text-white">
+                      Achievements
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-3 gap-4">
@@ -163,19 +244,25 @@ export default function ProfilePage() {
                         <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-1">
                           <Check className="h-6 w-6 text-indigo-600" />
                         </div>
-                        <span className="text-xs text-center text-slate-700 dark:text-slate-300">100 Tasks</span>
+                        <span className="text-xs text-center text-slate-700 dark:text-slate-300">
+                          100 Tasks
+                        </span>
                       </div>
                       <div className="flex flex-col items-center">
                         <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-1">
                           <Check className="h-6 w-6 text-emerald-600" />
                         </div>
-                        <span className="text-xs text-center text-slate-700 dark:text-slate-300">30 Day Streak</span>
+                        <span className="text-xs text-center text-slate-700 dark:text-slate-300">
+                          30 Day Streak
+                        </span>
                       </div>
                       <div className="flex flex-col items-center">
                         <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-1">
                           <Check className="h-6 w-6 text-amber-600" />
                         </div>
-                        <span className="text-xs text-center text-slate-700 dark:text-slate-300">Early Bird</span>
+                        <span className="text-xs text-center text-slate-700 dark:text-slate-300">
+                          Early Bird
+                        </span>
                       </div>
                     </div>
                   </CardContent>
@@ -208,7 +295,9 @@ export default function ProfilePage() {
                   <TabsContent value="info" className="mt-0">
                     <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
                       <CardHeader>
-                        <CardTitle className="text-slate-900 dark:text-white">Personal Information</CardTitle>
+                        <CardTitle className="text-slate-900 dark:text-white">
+                          Personal Information
+                        </CardTitle>
                         <CardDescription className="text-slate-700 dark:text-slate-300">
                           Update your personal details
                         </CardDescription>
@@ -216,7 +305,10 @@ export default function ProfilePage() {
                       <CardContent className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="first-name" className="text-slate-900 dark:text-white">
+                            <Label
+                              htmlFor="first-name"
+                              className="text-slate-900 dark:text-white"
+                            >
                               First Name
                             </Label>
                             <Input
@@ -227,7 +319,10 @@ export default function ProfilePage() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="last-name" className="text-slate-900 dark:text-white">
+                            <Label
+                              htmlFor="last-name"
+                              className="text-slate-900 dark:text-white"
+                            >
                               Last Name
                             </Label>
                             <Input
@@ -240,7 +335,10 @@ export default function ProfilePage() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="email" className="text-slate-900 dark:text-white">
+                          <Label
+                            htmlFor="email"
+                            className="text-slate-900 dark:text-white"
+                          >
                             Email
                           </Label>
                           <Input
@@ -253,7 +351,10 @@ export default function ProfilePage() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="job-title" className="text-slate-900 dark:text-white">
+                          <Label
+                            htmlFor="job-title"
+                            className="text-slate-900 dark:text-white"
+                          >
                             Job Title
                           </Label>
                           <Input
@@ -265,7 +366,10 @@ export default function ProfilePage() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="bio" className="text-slate-900 dark:text-white">
+                          <Label
+                            htmlFor="bio"
+                            className="text-slate-900 dark:text-white"
+                          >
                             Bio
                           </Label>
                           <Textarea
@@ -294,7 +398,9 @@ export default function ProfilePage() {
                   <TabsContent value="activity" className="mt-0">
                     <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
                       <CardHeader>
-                        <CardTitle className="text-slate-900 dark:text-white">Recent Activity</CardTitle>
+                        <CardTitle className="text-slate-900 dark:text-white">
+                          Recent Activity
+                        </CardTitle>
                         <CardDescription className="text-slate-700 dark:text-slate-300">
                           Your recent actions and task history
                         </CardDescription>
@@ -305,9 +411,12 @@ export default function ProfilePage() {
                             <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-indigo-500"></div>
                             <div className="space-y-1">
                               <p className="text-sm font-medium text-slate-900 dark:text-white">
-                                Completed task "Complete project proposal"
+                                Completed task &quot;Complete project
+                                proposal&quot;
                               </p>
-                              <p className="text-xs text-slate-700 dark:text-slate-300">Today at 10:30 AM</p>
+                              <p className="text-xs text-slate-700 dark:text-slate-300">
+                                Today at 10:30 AM
+                              </p>
                             </div>
                           </div>
 
@@ -315,9 +424,12 @@ export default function ProfilePage() {
                             <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-emerald-500"></div>
                             <div className="space-y-1">
                               <p className="text-sm font-medium text-slate-900 dark:text-white">
-                                Created new task "Schedule team meeting"
+                                Created new task &quot;Schedule team
+                                meeting&quot;
                               </p>
-                              <p className="text-xs text-slate-700 dark:text-slate-300">Yesterday at 2:15 PM</p>
+                              <p className="text-xs text-slate-700 dark:text-slate-300">
+                                Yesterday at 2:15 PM
+                              </p>
                             </div>
                           </div>
 
@@ -325,9 +437,12 @@ export default function ProfilePage() {
                             <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-amber-500"></div>
                             <div className="space-y-1">
                               <p className="text-sm font-medium text-slate-900 dark:text-white">
-                                Updated task priority for "Prepare for exam"
+                                Updated task priority for &quot;Prepare for
+                                exam&quot;
                               </p>
-                              <p className="text-xs text-slate-700 dark:text-slate-300">Yesterday at 11:45 AM</p>
+                              <p className="text-xs text-slate-700 dark:text-slate-300">
+                                Yesterday at 11:45 AM
+                              </p>
                             </div>
                           </div>
 
@@ -335,9 +450,11 @@ export default function ProfilePage() {
                             <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-indigo-500"></div>
                             <div className="space-y-1">
                               <p className="text-sm font-medium text-slate-900 dark:text-white">
-                                Completed task "Gym workout"
+                                Completed task &quot;Gym workout&quot;
                               </p>
-                              <p className="text-xs text-slate-700 dark:text-slate-300">March 18, 2025 at 6:30 PM</p>
+                              <p className="text-xs text-slate-700 dark:text-slate-300">
+                                March 18, 2025 at 6:30 PM
+                              </p>
                             </div>
                           </div>
 
@@ -345,15 +462,21 @@ export default function ProfilePage() {
                             <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-red-500"></div>
                             <div className="space-y-1">
                               <p className="text-sm font-medium text-slate-900 dark:text-white">
-                                Missed deadline for "Read book chapter"
+                                Missed deadline for &quot;Read book
+                                chapter&quot;
                               </p>
-                              <p className="text-xs text-slate-700 dark:text-slate-300">March 17, 2025 at 9:00 PM</p>
+                              <p className="text-xs text-slate-700 dark:text-slate-300">
+                                March 17, 2025 at 9:00 PM
+                              </p>
                             </div>
                           </div>
                         </div>
                       </CardContent>
                       <CardFooter>
-                        <Button variant="outline" className="w-full border-white/30 bg-white/40">
+                        <Button
+                          variant="outline"
+                          className="w-full border-white/30 bg-white/40"
+                        >
                           View All Activity
                         </Button>
                       </CardFooter>
@@ -363,7 +486,9 @@ export default function ProfilePage() {
                   <TabsContent value="preferences" className="mt-0">
                     <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
                       <CardHeader>
-                        <CardTitle className="text-slate-900 dark:text-white">User Preferences</CardTitle>
+                        <CardTitle className="text-slate-900 dark:text-white">
+                          User Preferences
+                        </CardTitle>
                         <CardDescription className="text-slate-700 dark:text-slate-300">
                           Customize your personal preferences
                         </CardDescription>
@@ -372,7 +497,9 @@ export default function ProfilePage() {
                         <div className="space-y-4">
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                             <div>
-                              <h3 className="text-sm font-medium text-slate-900 dark:text-white">Default Task View</h3>
+                              <h3 className="text-sm font-medium text-slate-900 dark:text-white">
+                                Default Task View
+                              </h3>
                               <p className="text-xs text-slate-700 dark:text-slate-300">
                                 Choose how tasks are displayed by default
                               </p>
@@ -384,7 +511,10 @@ export default function ProfilePage() {
                               >
                                 List
                               </Button>
-                              <Button variant="outline" className="border-white/30 bg-indigo-500 text-white">
+                              <Button
+                                variant="outline"
+                                className="border-white/30 bg-indigo-500 text-white"
+                              >
                                 Board
                               </Button>
                               <Button
@@ -400,13 +530,18 @@ export default function ProfilePage() {
 
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                             <div>
-                              <h3 className="text-sm font-medium text-slate-900 dark:text-white">Default Task Sort</h3>
+                              <h3 className="text-sm font-medium text-slate-900 dark:text-white">
+                                Default Task Sort
+                              </h3>
                               <p className="text-xs text-slate-700 dark:text-slate-300">
                                 Choose how tasks are sorted by default
                               </p>
                             </div>
                             <div className="flex gap-2 flex-wrap">
-                              <Button variant="outline" className="border-white/30 bg-indigo-500 text-white">
+                              <Button
+                                variant="outline"
+                                className="border-white/30 bg-indigo-500 text-white"
+                              >
                                 Due Date
                               </Button>
                               <Button
@@ -428,14 +563,18 @@ export default function ProfilePage() {
 
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                             <div>
-                              <h3 className="text-sm font-medium text-slate-900 dark:text-white">Default Category</h3>
+                              <h3 className="text-sm font-medium text-slate-900 dark:text-white">
+                                Default Category
+                              </h3>
                               <p className="text-xs text-slate-700 dark:text-slate-300">
                                 Set your default task category
                               </p>
                             </div>
                             <div className="flex items-center gap-2">
                               <div className="w-3 h-3 rounded-full bg-indigo-500"></div>
-                              <span className="text-sm font-medium text-slate-900 dark:text-white">Work</span>
+                              <span className="text-sm font-medium text-slate-900 dark:text-white">
+                                Work
+                              </span>
                             </div>
                           </div>
 
@@ -443,14 +582,18 @@ export default function ProfilePage() {
 
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                             <div>
-                              <h3 className="text-sm font-medium text-slate-900 dark:text-white">Default Priority</h3>
+                              <h3 className="text-sm font-medium text-slate-900 dark:text-white">
+                                Default Priority
+                              </h3>
                               <p className="text-xs text-slate-700 dark:text-slate-300">
                                 Set your default task priority
                               </p>
                             </div>
                             <div className="flex items-center gap-2">
                               <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-                              <span className="text-sm font-medium text-slate-900 dark:text-white">Medium</span>
+                              <span className="text-sm font-medium text-slate-900 dark:text-white">
+                                Medium
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -470,6 +613,5 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

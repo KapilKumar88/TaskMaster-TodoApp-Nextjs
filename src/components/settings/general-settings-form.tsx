@@ -1,22 +1,22 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Check, ChevronDown, LoaderPinwheel, Save } from "lucide-react";
-import { useActionState, useEffect, useState } from "react";
-import { useUserSettingContext } from "@/contextApis/user-settings";
-import { TimeFrequency, WeekStartDay } from "@prisma/client";
-import { updateUserGeneralSettingsAction } from "@/server-actions/settings.actions";
-import { GeneralSettingsFormState } from "@/lib/interfaces/server-action.interface";
-import moment from "moment-timezone";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Check, ChevronDown, LoaderPinwheel, Save } from 'lucide-react';
+import { useActionState, useEffect, useState } from 'react';
+import { useUserSettingContext } from '@/contextApis/user-settings';
+import { TimeFrequency, WeekStartDay } from '@prisma/client';
+import { updateUserGeneralSettingsAction } from '@/server-actions/settings.actions';
+import { GeneralSettingsFormState } from '@/lib/interfaces/server-action.interface';
+import moment from 'moment-timezone';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import {
   Command,
   CommandEmpty,
@@ -24,10 +24,10 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "../ui/command";
-import { cn } from "@/lib/utils";
-import { ToastVariation } from "@/lib/enums";
-import { toast } from "../common/sonner";
+} from '../ui/command';
+import { cn } from '@/lib/utils';
+import { ToastVariation } from '@/lib/enums';
+import { toast } from '../common/sonner';
 
 export default function GeneralSettingsForm() {
   const timeZoneList = moment.tz.names();
@@ -37,9 +37,9 @@ export default function GeneralSettingsForm() {
       updateUserGeneralSettingsAction,
       {
         errors: {},
-        message: "",
+        message: '',
         success: false,
-      }
+      },
     );
 
   const [openTimeZonePopup, setOpenTimeZonePopup] = useState<boolean>(false);
@@ -67,8 +67,8 @@ export default function GeneralSettingsForm() {
     autoArchiveTime?: number;
     timeFrequency?: TimeFrequency;
   }>({
-    timeZone: userSettings?.timeZone ?? "",
-    dateFormat: userSettings?.dateFormat ?? "",
+    timeZone: userSettings?.timeZone ?? '',
+    dateFormat: userSettings?.dateFormat ?? '',
     weekStartDay: userSettings?.weekStartDay ?? WeekStartDay.sunday,
     autoArchive: userSettings?.autoArchive ?? false,
     autoArchiveTime: userSettings?.autoArchiveTime ?? 30,
@@ -132,7 +132,7 @@ export default function GeneralSettingsForm() {
     <form
       className="space-y-4"
       action={(formData: FormData) => {
-        formData.append("timeZone", trackFormData.timeZone ?? "");
+        formData.append('timeZone', trackFormData.timeZone ?? '');
         generalSettingsAction(formData);
       }}
     >
@@ -191,10 +191,10 @@ export default function GeneralSettingsForm() {
                       >
                         <Check
                           className={cn(
-                            "mr-2 h-4 w-4",
+                            'mr-2 h-4 w-4',
                             trackFormData?.timeZone === tz
-                              ? "opacity-100"
-                              : "opacity-0"
+                              ? 'opacity-100'
+                              : 'opacity-0',
                           )}
                         />
                         <span>{tz}</span>
@@ -223,7 +223,7 @@ export default function GeneralSettingsForm() {
           </div>
           <Select
             name="dateFormat"
-            defaultValue={userSettings?.dateFormat ?? ""}
+            defaultValue={userSettings?.dateFormat ?? ''}
             value={trackFormData.dateFormat}
             onValueChange={(e) =>
               setTrackFormData((previousState) => {
@@ -324,13 +324,13 @@ export default function GeneralSettingsForm() {
               defaultValue={
                 userSettings?.autoArchive
                   ? `${userSettings?.autoArchiveTime} ${userSettings?.autoArchiveTimeFrequency}`
-                  : ""
+                  : ''
               }
               disabled={!trackFormData.autoArchive}
               value={`${trackFormData.autoArchiveTime} ${trackFormData.timeFrequency}`}
               onValueChange={(e) => {
                 setTrackFormData((previousState) => {
-                  const temp = e.split(" ");
+                  const temp = e.split(' ');
                   return {
                     ...previousState,
                     autoArchiveTime: parseInt(temp[0]),

@@ -1,13 +1,13 @@
-import { DIFFERENT_COLOR_CODES } from "@/lib/constants";
-import { faker } from "@faker-js/faker";
-import { PrismaClient } from "@prisma/client";
-import { generateRandomNumber } from "./seed";
+import { DIFFERENT_COLOR_CODES } from '@/lib/constants';
+import { faker } from '@faker-js/faker';
+import { PrismaClient } from '@prisma/client';
+import { generateRandomNumber } from './seed';
 
 const numberOfCategories = 50;
 
 export default async function seedCategories(
   prismaClient: PrismaClient,
-  userIds: string[]
+  userIds: string[],
 ) {
   const finalResponse: Array<{
     userId: string;

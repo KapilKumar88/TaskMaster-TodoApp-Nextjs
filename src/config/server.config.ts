@@ -1,4 +1,4 @@
-import "server-only";
+import 'server-only';
 type ServerSideConfig = {
   NODE_ENV: string;
   APP_NAME: string;

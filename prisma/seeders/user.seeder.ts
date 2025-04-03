@@ -1,7 +1,7 @@
-import { ACCENT_COLORS } from "@/lib/constants";
-import { generateHashedValue } from "@/lib/utils";
-import { faker } from "@faker-js/faker";
-import { PrismaClient } from "@prisma/client";
+import { ACCENT_COLORS } from '@/lib/constants';
+import { generateHashedValue } from '@/lib/utils';
+import { faker } from '@faker-js/faker';
+import { PrismaClient } from '@prisma/client';
 
 const numberOfUsers = 100;
 
@@ -12,7 +12,7 @@ export default async function seedUsers(prismaClient: PrismaClient) {
       data: {
         name: faker.person.firstName(),
         email: faker.internet.email({
-          provider: "mailinator.com",
+          provider: 'mailinator.com',
         }),
         password: await generateHashedValue(faker.internet.password()),
         profileImage: faker.image.avatar(),
@@ -26,7 +26,7 @@ export default async function seedUsers(prismaClient: PrismaClient) {
           },
         },
         timeZone: faker.location.timeZone(),
-        dateFormat: "MM/DD/YYYY",
+        dateFormat: 'MM/DD/YYYY',
         autoArchiveTime: 30,
         autoArchive: false,
         glassEffectIntensity: 50,

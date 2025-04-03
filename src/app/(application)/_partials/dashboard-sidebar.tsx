@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { useSideBarContext } from "@/contextApis/side-bar";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { useSideBarContext } from '@/contextApis/side-bar';
+import { cn } from '@/lib/utils';
 import {
   BarChart3,
   CheckSquare,
@@ -10,12 +10,12 @@ import {
   LogOut,
   Settings,
   User,
-} from "lucide-react";
-import { Session } from "next-auth";
-import { signOut } from "next-auth/react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+} from 'lucide-react';
+import { Session } from 'next-auth';
+import { signOut } from 'next-auth/react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
 export function DashboardSidebar({
   userSession,
@@ -28,28 +28,28 @@ export function DashboardSidebar({
 
   const routes = [
     {
-      label: "Dashboard",
+      label: 'Dashboard',
       icon: LayoutDashboard,
-      href: "/dashboard",
-      active: pathname === "/dashboard",
+      href: '/dashboard',
+      active: pathname === '/dashboard',
     },
     {
-      label: "Tasks",
+      label: 'Tasks',
       icon: CheckSquare,
-      href: "/task",
-      active: pathname === "/task",
+      href: '/task',
+      active: pathname === '/task',
     },
     {
-      label: "Analytics",
+      label: 'Analytics',
       icon: BarChart3,
-      href: "/analytics",
-      active: pathname === "/analytics",
+      href: '/analytics',
+      active: pathname === '/analytics',
     },
     {
-      label: "Settings",
+      label: 'Settings',
       icon: Settings,
-      href: "/settings",
-      active: pathname === "/settings",
+      href: '/settings',
+      active: pathname === '/settings',
     },
   ];
 
@@ -63,17 +63,17 @@ export function DashboardSidebar({
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [setSidebarOpen, sidebarOpen]);
 
   return (
     <div
       className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        'fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0',
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full',
       )}
       ref={sidebarRef}
     >
@@ -95,9 +95,9 @@ export function DashboardSidebar({
                 variant="ghost"
                 asChild
                 className={cn(
-                  "justify-start gap-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-white/40 dark:hover:text-white",
+                  'justify-start gap-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-white/40 dark:hover:text-white',
                   route.active &&
-                    "bg-white/40 text-slate-900 dark:text-white font-medium"
+                    'bg-white/40 text-slate-900 dark:text-white font-medium',
                 )}
               >
                 <Link href={route.href}>

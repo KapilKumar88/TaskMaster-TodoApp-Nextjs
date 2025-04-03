@@ -1,19 +1,19 @@
-import { auth } from "@/auth";
-import Unauthorized from "@/components/common/unauthorized";
+import { auth } from '@/auth';
+import Unauthorized from '@/components/common/unauthorized';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import appConfig from "@/config/app.config";
+} from '@/components/ui/card';
+import appConfig from '@/config/app.config';
 import {
   avgCompletionTimeStats,
   overdueRateStats,
   taskCompletionRateStats,
   totalTaskStats as totalTaskStatsQuery,
-} from "@/services/task.service";
+} from '@/services/task.service';
 import {
   endOfDay,
   endOfMonth,
@@ -23,27 +23,27 @@ import {
   startOfMonth,
   startOfWeek,
   startOfYear,
-} from "date-fns";
+} from 'date-fns';
 
 export const getDefaultDateTime = () => {
   const dateInstance = new Date();
 
-  if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === "weekly") {
+  if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'weekly') {
     return {
       startDate: startOfWeek(dateInstance),
       endDate: endOfWeek(dateInstance),
     };
-  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === "daily") {
+  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'daily') {
     return {
       startDate: startOfDay(dateInstance),
       endDate: endOfDay(dateInstance),
     };
-  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === "monthly") {
+  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'monthly') {
     return {
       startDate: startOfMonth(dateInstance),
       endDate: endOfMonth(dateInstance),
     };
-  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === "yearly") {
+  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'yearly') {
     return {
       startDate: startOfYear(dateInstance),
       endDate: endOfYear(dateInstance),
@@ -100,14 +100,15 @@ export default async function TopSectionAnalytics({
                   <span className="text-emerald-600 dark:text-emerald-400">
                     ↑{totalTaskStats?.percentageDifference?.toFixed(2) ?? 0}%
                   </span>
-                  {" from previous period"}
+                  {' from previous period'}
                 </>
               ) : (
                 <>
                   <span className="text-red-600 dark:text-red-400">
-                    ↓{totalTaskStats?.percentageDifference?.toFixed(2) ?? 0}{" "}
+                    ↓
+                    {totalTaskStats?.percentageDifference?.toFixed(2) ?? 0}{' '}
                   </span>
-                  {" from previous period"}
+                  {' from previous period'}
                 </>
               ))}
           </div>
@@ -132,14 +133,16 @@ export default async function TopSectionAnalytics({
                     ↑{taskCompletionRate?.percentageDifference?.toFixed(2) ?? 0}
                     %
                   </span>
-                  {" from previous period"}
+                  {' from previous period'}
                 </>
               ) : (
                 <>
                   <span className="text-red-600 dark:text-red-400">
-                    ↓{taskCompletionRate?.percentageDifference?.toFixed(2) ?? 0}{" "}
+                    ↓
+                    {taskCompletionRate?.percentageDifference?.toFixed(2) ??
+                      0}{' '}
                   </span>
-                  {" from previous period"}
+                  {' from previous period'}
                 </>
               ))}
           </div>
@@ -163,22 +166,22 @@ export default async function TopSectionAnalytics({
                   <span className="text-emerald-600 dark:text-emerald-400">
                     ↑
                     {(avgCompletionStats?.percentageDifference / 24)?.toFixed(
-                      2
+                      2,
                     ) ?? 0}
                     %
                   </span>
-                  {" from previous period"}
+                  {' from previous period'}
                 </>
               ) : (
                 <>
                   <span className="text-red-600 dark:text-red-400">
                     ↓
                     {(avgCompletionStats?.percentageDifference / 24)?.toFixed(
-                      2
-                    ) ?? 0}{" "}
+                      2,
+                    ) ?? 0}{' '}
                     days
                   </span>
-                  {" from previous period"}
+                  {' from previous period'}
                 </>
               ))}
           </div>
@@ -202,22 +205,22 @@ export default async function TopSectionAnalytics({
                   <span className="text-emerald-600 dark:text-emerald-400">
                     ↑
                     {(overdueRateStatsData?.percentageDifference / 24)?.toFixed(
-                      2
+                      2,
                     ) ?? 0}
                     %
                   </span>
-                  {" from previous period"}
+                  {' from previous period'}
                 </>
               ) : (
                 <>
                   <span className="text-red-600 dark:text-red-400">
                     ↓
                     {(overdueRateStatsData?.percentageDifference / 24)?.toFixed(
-                      2
-                    ) ?? 0}{" "}
+                      2,
+                    ) ?? 0}{' '}
                     days
                   </span>
-                  {" from previous period"}
+                  {' from previous period'}
                 </>
               ))}
           </div>

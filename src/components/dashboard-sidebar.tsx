@@ -1,51 +1,58 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
-import { BarChart3, CheckSquare, LayoutDashboard, LogOut, Settings, User } from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import {
+  BarChart3,
+  CheckSquare,
+  LayoutDashboard,
+  LogOut,
+  Settings,
+  User,
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface DashboardSidebarProps {
-  open: boolean
-  setOpen: (open: boolean) => void
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
-export function DashboardSidebar({ open, setOpen }: DashboardSidebarProps) {
-  const pathname = usePathname()
+export function DashboardSidebar({ open }: DashboardSidebarProps) {
+  const pathname = usePathname();
 
   const routes = [
     {
-      label: "Dashboard",
+      label: 'Dashboard',
       icon: LayoutDashboard,
-      href: "/dashboard",
-      active: pathname === "/dashboard",
+      href: '/dashboard',
+      active: pathname === '/dashboard',
     },
     {
-      label: "Tasks",
+      label: 'Tasks',
       icon: CheckSquare,
-      href: "/dashboard/tasks",
-      active: pathname === "/dashboard/tasks",
+      href: '/dashboard/tasks',
+      active: pathname === '/dashboard/tasks',
     },
     {
-      label: "Analytics",
+      label: 'Analytics',
       icon: BarChart3,
-      href: "/dashboard/analytics",
-      active: pathname === "/dashboard/analytics",
+      href: '/dashboard/analytics',
+      active: pathname === '/dashboard/analytics',
     },
     {
-      label: "Settings",
+      label: 'Settings',
       icon: Settings,
-      href: "/dashboard/settings",
-      active: pathname === "/dashboard/settings",
+      href: '/dashboard/settings',
+      active: pathname === '/dashboard/settings',
     },
-  ]
+  ];
 
   return (
     <div
       className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0",
-        open ? "translate-x-0" : "-translate-x-full",
+        'fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0',
+        open ? 'translate-x-0' : '-translate-x-full',
       )}
     >
       <div className="flex h-full flex-col border-r border-white/30 bg-white/30 backdrop-blur-xl">
@@ -53,7 +60,9 @@ export function DashboardSidebar({ open, setOpen }: DashboardSidebarProps) {
           <div className="relative h-8 w-8 bg-gradient-to-br from-teal-500 to-indigo-600 rounded-lg flex items-center justify-center">
             <span className="text-white text-lg font-bold">T</span>
           </div>
-          <span className="text-lg font-semibold text-slate-900 dark:text-white">TodoApp</span>
+          <span className="text-lg font-semibold text-slate-900 dark:text-white">
+            TodoApp
+          </span>
         </div>
 
         <div className="flex-1 overflow-auto py-4">
@@ -64,8 +73,9 @@ export function DashboardSidebar({ open, setOpen }: DashboardSidebarProps) {
                 variant="ghost"
                 asChild
                 className={cn(
-                  "justify-start gap-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-white/40 dark:hover:text-white",
-                  route.active && "bg-white/40 text-slate-900 dark:text-white font-medium",
+                  'justify-start gap-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 hover:bg-white/40 dark:hover:text-white',
+                  route.active &&
+                    'bg-white/40 text-slate-900 dark:text-white font-medium',
                 )}
               >
                 <Link href={route.href}>
@@ -83,8 +93,12 @@ export function DashboardSidebar({ open, setOpen }: DashboardSidebarProps) {
               <User className="h-5 w-5 text-indigo-700 dark:text-indigo-300" />
             </div>
             <div className="flex-1 overflow-hidden">
-              <p className="text-sm font-medium text-slate-900 dark:text-white">John Doe</p>
-              <p className="truncate text-xs text-slate-700 dark:text-slate-300">john@example.com</p>
+              <p className="text-sm font-medium text-slate-900 dark:text-white">
+                John Doe
+              </p>
+              <p className="truncate text-xs text-slate-700 dark:text-slate-300">
+                john@example.com
+              </p>
             </div>
             <Button
               variant="ghost"
@@ -98,6 +112,5 @@ export function DashboardSidebar({ open, setOpen }: DashboardSidebarProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

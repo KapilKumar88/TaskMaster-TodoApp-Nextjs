@@ -1,15 +1,15 @@
-import "server-only";
-import { prisma } from "@/lib/prisma";
+import 'server-only';
+import { prisma } from '@/lib/prisma';
 import {
   AppTheme,
   Prisma,
   TimeFrequency,
   User,
   WeekStartDay,
-} from "@prisma/client";
+} from '@prisma/client';
 
 export async function createUserSettings(payload: {
-  userId: User["id"];
+  userId: User['id'];
   timeZone: string;
   dateFormat: string;
 }) {
@@ -29,7 +29,7 @@ export async function createUserSettings(payload: {
   });
 }
 
-export async function getUserSettings(userId: User["id"]) {
+export async function getUserSettings(userId: User['id']) {
   return await prisma.settings.findFirst({
     where: {
       user: {
@@ -40,7 +40,7 @@ export async function getUserSettings(userId: User["id"]) {
 }
 
 export async function updateUserGeneralSettings(payload: {
-  userId: User["id"];
+  userId: User['id'];
   timeZone: string;
   dateFormat: string;
   weekStartDay: WeekStartDay;
@@ -64,7 +64,7 @@ export async function updateUserGeneralSettings(payload: {
 }
 
 export async function updateUserAppearanceSettings(payload: {
-  userId: User["id"];
+  userId: User['id'];
   theme: AppTheme;
   accentColor: string;
   glassEffectIntensity: number;
@@ -82,7 +82,7 @@ export async function updateUserAppearanceSettings(payload: {
 }
 
 export async function updateUserNotificationSettings(payload: {
-  userId: User["id"];
+  userId: User['id'];
   emailNotification: boolean;
   pushNotification: boolean;
   taskDueReminder: boolean;
@@ -98,8 +98,8 @@ export async function updateUserNotificationSettings(payload: {
   };
 
   if (payload.taskDueReminder) {
-    data["taskDueTime"] = payload.taskDueTime;
-    data["taskDueTimeFrequency"] = payload.taskDueTimeFrequency;
+    data['taskDueTime'] = payload.taskDueTime;
+    data['taskDueTimeFrequency'] = payload.taskDueTimeFrequency;
   }
 
   return await prisma.settings.update({

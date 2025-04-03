@@ -1,17 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TaskList } from "./task-list";
-import { useTaskContext } from "@/contextApis/task";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { TaskList } from './task-list';
+import { useTaskContext } from '@/contextApis/task';
 import {
   PaginationNextWithIcon,
   PaginationPreviousWithIcon,
-} from "../ui/pagination";
+} from '../ui/pagination';
 
 export default function TaskListCard({
   cardTitle,
   filter,
 }: Readonly<{
   cardTitle: string;
-  filter?: "all" | "today" | "upcoming" | "completed";
+  filter?: 'all' | 'today' | 'upcoming' | 'completed';
 }>) {
   const { pagination, setPagination } = useTaskContext();
   return (

@@ -1,6 +1,6 @@
-import { ChartSkeleton } from "@/components/common/skeletons/chart-skeleton";
-import { DashboardCardsSkeleton } from "@/components/common/skeletons/dashboard-cards-skeleton";
-import { TaskListSkeleton } from "@/components/common/skeletons/task-list-skeleton";
+import { ChartSkeleton } from '@/components/common/skeletons/chart-skeleton';
+import { DashboardCardsSkeleton } from '@/components/common/skeletons/dashboard-cards-skeleton';
+import { TaskListSkeleton } from '@/components/common/skeletons/task-list-skeleton';
 
 export default function Loading() {
   return (

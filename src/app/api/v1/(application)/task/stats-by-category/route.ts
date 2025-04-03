@@ -1,13 +1,13 @@
-import { auth } from "@/auth";
-import { sendResponse } from "@/lib/utils";
-import { allCategoryTaskCount } from "@/services/category.service";
+import { auth } from '@/auth';
+import { sendResponse } from '@/lib/utils';
+import { allCategoryTaskCount } from '@/services/category.service';
 
 export const GET = auth(async function GET(req) {
   if (!req.auth) {
     return sendResponse({
-      status: "error",
+      status: 'error',
       statusCode: 401,
-      message: "Unauthorized",
+      message: 'Unauthorized',
     });
   }
 
@@ -15,6 +15,6 @@ export const GET = auth(async function GET(req) {
 
   return sendResponse({
     data: getData,
-    message: "Data retrieved successfully",
+    message: 'Data retrieved successfully',
   });
 });

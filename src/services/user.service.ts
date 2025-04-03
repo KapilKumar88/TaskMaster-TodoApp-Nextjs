@@ -1,11 +1,11 @@
-import "server-only";
-import { generateHashedValue, verifyHash } from "@/lib/utils";
-import { prisma } from "@/lib/prisma";
-import { createCategoryBulk } from "./category.service";
-import { DEFAULT_CATEGORIES } from "@/lib/constants";
-import { createUserSettings } from "./settings.service";
-import appConfig from "@/config/app.config";
-import { User } from "@prisma/client";
+import 'server-only';
+import { generateHashedValue, verifyHash } from '@/lib/utils';
+import { prisma } from '@/lib/prisma';
+import { createCategoryBulk } from './category.service';
+import { DEFAULT_CATEGORIES } from '@/lib/constants';
+import { createUserSettings } from './settings.service';
+import appConfig from '@/config/app.config';
+import { User } from '@prisma/client';
 
 export async function createUser(payload: {
   name: string;
@@ -33,7 +33,7 @@ export async function createUser(payload: {
       name: c.name,
       color: c.color,
       userId: user.id,
-    }))
+    })),
   );
   return user;
 }
@@ -47,7 +47,7 @@ export async function getUserDetailsByEmailId(email: string) {
 }
 
 export async function changePassword(payload: {
-  userId: User["id"];
+  userId: User['id'];
   currentPassword: string;
   newPassword: string;
 }) {
@@ -59,7 +59,7 @@ export async function changePassword(payload: {
 
   const isValidPassword = await verifyHash(
     payload.currentPassword,
-    userDetails.password
+    userDetails.password,
   );
 
   if (!isValidPassword) {

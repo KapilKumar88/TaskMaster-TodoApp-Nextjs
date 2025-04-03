@@ -1,4 +1,4 @@
-import { TaskPriority, WeekStartDay } from "@prisma/client";
+import { TaskPriority, WeekStartDay } from '@prisma/client';
 
 export interface ServerActionInterface {
   message: string;

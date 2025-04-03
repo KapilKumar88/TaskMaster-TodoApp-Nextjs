@@ -1,24 +1,24 @@
-"use server";
-import "server-only";
+'use server';
+import 'server-only';
 
-import { auth } from "@/auth";
+import { auth } from '@/auth';
 import {
   AppearanceSettingsFormState,
   GeneralSettingsFormState,
   NotificationsSettingsFormState,
-} from "@/lib/interfaces/server-action.interface";
-import { generalTaskSchema } from "@/validationsSchemas/settings.validation";
-import { AppTheme, TimeFrequency, WeekStartDay } from "@prisma/client";
+} from '@/lib/interfaces/server-action.interface';
+import { generalTaskSchema } from '@/validationsSchemas/settings.validation';
+import { AppTheme, TimeFrequency, WeekStartDay } from '@prisma/client';
 import {
   updateUserAppearanceSettings,
   updateUserGeneralSettings,
   updateUserNotificationSettings,
-} from "@/services/settings.service";
-import { revalidatePath } from "next/cache";
+} from '@/services/settings.service';
+import { revalidatePath } from 'next/cache';
 
 export async function updateUserGeneralSettingsAction(
   state: GeneralSettingsFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<GeneralSettingsFormState> {
   try {
     const userSession = await auth();
@@ -26,32 +26,32 @@ export async function updateUserGeneralSettingsAction(
     if (!userSession?.user.id) {
       return {
         success: false,
-        message: "Unauthorized",
+        message: 'Unauthorized',
       };
     }
 
-    const autoArchive = (formData.get("autoArchive") as string) === "on";
-    const tempAutoArchiveTime = formData.get("autoArchiveTime") as string;
+    const autoArchive = (formData.get('autoArchive') as string) === 'on';
+    const tempAutoArchiveTime = formData.get('autoArchiveTime') as string;
     const autoArchiveTime = autoArchive
-      ? parseInt(tempAutoArchiveTime.split(" ")[0])
+      ? parseInt(tempAutoArchiveTime.split(' ')[0])
       : undefined;
     const timeFrequency = autoArchive
-      ? tempAutoArchiveTime.split(" ")[1]
+      ? tempAutoArchiveTime.split(' ')[1]
       : undefined;
 
     const getFormPayload = {
-      timeZone: formData.get("timeZone") as string,
-      dateFormat: formData.get("dateFormat") as string,
-      weekStartDay: formData.get("weekStartDay") as WeekStartDay,
+      timeZone: formData.get('timeZone') as string,
+      dateFormat: formData.get('dateFormat') as string,
+      weekStartDay: formData.get('weekStartDay') as WeekStartDay,
       autoArchive: autoArchive,
       autoArchiveTime: autoArchiveTime,
       timeFrequency: timeFrequency,
     };
 
     const validatedFields = generalTaskSchema.safeParse({
-      timeZone: getFormPayload.timeZone ?? "",
-      dateFormat: getFormPayload.dateFormat ?? "",
-      weekStartDay: getFormPayload.weekStartDay ?? "",
+      timeZone: getFormPayload.timeZone ?? '',
+      dateFormat: getFormPayload.dateFormat ?? '',
+      weekStartDay: getFormPayload.weekStartDay ?? '',
       autoArchive: getFormPayload.autoArchive,
       autoArchiveTime: getFormPayload.autoArchiveTime,
       timeFrequency: getFormPayload.timeFrequency,
@@ -69,7 +69,7 @@ export async function updateUserGeneralSettingsAction(
           autoArchiveTime: tempAutoArchiveTime,
         },
         success: false,
-        message: "Validation error",
+        message: 'Validation error',
       };
     }
 
@@ -83,7 +83,7 @@ export async function updateUserGeneralSettingsAction(
       timeFrequency: validatedFields.data.timeFrequency,
     });
 
-    revalidatePath("/settings");
+    revalidatePath('/settings');
     return {
       success: true,
       errors: {},
@@ -96,24 +96,24 @@ export async function updateUserGeneralSettingsAction(
           ? `${newSettingsData.autoArchiveTime} ${newSettingsData.autoArchiveTimeFrequency}`
           : null,
       },
-      message: "Settings updated successfully",
+      message: 'Settings updated successfully',
     };
   } catch (error) {
     return {
       ...state,
       errors: {
         general:
-          (error as Error)?.message ?? "Something went wrong. Please try again",
+          (error as Error)?.message ?? 'Something went wrong. Please try again',
       },
       success: false,
-      message: "Server error",
+      message: 'Server error',
     };
   }
 }
 
 export async function saveAppearanceSettingsAction(
   state: AppearanceSettingsFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<AppearanceSettingsFormState> {
   try {
     const userSession = await auth();
@@ -121,40 +121,40 @@ export async function saveAppearanceSettingsAction(
     if (!userSession?.user.id) {
       return {
         success: false,
-        message: "Unauthorized",
+        message: 'Unauthorized',
       };
     }
 
     await updateUserAppearanceSettings({
       userId: userSession.user.id,
-      theme: formData.get("theme") as AppTheme,
-      accentColor: formData.get("accentColor") as string,
+      theme: formData.get('theme') as AppTheme,
+      accentColor: formData.get('accentColor') as string,
       glassEffectIntensity: parseInt(
-        formData.get("glassEffectIntensity") as string
+        formData.get('glassEffectIntensity') as string,
       ),
     });
 
-    revalidatePath("/settings");
+    revalidatePath('/settings');
     return {
       success: true,
-      message: "Settings updated successfully",
+      message: 'Settings updated successfully',
     };
   } catch (error) {
     return {
       ...state,
       errors: {
         general:
-          (error as Error)?.message ?? "Something went wrong. Please try again",
+          (error as Error)?.message ?? 'Something went wrong. Please try again',
       },
       success: false,
-      message: "Server error",
+      message: 'Server error',
     };
   }
 }
 
 export async function saveNotificationSettingsAction(
   state: NotificationsSettingsFormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<NotificationsSettingsFormState> {
   try {
     const userSession = await auth();
@@ -162,44 +162,44 @@ export async function saveNotificationSettingsAction(
     if (!userSession?.user.id) {
       return {
         success: false,
-        message: "Unauthorized",
+        message: 'Unauthorized',
       };
     }
 
     const taskDueReminder =
-      (formData.get("taskDueReminders") as string) === "on";
-    const tempTaskDueTime = formData.get("taskDueTime") as string;
+      (formData.get('taskDueReminders') as string) === 'on';
+    const tempTaskDueTime = formData.get('taskDueTime') as string;
     const taskDueTime = taskDueReminder
-      ? parseInt(tempTaskDueTime.split(" ")[0])
+      ? parseInt(tempTaskDueTime.split(' ')[0])
       : undefined;
     const taskDueTimeFrequency = taskDueReminder
-      ? tempTaskDueTime.split(" ")[1]
+      ? tempTaskDueTime.split(' ')[1]
       : undefined;
 
     await updateUserNotificationSettings({
       userId: userSession.user.id,
-      emailNotification: formData.get("emailNotifications") === "on",
-      pushNotification: formData.get("pushNotifications") === "on",
+      emailNotification: formData.get('emailNotifications') === 'on',
+      pushNotification: formData.get('pushNotifications') === 'on',
       taskDueReminder: taskDueReminder,
       taskDueTime: taskDueTime,
       taskDueTimeFrequency: taskDueTimeFrequency as TimeFrequency,
-      weeklySummary: formData.get("weeklySummary") === "on",
+      weeklySummary: formData.get('weeklySummary') === 'on',
     });
 
-    revalidatePath("/settings");
+    revalidatePath('/settings');
     return {
       success: true,
-      message: "Settings updated successfully",
+      message: 'Settings updated successfully',
     };
   } catch (error) {
     return {
       ...state,
       errors: {
         general:
-          (error as Error)?.message ?? "Something went wrong. Please try again",
+          (error as Error)?.message ?? 'Something went wrong. Please try again',
       },
       success: false,
-      message: "Server error",
+      message: 'Server error',
     };
   }
 }

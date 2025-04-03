@@ -1,4 +1,4 @@
-import { ChartSkeleton } from "@/components/common/skeletons/chart-skeleton";
+import { ChartSkeleton } from '@/components/common/skeletons/chart-skeleton';
 
 export default function Loading() {
   return (

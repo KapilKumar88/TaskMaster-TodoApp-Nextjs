@@ -6,8 +6,8 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
-import { useTaskContext } from "@/contextApis/task";
+} from '@/components/ui/pagination';
+import { useTaskContext } from '@/contextApis/task';
 
 export default function TaskPagination({
   totalNumberOfRecords,

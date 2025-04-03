@@ -1,15 +1,15 @@
-"use client";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+'use client';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { CalendarIcon, Download } from "lucide-react";
-import type { DateRange } from "react-day-picker";
+} from '@/components/ui/select';
+import { CalendarIcon, Download } from 'lucide-react';
+import type { DateRange } from 'react-day-picker';
 import {
   endOfDay,
   endOfMonth,
@@ -20,16 +20,16 @@ import {
   startOfMonth,
   startOfWeek,
   startOfYear,
-} from "date-fns";
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
+} from 'date-fns';
+import { cn } from '@/lib/utils';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { useRouter } from "next/navigation";
-import appConfig from "@/config/app.config";
+} from '@/components/ui/popover';
+import { useRouter } from 'next/navigation';
+import appConfig from '@/config/app.config';
 
 export default function AnalyticsFilter() {
   const router = useRouter();
@@ -37,37 +37,39 @@ export default function AnalyticsFilter() {
     {
       from: startOfWeek(new Date()),
       to: endOfWeek(new Date()),
-    }
+    },
   );
 
-  const [period, setPeriod] = useState<string>(appConfig.DEFAULT_PERIOD_FOR_COMPUTATION);
+  const [period, setPeriod] = useState<string>(
+    appConfig.DEFAULT_PERIOD_FOR_COMPUTATION,
+  );
 
   useEffect(() => {
     let startDate = null;
     let endDate = null;
     const currentDate = new Date();
-    if (period === "daily") {
+    if (period === 'daily') {
       startDate = startOfDay(currentDate);
       endDate = endOfDay(currentDate);
       setCustomDateRange({
         from: startDate,
         to: endDate,
       });
-    } else if (period === "weekly") {
+    } else if (period === 'weekly') {
       startDate = startOfWeek(currentDate);
       endDate = endOfWeek(currentDate);
       setCustomDateRange({
         from: startDate,
         to: endDate,
       });
-    } else if (period === "monthly") {
+    } else if (period === 'monthly') {
       startDate = startOfMonth(currentDate);
       endDate = endOfMonth(currentDate);
       setCustomDateRange({
         from: startDate,
         to: endDate,
       });
-    } else if (period === "yearly") {
+    } else if (period === 'yearly') {
       startDate = startOfYear(currentDate);
       endDate = endOfYear(currentDate);
       setCustomDateRange({
@@ -79,8 +81,8 @@ export default function AnalyticsFilter() {
     if (startDate !== null && endDate !== null) {
       router.push(
         `/analytics?startDate=${encodeURIComponent(
-          format(startDate, "yyyy-MM-dd")
-        )}&endDate=${encodeURIComponent(format(endDate, "yyyy-MM-dd"))}`
+          format(startDate, 'yyyy-MM-dd'),
+        )}&endDate=${encodeURIComponent(format(endDate, 'yyyy-MM-dd'))}`,
       );
     }
   }, [period]);
@@ -92,19 +94,19 @@ export default function AnalyticsFilter() {
           <Button
             variant="outline"
             className={cn(
-              "w-full sm:w-auto justify-start text-left font-normal border-white/30 bg-white/40",
-              !customDateRange && "text-muted-foreground"
+              'w-full sm:w-auto justify-start text-left font-normal border-white/30 bg-white/40',
+              !customDateRange && 'text-muted-foreground',
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             {customDateRange?.from ? (
               customDateRange.to ? (
                 <>
-                  {format(customDateRange.from, "LLL dd, y")} -{" "}
-                  {format(customDateRange.to, "LLL dd, y")}
+                  {format(customDateRange.from, 'LLL dd, y')} -{' '}
+                  {format(customDateRange.to, 'LLL dd, y')}
                 </>
               ) : (
-                format(customDateRange.from, "LLL dd, y")
+                format(customDateRange.from, 'LLL dd, y')
               )
             ) : (
               <span>Pick a date range</span>

@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TaskForm } from "@/components/task/task-form";
-import {  Plus } from "lucide-react";
-import TaskListCard from "./task-list-card";
-import TaskStatsByCategory from "./task-stats-by-category";
-import { TaskContextProvider } from "@/contextApis/task";
-import FilterButton from "./filter-button";
-import SortButton from "./sort-button";
-import SearchInput from "./search-input";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TaskForm } from '@/components/task/task-form';
+import { Plus } from 'lucide-react';
+import TaskListCard from './task-list-card';
+import TaskStatsByCategory from './task-stats-by-category';
+import { TaskContextProvider } from '@/contextApis/task';
+import FilterButton from './filter-button';
+import SortButton from './sort-button';
+import SearchInput from './search-input';
 
 export default function Task({
   categories,
@@ -77,7 +77,7 @@ export default function Task({
             </TabsContent>
 
             <TabsContent value="today" className="mt-0">
-              <TaskListCard cardTitle="Today&apos;s Tasks" filter="today" />
+              <TaskListCard cardTitle="Today's Tasks" filter="today" />
             </TabsContent>
 
             <TabsContent value="upcoming" className="mt-0">
@@ -93,7 +93,7 @@ export default function Task({
             <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md sticky top-20">
               <CardHeader>
                 <CardTitle className="text-slate-900 dark:text-white">
-                  {showTaskForm ? "Add New Task" : "Task Categories"}
+                  {showTaskForm ? 'Add New Task' : 'Task Categories'}
                 </CardTitle>
               </CardHeader>
               <CardContent>

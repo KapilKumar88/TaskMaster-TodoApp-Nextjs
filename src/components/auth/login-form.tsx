@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { loginUserServerAction } from "@/server-actions/auth.actions";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { LoaderPinwheel } from "lucide-react";
-import { redirect } from "next/navigation";
-import { useActionState, useEffect, useState } from "react";
-import { LoginFormState } from "@/lib/interfaces/server-action.interface";
-import { toast } from "../common/sonner";
-import { ToastVariation } from "@/lib/enums";
+import { loginUserServerAction } from '@/server-actions/auth.actions';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { LoaderPinwheel } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { useActionState, useEffect, useState } from 'react';
+import { LoginFormState } from '@/lib/interfaces/server-action.interface';
+import { toast } from '../common/sonner';
+import { ToastVariation } from '@/lib/enums';
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState<LoginFormState, FormData>(
@@ -17,11 +17,11 @@ export default function LoginForm() {
     {
       errors: {},
       formValues: {
-        email: "",
+        email: '',
       },
-      message: "",
+      message: '',
       success: false,
-    }
+    },
   );
 
   const [formErrors, setFormErrors] = useState<{
@@ -68,7 +68,7 @@ export default function LoginForm() {
         message: state.message,
         variation: ToastVariation.SUCCESS,
       });
-      redirect("/dashboard");
+      redirect('/dashboard');
     }
   }, [state]);
 
@@ -84,7 +84,7 @@ export default function LoginForm() {
           name="email"
           placeholder="your@email.com"
           className="bg-white/40 border-white/40 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
-          defaultValue={state?.formValues?.email ?? ""}
+          defaultValue={state?.formValues?.email ?? ''}
           onChange={handleInputChange}
         />
         {formErrors?.email && (
@@ -112,7 +112,7 @@ export default function LoginForm() {
         disabled={pending}
       >
         {pending && <LoaderPinwheel className="mr-2 h-8 w-8 animate-spin" />}
-        {!pending && "Login"}
+        {!pending && 'Login'}
       </Button>
     </form>
   );

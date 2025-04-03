@@ -1,4 +1,4 @@
-import "client-only";
+import 'client-only';
 type ClientSideConfig = {
   APP_NAME: string;
   NODE_ENV: string;

@@ -1,21 +1,21 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { AlertCircle, Trash2 } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import GeneralSettingsForm from "@/components/settings/general-settings-form";
-import NotificationSettingsForm from "@/components/settings/notification-settings-form";
-import AppearanceSettingsForm from "@/components/settings/appearance-settings-form";
-import EmailAddress from "@/components/settings/account-settings/email-address";
-import PasswordChange from "@/components/settings/account-settings/password-change";
-import ExportData from "@/components/settings/account-settings/data-export";
+} from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
+import { AlertCircle, Trash2 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import GeneralSettingsForm from '@/components/settings/general-settings-form';
+import NotificationSettingsForm from '@/components/settings/notification-settings-form';
+import AppearanceSettingsForm from '@/components/settings/appearance-settings-form';
+import EmailAddress from '@/components/settings/account-settings/email-address';
+import PasswordChange from '@/components/settings/account-settings/password-change';
+import ExportData from '@/components/settings/account-settings/data-export';
 
 export default function SettingsPage() {
   return (
@@ -179,7 +179,7 @@ export default function SettingsPage() {
                     Feedback
                   </h3>
                   <p className="text-sm text-slate-700 dark:text-slate-300 mb-3">
-                    We'd love to hear your thoughts on how we can improve.
+                    We&apos;d love to hear your thoughts on how we can improve.
                   </p>
                   <Button
                     variant="outline"

@@ -1,15 +1,18 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Bell, Menu, Plus, Search } from "lucide-react"
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Bell, Menu, Plus, Search } from 'lucide-react';
 
 interface DashboardHeaderProps {
-  sidebarOpen: boolean
-  setSidebarOpen: (open: boolean) => void
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
 }
 
-export function DashboardHeader({ sidebarOpen, setSidebarOpen }: DashboardHeaderProps) {
+export function DashboardHeader({
+  sidebarOpen,
+  setSidebarOpen,
+}: DashboardHeaderProps) {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-white/30 bg-white/30 backdrop-blur-xl px-6">
       <Button
@@ -22,7 +25,9 @@ export function DashboardHeader({ sidebarOpen, setSidebarOpen }: DashboardHeader
         <span className="sr-only">Toggle sidebar</span>
       </Button>
 
-      <h1 className="text-xl font-semibold text-slate-900 dark:text-white md:text-2xl">Dashboard</h1>
+      <h1 className="text-xl font-semibold text-slate-900 dark:text-white md:text-2xl">
+        Dashboard
+      </h1>
 
       <div className="relative ml-auto flex items-center gap-4">
         <div className="relative hidden md:block">
@@ -52,6 +57,5 @@ export function DashboardHeader({ sidebarOpen, setSidebarOpen }: DashboardHeader
         </Button>
       </div>
     </header>
-  )
+  );
 }
-

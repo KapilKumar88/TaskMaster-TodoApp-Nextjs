@@ -1,17 +1,17 @@
-"use client";
-import { toast } from "@/components/common/sonner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ToastVariation } from "@/lib/enums";
-import { changePasswordAction } from "@/server-actions/auth.actions";
-import { LoaderPinwheel } from "lucide-react";
-import { useActionState, useEffect, useState } from "react";
+'use client';
+import { toast } from '@/components/common/sonner';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { ToastVariation } from '@/lib/enums';
+import { changePasswordAction } from '@/server-actions/auth.actions';
+import { LoaderPinwheel } from 'lucide-react';
+import { useActionState, useEffect, useState } from 'react';
 
 export default function PasswordChange() {
   const [passwordChangeState, passwordChangeAction, passwordChangePending] =
     useActionState(changePasswordAction, {
       errors: {},
-      message: "",
+      message: '',
       success: false,
     });
 
@@ -119,7 +119,7 @@ export default function PasswordChange() {
                   Updating...
                 </>
               )}
-              {!passwordChangePending && "Update"}
+              {!passwordChangePending && 'Update'}
             </Button>
           </div>
         </div>

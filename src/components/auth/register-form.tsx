@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { registerUserServerAction } from "@/server-actions/auth.actions";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { LoaderPinwheel } from "lucide-react";
-import { redirect } from "next/navigation";
-import { useActionState, useEffect, useState } from "react";
-import { RegisterFormState } from "@/lib/interfaces/server-action.interface";
-import { toast } from "../common/sonner";
-import { ToastVariation } from "@/lib/enums";
+import { registerUserServerAction } from '@/server-actions/auth.actions';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { LoaderPinwheel } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { useActionState, useEffect, useState } from 'react';
+import { RegisterFormState } from '@/lib/interfaces/server-action.interface';
+import { toast } from '../common/sonner';
+import { ToastVariation } from '@/lib/enums';
 
 export default function RegisterForm() {
   const [state, action, pending] = useActionState<RegisterFormState, FormData>(
@@ -17,12 +17,12 @@ export default function RegisterForm() {
     {
       errors: {},
       formValues: {
-        fullName: "",
-        email: "",
+        fullName: '',
+        email: '',
       },
-      message: "",
+      message: '',
       success: false,
-    }
+    },
   );
 
   const [formErrors, setFormErrors] = useState<{
@@ -83,7 +83,7 @@ export default function RegisterForm() {
         message: state.message,
         variation: ToastVariation.SUCCESS,
       });
-      redirect("/dashboard");
+      redirect('/dashboard');
     }
   }, [state]);
 
@@ -99,7 +99,7 @@ export default function RegisterForm() {
           name="fullName"
           placeholder="Enter your full name"
           className="bg-white/40 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
-          defaultValue={state?.formValues?.fullName ?? ""}
+          defaultValue={state?.formValues?.fullName ?? ''}
           onChange={handleInputChange}
         />
         {formErrors?.fullName && (
@@ -116,7 +116,7 @@ export default function RegisterForm() {
           name="email"
           placeholder="your@email.com"
           className="bg-white/40 border-white/40 text-slate-900 dark:text-white placeholder:text-slate-500 focus:border-indigo-500 focus:ring-indigo-500"
-          defaultValue={state?.formValues?.email ?? ""}
+          defaultValue={state?.formValues?.email ?? ''}
           onChange={handleInputChange}
         />
         {formErrors?.email && (
@@ -164,7 +164,7 @@ export default function RegisterForm() {
         disabled={pending}
       >
         {pending && <LoaderPinwheel className="mr-2 h-8 w-8 animate-spin" />}
-        {!pending && "Register"}
+        {!pending && 'Register'}
       </Button>
     </form>
   );

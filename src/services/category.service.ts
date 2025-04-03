@@ -1,7 +1,7 @@
-import "server-only";
-import { prisma } from "@/lib/prisma";
-import { DEFAULT_CATEGORIES } from "@/lib/constants";
-import { startOfDay } from "date-fns";
+import 'server-only';
+import { prisma } from '@/lib/prisma';
+import { DEFAULT_CATEGORIES } from '@/lib/constants';
+import { startOfDay } from 'date-fns';
 
 export async function createCategory(payload: {
   name: string;
@@ -20,7 +20,7 @@ export async function createCategoryBulk(
     name: string;
     userId: string;
     color: string;
-  }>
+  }>,
 ) {
   return await prisma.category.createMany({
     data: payload,
@@ -43,7 +43,7 @@ export async function getUserCategories(userId: string) {
         name: c.name,
         color: c.color,
         userId: userId,
-      }))
+      })),
     );
     return getUserCategories(userId);
   }

@@ -1,20 +1,20 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+'use client';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "../ui/separator";
-import { LoaderPinwheel, Save } from "lucide-react";
-import { useUserSettingContext } from "@/contextApis/user-settings";
-import { useActionState, useEffect, useState } from "react";
-import { saveNotificationSettingsAction } from "@/server-actions/settings.actions";
-import { toast } from "../common/sonner";
-import { ToastVariation } from "@/lib/enums";
+} from '@/components/ui/select';
+import { Separator } from '../ui/separator';
+import { LoaderPinwheel, Save } from 'lucide-react';
+import { useUserSettingContext } from '@/contextApis/user-settings';
+import { useActionState, useEffect, useState } from 'react';
+import { saveNotificationSettingsAction } from '@/server-actions/settings.actions';
+import { toast } from '../common/sonner';
+import { ToastVariation } from '@/lib/enums';
 
 export default function NotificationSettingsForm() {
   const { userSettings } = useUserSettingContext();
@@ -24,7 +24,7 @@ export default function NotificationSettingsForm() {
     notificationSettingsPending,
   ] = useActionState(saveNotificationSettingsAction, {
     errors: {},
-    message: "",
+    message: '',
     success: false,
   });
 
@@ -40,7 +40,7 @@ export default function NotificationSettingsForm() {
     taskDueReminder: userSettings?.taskDueReminder ?? false,
     taskDueTime: userSettings?.taskDueReminder
       ? `${userSettings.taskDueTime} ${userSettings?.taskDueTimeFrequency}`
-      : "1 day",
+      : '1 day',
     weeklySummary: userSettings?.weeklySummary ?? false,
   });
 

@@ -5,13 +5,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "../ui/button";
-import { SlidersHorizontal } from "lucide-react";
-import { useTaskContext } from "@/contextApis/task";
+} from '@/components/ui/dropdown-menu';
+import { Button } from '../ui/button';
+import { SlidersHorizontal } from 'lucide-react';
+import { useTaskContext } from '@/contextApis/task';
 
 export default function SortButton() {
-  const { taskSorting, setTaskSorting } = useTaskContext();
+  const { setTaskSorting } = useTaskContext();
 
   return (
     <DropdownMenu>
@@ -29,8 +29,8 @@ export default function SortButton() {
             setTaskSorting((previousState) => {
               return {
                 ...previousState,
-                sortBy: "dueDate",
-                sortDirection: "asc",
+                sortBy: 'dueDate',
+                sortDirection: 'asc',
               };
             })
           }
@@ -42,8 +42,8 @@ export default function SortButton() {
             setTaskSorting((previousState) => {
               return {
                 ...previousState,
-                sortBy: "dueDate",
-                sortDirection: "desc",
+                sortBy: 'dueDate',
+                sortDirection: 'desc',
               };
             })
           }
@@ -55,8 +55,8 @@ export default function SortButton() {
             setTaskSorting((previousState) => {
               return {
                 ...previousState,
-                sortBy: "priority",
-                sortDirection: "asc",
+                sortBy: 'priority',
+                sortDirection: 'asc',
               };
             })
           }
@@ -68,8 +68,8 @@ export default function SortButton() {
             setTaskSorting((previousState) => {
               return {
                 ...previousState,
-                sortBy: "priority",
-                sortDirection: "desc",
+                sortBy: 'priority',
+                sortDirection: 'desc',
               };
             })
           }
@@ -81,8 +81,8 @@ export default function SortButton() {
             setTaskSorting((previousState) => {
               return {
                 ...previousState,
-                sortBy: "alphabetical",
-                sortDirection: "asc",
+                sortBy: 'alphabetical',
+                sortDirection: 'asc',
               };
             })
           }
@@ -94,8 +94,8 @@ export default function SortButton() {
             setTaskSorting((previousState) => {
               return {
                 ...previousState,
-                sortBy: "alphabetical",
-                sortDirection: "desc",
+                sortBy: 'alphabetical',
+                sortDirection: 'desc',
               };
             })
           }

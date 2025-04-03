@@ -1,5 +1,5 @@
-"use client";
+'use client';
 
-export default function Error({ error, reset }: any) {
-  return <h1>{error?.message ?? "Error page"}</h1>;
+export default function Error({ error }: Readonly<{ error: Error }>) {
+  return <h1>{error?.message ?? 'Error page'}</h1>;
 }
