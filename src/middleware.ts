@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import serverSideConfig from './config/server.config';
+// import serverSideConfig from './config/server.config';
 import { cookies } from 'next/headers';
 
 const authPaths = [
@@ -9,15 +9,15 @@ const authPaths = [
   '/forgot-password',
   '/reset-password',
 ];
-const COOKIES_NAME =
-  serverSideConfig.NODE_ENV === 'production'
-    ? '__Secure-next-auth.session-token'
-    : 'authjs.session-token';
+// const COOKIES_NAME =
+//   serverSideConfig.NODE_ENV === 'production'
+//     ? '__Secure-next-auth.session-token'
+//     : 'authjs.session-token';
+const COOKIES_NAME = 'authjs.session-token';
 
 export default async function middleware(request: NextRequest) {
   const c = await cookies();
   const cookieToken = c?.get(COOKIES_NAME)?.value;
-
   if (
     !cookieToken &&
     !authPaths.includes(request.nextUrl.pathname) &&

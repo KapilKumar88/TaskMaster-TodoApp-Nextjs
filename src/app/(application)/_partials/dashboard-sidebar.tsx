@@ -19,9 +19,9 @@ import { useEffect, useRef } from 'react';
 
 export function DashboardSidebar({
   userSession,
-}: {
+}: Readonly<{
   userSession: Session | null;
-}) {
+}>) {
   const { setSidebarOpen, sidebarOpen } = useSideBarContext();
   const pathname = usePathname();
   const sidebarRef = useRef<HTMLDivElement>(null);

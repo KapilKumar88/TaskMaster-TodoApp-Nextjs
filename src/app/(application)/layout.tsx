@@ -5,6 +5,7 @@ import { SidebarContextProvider } from '@/contextApis/side-bar';
 import { UserSettingProvider } from '@/contextApis/user-settings';
 import { getUserSettings } from '@/services/settings.service';
 import { Toaster } from '@/components/common/sonner';
+import Unauthorized from '@/components/common/unauthorized';
 
 export default async function ApplicationLayout({
   children,
@@ -12,6 +13,9 @@ export default async function ApplicationLayout({
   children: React.ReactNode;
 }>) {
   const userSession = await auth();
+  if (userSession === null) {
+    return <Unauthorized />;
+  }
   const userSettings = await getUserSettings(userSession?.user.id);
 
   return (

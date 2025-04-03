@@ -3,9 +3,9 @@ import NavButton from './_ui/nav-button';
 
 export default function DashboardTaskLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md lg:col-span-4">
       <CardHeader className="flex flex-row items-center justify-between">

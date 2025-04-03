@@ -94,9 +94,12 @@ export async function makeTaskCompleted(
 ): Promise<UpdateTaskFormState> {
   try {
     const userSession = await auth();
+    if (!userSession?.user?.id) {
+      throw new Error('User not found');
+    }
     const getFormPayload = {
       taskId: parseInt(formData.get('taskId') as string),
-      status: formData.get('status') as string,
+      status: formData.get('status') as TaskStatus,
     };
     await changeTaskStatus(
       getFormPayload.taskId,
@@ -126,6 +129,9 @@ export async function markTaskImportant(
 ): Promise<UpdateTaskFormState> {
   try {
     const userSession = await auth();
+    if (!userSession?.user?.id) {
+      throw new Error('User not found');
+    }
     const getFormPayload = {
       taskId: parseInt(formData.get('taskId') as string),
       isImportant:
@@ -159,6 +165,9 @@ export async function deleteTask(
 ): Promise<UpdateTaskFormState> {
   try {
     const userSession = await auth();
+    if (!userSession?.user?.id) {
+      throw new Error('User not found');
+    }
     const getFormPayload = {
       taskId: parseInt(formData.get('taskId') as string),
     };

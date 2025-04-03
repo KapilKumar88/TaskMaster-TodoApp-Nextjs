@@ -29,8 +29,7 @@ export const createTaskSchema = object({
   }),
   dueDate: z
     .date({ message: 'Due Date is required' })
-    .min(startOfToday(), 'Date must be in the future')
-    .default('Due Date is required'),
+    .min(startOfToday(), 'Date must be in the future'),
   dueTime: optional(z.string().time()),
 });
 
@@ -62,7 +61,6 @@ export const updateTaskSchema = object({
   }),
   dueDate: z
     .date({ message: 'Due Date is required' })
-    .min(startOfToday(), 'Date must be in the future')
-    .default('Due Date is required'),
+    .min(startOfToday(), 'Date must be in the future'),
   dueTime: optional(z.string().time()),
 });

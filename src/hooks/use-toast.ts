@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { ToasterProps } from 'sonner';
 
 const TOAST_LIMIT = 1;
@@ -9,7 +10,7 @@ type ToasterToast = ToasterProps & {
   id: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
-  action?: ToastActionElement;
+  // action?: ToastActionElement;
 };
 
 export const actionTypes = {
@@ -151,10 +152,10 @@ function toast({ ...props }: Toast) {
     toast: {
       ...props,
       id,
-      open: true,
-      onOpenChange: (open) => {
-        if (!open) dismiss();
-      },
+      // open: true,
+      // onOpenChange: (open) => {
+      //   if (!open) dismiss();
+      // },
     },
   });
 
@@ -166,9 +167,9 @@ function toast({ ...props }: Toast) {
 }
 
 function useToast() {
-  const [state, setState] = React.useState<State>(memoryState);
+  const [state, setState] = useState<State>(memoryState);
 
-  React.useEffect(() => {
+  useEffect(() => {
     listeners.push(setState);
     return () => {
       const index = listeners.indexOf(setState);

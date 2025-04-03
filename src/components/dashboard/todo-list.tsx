@@ -8,7 +8,7 @@ import { TaskInterface } from '@/lib/interfaces/task.interface';
 import { TaskStatus } from '@prisma/client';
 import { getPriorityColor } from '@/lib/utils';
 
-export function TodoList({ tasks }: { tasks: TaskInterface[] }) {
+export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
   return (
     <div className="space-y-2">
       {tasks?.length === 0 && (

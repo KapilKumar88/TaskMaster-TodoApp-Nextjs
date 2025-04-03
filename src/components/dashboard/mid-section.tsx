@@ -11,9 +11,9 @@ import { getDefaultDateTime } from '@/app/(application)/analytics/@topSection/pa
 
 export default async function MidSection({
   userSession,
-}: {
-  userSession: Session | null;
-}) {
+}: Readonly<{
+  userSession: Session;
+}>) {
   const defaultDates = getDefaultDateTime();
   const [weeklyProgressChatData, taskCompletionChartData] = await Promise.all([
     weeklyProgressChartStats(
