@@ -1,7 +1,8 @@
 import { auth } from '@/auth';
 import Unauthorized from '@/components/common/unauthorized';
 import { TodoList } from '@/components/dashboard/todo-list';
-import { getTaskByStatusOfCurrentWeek } from '@/services/task.service';
+import { getDefaultDateTime } from '@/lib/utils';
+import { getImportantTaskListOfGivenPeriod } from '@/services/task.service';
 import { TaskStatus } from '@prisma/client';
 
 export default async function CompletedTask() {
@@ -11,9 +12,13 @@ export default async function CompletedTask() {
     return <Unauthorized />;
   }
 
-  const taskList = await getTaskByStatusOfCurrentWeek(
-    userSession?.user.id,
-    TaskStatus.COMPLETED,
-  );
+  const defaultDates = getDefaultDateTime();
+  const taskList = await getImportantTaskListOfGivenPeriod({
+    userId: userSession?.user.id,
+    startDate: defaultDates.startDate,
+    endDate: defaultDates.endDate,
+    status: TaskStatus.COMPLETED,
+  });
+
   return <TodoList tasks={taskList} />;
 }

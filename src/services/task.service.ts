@@ -813,37 +813,38 @@ export async function getTaskCompletionRate(
   return finalOutput;
 }
 
-export async function getTaskByStatusOfCurrentWeek(
-  userId: string,
-  status: TaskStatus,
-) {
-  return prisma.task.findMany({
-    include: {
-      category: true,
+export async function getImportantTaskListOfGivenPeriod({
+  userId,
+  startDate,
+  endDate,
+  status,
+  fetchImportantTasks,
+}: {
+  userId: string;
+  startDate: Date | string;
+  endDate: Date | string;
+  status?: TaskStatus;
+  fetchImportantTasks?: boolean;
+}) {
+  const whereCondition: Prisma.TaskWhereInput = {
+    userId: userId,
+    dueDate: {
+      gte: startOfDay(startDate),
+      lte: endOfDay(endDate),
     },
-    where: {
-      userId: userId,
-      dueDate: {
-        gte: startOfWeek(new Date()),
-        lte: endOfWeek(new Date()),
-      },
-      status: status,
-    },
-  });
-}
+  };
 
-export async function getImportantTaskListOfCurrentWeek(userId: string) {
+  if (fetchImportantTasks) {
+    whereCondition.markAsImportant = true;
+  }
+  if (status) {
+    whereCondition.status = status;
+  }
+
   return prisma.task.findMany({
     include: {
       category: true,
     },
-    where: {
-      userId: userId,
-      dueDate: {
-        gte: startOfWeek(new Date()),
-        lte: endOfWeek(new Date()),
-      },
-      markAsImportant: true,
-    },
+    where: whereCondition,
   });
 }
