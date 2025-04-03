@@ -10,13 +10,13 @@ import {
 
 export default function TaskCompletionChart({
   data,
-}: {
+}: Readonly<{
   data: Array<{
     name: string;
     value: number;
     color: string;
   }>;
-}) {
+}>) {
   return (
     <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">
@@ -30,8 +30,8 @@ export default function TaskCompletionChart({
             paddingAngle={5}
             dataKey="value"
           >
-            {data?.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
+            {data?.map((entry) => (
+              <Cell key={`cell-${entry?.name}-yg`} fill={entry.color} />
             ))}
           </Pie>
           <Tooltip

@@ -12,13 +12,13 @@ import {
 
 export function CategoryDistributionChart({
   data,
-}: {
+}: Readonly<{
   data: Array<{
     name: string;
     value: number;
     color: string;
   }>;
-}) {
+}>) {
   return (
     <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">

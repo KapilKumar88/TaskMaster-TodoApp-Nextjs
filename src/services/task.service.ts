@@ -723,47 +723,33 @@ export async function getCategoryDistributionTaskStats(
   startDate: Date | string,
   endDate: Date | string,
 ) {
-  const result = await prisma.task.findMany({
-    select: {
-      category: {
+  const result = await prisma.category.findMany({
+    include: {
+      _count: {
         select: {
-          name: true,
-          color: true,
+          tasks: {
+            where: {
+              createdAt: {
+                gte: startOfDay(startDate),
+                lte: endOfDay(endDate),
+              },
+            },
+          },
         },
       },
     },
     where: {
       userId: userId,
-      createdAt: {
-        gte: startOfDay(startDate),
-        lte: endOfDay(endDate),
-      },
     },
   });
-  const data = result.reduce(
-    (acc: Array<{ name: string; value: number; color: string }>, curr) => {
-      const findIndex = acc.findIndex(
-        (item) => item.name.toLowerCase() == curr.category.name.toLowerCase(),
-      );
 
-      if (findIndex !== -1) {
-        acc[findIndex] = {
-          ...acc[findIndex],
-          value: acc[findIndex].value + 1,
-        };
-      } else {
-        acc.push({
-          name: capitalizeFirstLetters(curr.category.name),
-          value: 1,
-          color: curr.category.color,
-        });
-      }
-
-      return acc;
-    },
-    [],
-  );
-  return data;
+  return result.map((x) => {
+    return {
+      name: capitalizeFirstLetters(x.name),
+      value: x?._count?.tasks ?? 0,
+      color: x.color,
+    };
+  });
 }
 
 export async function getTaskCompletionRate(
