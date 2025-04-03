@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CategoryDistributionChart } from '@/components/category-distribution-chart';
 import { CompletionRateChart } from '@/components/completion-rate-chart';
 import TaskCompletionChart from '@/components/dashboard/task-completion-chart';
-import { getDefaultDateTime } from '../@topSection/page';
 import { auth } from '@/auth';
 import Unauthorized from '@/components/common/unauthorized';
 import {
@@ -10,6 +9,7 @@ import {
   getTaskCompletionRate,
   taskCompletionChartStats,
 } from '@/services/task.service';
+import { getDefaultDateTime } from '@/lib/utils';
 
 export default async function BottomSectionAnalytics({
   searchParams,

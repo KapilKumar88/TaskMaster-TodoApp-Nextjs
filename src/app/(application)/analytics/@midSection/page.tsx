@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getDefaultDateTime } from '../@topSection/page';
 import { auth } from '@/auth';
 import Unauthorized from '@/components/common/unauthorized';
 import {
@@ -8,12 +7,13 @@ import {
 } from '@/services/task.service';
 import WeeklyProgressChart from '@/components/dashboard/weekly-progress-chart';
 import { ProductivityChart } from '@/components/productivity-chart';
+import { getDefaultDateTime } from '@/lib/utils';
 
 export default async function MidSectionAnalytics({
   searchParams,
-}: {
+}: Readonly<{
   searchParams: { startDate: string; endDate: string };
-}) {
+}>) {
   const [userSession, queryParams] = await Promise.all([auth(), searchParams]);
   const defaultDateTime = getDefaultDateTime();
   const startDate = queryParams?.startDate ?? defaultDateTime?.startDate;

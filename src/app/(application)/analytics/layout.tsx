@@ -4,11 +4,11 @@ export default function AnalyticsLayout({
   topSection,
   midSection,
   bottomSection,
-}: {
+}: Readonly<{
   topSection: React.ReactNode;
   midSection: React.ReactNode;
   bottomSection: React.ReactNode;
-}) {
+}>) {
   return (
     <main className="p-4 md:p-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">

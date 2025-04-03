@@ -317,13 +317,28 @@ export async function taskCompletionRateStats(
     currentPeriodCompletedTask / currentPeriodTaskCount / 100;
   const previousPeriodCompletionRate =
     previousPeriodCompletedTask / previousPeriodTaskCount / 100;
-  const percentageDifference =
-    (currentPeriodCompletionRate - previousPeriodCompletionRate) /
-    previousPeriodCompletionRate;
+
+  let percentageDifference = 0;
+  if (previousPeriodCompletionRate > 0 && previousPeriodCompletionRate !== 0) {
+    percentageDifference =
+      (currentPeriodCompletionRate - previousPeriodCompletionRate) /
+      previousPeriodCompletionRate;
+  }
+
   return {
-    currentPeriodCompletionRate,
-    previousPeriodCompletionRate,
-    percentageDifference: percentageDifference,
+    currentPeriodCompletionRate: Number.isInteger(currentPeriodCompletionRate)
+      ? currentPeriodCompletionRate
+      : parseFloat(currentPeriodCompletionRate.toFixed(2)),
+    previousPeriodCompletionRate: Number.isInteger(previousPeriodCompletionRate)
+      ? previousPeriodCompletionRate
+      : parseFloat(previousPeriodCompletionRate.toFixed(2)),
+    percentageDifference: Number.isInteger(percentageDifference)
+      ? percentageDifference
+      : parseFloat(percentageDifference.toFixed(2)),
+    percentageDirection:
+      percentageDifference > 0
+        ? DirectionIndicators.UP
+        : DirectionIndicators.DOWN,
   };
 }
 
@@ -393,18 +408,50 @@ export async function avgCompletionTimeStats(
     0,
   );
 
-  const avgCurrentPeriodTime =
-    currentPeriodCompletionTime / currentPeriodTasks?.length;
-  const avgPreviousPeriodTime =
-    previousPeriodCompletionTime / previousPeriodTask?.length;
+  let avgCurrentPeriodTime = 0;
 
-  const percentageDifference =
-    ((avgCurrentPeriodTime - avgPreviousPeriodTime) / avgPreviousPeriodTime) *
-    100;
+  if (currentPeriodTasks?.length > 0 && currentPeriodCompletionTime !== 0) {
+    avgCurrentPeriodTime =
+      currentPeriodCompletionTime / currentPeriodTasks?.length;
+  }
+
+  let avgPreviousPeriodTime = 0;
+
+  if (previousPeriodTask?.length > 0 && previousPeriodCompletionTime !== 0) {
+    avgPreviousPeriodTime =
+      previousPeriodCompletionTime / previousPeriodTask?.length;
+  }
+
+  let percentageDifference = 0;
+  if (avgPreviousPeriodTime > 0 && avgCurrentPeriodTime !== 0) {
+    percentageDifference =
+      ((avgCurrentPeriodTime - avgPreviousPeriodTime) / avgPreviousPeriodTime) *
+      100;
+  }
+
+  percentageDifference = percentageDifference / 24; // to convert into days
+
+  avgCurrentPeriodTime =
+    avgCurrentPeriodTime > 0 ? avgCurrentPeriodTime / 24 : avgCurrentPeriodTime; // to convert into days
+  avgPreviousPeriodTime =
+    avgPreviousPeriodTime > 0
+      ? avgPreviousPeriodTime / 24
+      : avgPreviousPeriodTime; // to convert into days
+
   return {
-    avgCurrentPeriodTime: avgCurrentPeriodTime,
-    avgPreviousPeriodTime: avgPreviousPeriodTime,
-    percentageDifference,
+    avgCurrentPeriodTime: Number.isInteger(avgCurrentPeriodTime)
+      ? avgCurrentPeriodTime
+      : parseFloat(avgCurrentPeriodTime.toFixed(2)),
+    avgPreviousPeriodTime: Number.isInteger(avgPreviousPeriodTime)
+      ? avgPreviousPeriodTime
+      : parseFloat(avgPreviousPeriodTime.toFixed(2)),
+    percentageDifference: Number.isInteger(percentageDifference)
+      ? percentageDifference
+      : parseFloat(percentageDifference.toFixed(2)),
+    percentageDirection:
+      percentageDifference > 0
+        ? DirectionIndicators.UP
+        : DirectionIndicators.DOWN,
   };
 }
 
@@ -466,13 +513,27 @@ export async function overdueRateStats(
     currentPeriodOverdueTaskCount / currentPeriodTaskCount / 100;
   const previousPeriodOverdueRate =
     previousPeriodOverdueTaskCount / previousPeriodTaskCount / 100;
-  const percentageDifference =
-    (currentPeriodOverdueRate - previousPeriodOverdueRate) /
-    previousPeriodOverdueRate;
+  let percentageDifference = 0;
+
+  if (previousPeriodOverdueRate > 0 && currentPeriodOverdueRate !== 0) {
+    percentageDifference =
+      (currentPeriodOverdueRate - previousPeriodOverdueRate) /
+      previousPeriodOverdueRate;
+  }
   return {
-    currentPeriodOverdueRate,
-    previousPeriodOverdueRate,
-    percentageDifference: percentageDifference,
+    currentPeriodOverdueRate: Number.isInteger(currentPeriodOverdueRate)
+      ? currentPeriodOverdueRate
+      : parseFloat(currentPeriodOverdueRate.toFixed(2)),
+    previousPeriodOverdueRate: Number.isInteger(previousPeriodOverdueRate)
+      ? previousPeriodOverdueRate
+      : parseFloat(previousPeriodOverdueRate.toFixed(2)),
+    percentageDifference: Number.isInteger(percentageDifference)
+      ? percentageDifference
+      : parseFloat(percentageDifference.toFixed(2)),
+    percentageDirection:
+      percentageDifference > 0
+        ? DirectionIndicators.UP
+        : DirectionIndicators.DOWN,
   };
 }
 

@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { DirectionIndicators } from '@/lib/enums';
 import { getDefaultDateTime } from '@/lib/utils';
 import {
   avgCompletionTimeStats,
@@ -54,23 +55,25 @@ export default async function TopSectionAnalytics({
         </CardHeader>
         <CardContent>
           <div className="text-xs text-slate-700 dark:text-slate-300">
-            {totalTaskStats?.percentageDifference !== 0 &&
-              (totalTaskStats?.percentageDifference > 0 ? (
-                <>
-                  <span className="text-emerald-600 dark:text-emerald-400">
-                    ↑{totalTaskStats?.percentageDifference?.toFixed(2) ?? 0}%
-                  </span>
-                  {' from previous period'}
-                </>
-              ) : (
-                <>
-                  <span className="text-red-600 dark:text-red-400">
-                    ↓
-                    {totalTaskStats?.percentageDifference?.toFixed(2) ?? 0}{' '}
-                  </span>
-                  {' from previous period'}
-                </>
-              ))}
+            {totalTaskStats.percentageDifference !== 0 && (
+              <>
+                <span
+                  className={
+                    totalTaskStats.percentageDirection ===
+                    DirectionIndicators.DOWN
+                      ? 'text-red-600 dark:text-red-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+                  }
+                >
+                  {totalTaskStats.percentageDirection ===
+                  DirectionIndicators.DOWN
+                    ? '↓'
+                    : '↑'}
+                  {totalTaskStats.percentageDifference}%
+                </span>{' '}
+                from previous period
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -81,30 +84,30 @@ export default async function TopSectionAnalytics({
             Completion Rate
           </CardDescription>
           <CardTitle className="text-2xl text-slate-900 dark:text-white">
-            {taskCompletionRate?.currentPeriodCompletionRate.toFixed(2) ?? 0}%
+            {taskCompletionRate?.currentPeriodCompletionRate ?? 0}%
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-xs text-slate-700 dark:text-slate-300">
-            {taskCompletionRate?.percentageDifference !== 0 &&
-              (taskCompletionRate?.percentageDifference > 0 ? (
-                <>
-                  <span className="text-emerald-600 dark:text-emerald-400">
-                    ↑{taskCompletionRate?.percentageDifference?.toFixed(2) ?? 0}
-                    %
-                  </span>
-                  {' from previous period'}
-                </>
-              ) : (
-                <>
-                  <span className="text-red-600 dark:text-red-400">
-                    ↓
-                    {taskCompletionRate?.percentageDifference?.toFixed(2) ??
-                      0}{' '}
-                  </span>
-                  {' from previous period'}
-                </>
-              ))}
+            {taskCompletionRate.percentageDifference !== 0 && (
+              <>
+                <span
+                  className={
+                    taskCompletionRate.percentageDirection ===
+                    DirectionIndicators.DOWN
+                      ? 'text-red-600 dark:text-red-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+                  }
+                >
+                  {taskCompletionRate.percentageDirection ===
+                  DirectionIndicators.DOWN
+                    ? '↓'
+                    : '↑'}
+                  {taskCompletionRate.percentageDifference}%
+                </span>{' '}
+                from previous period
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -115,35 +118,30 @@ export default async function TopSectionAnalytics({
             Avg. Completion Time
           </CardDescription>
           <CardTitle className="text-2xl text-slate-900 dark:text-white">
-            {(avgCompletionStats?.avgCurrentPeriodTime / 24).toFixed(2)} days
+            {avgCompletionStats?.avgCurrentPeriodTime} days
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-xs text-slate-700 dark:text-slate-300">
-            {avgCompletionStats?.percentageDifference !== 0 &&
-              (avgCompletionStats?.percentageDifference > 0 ? (
-                <>
-                  <span className="text-emerald-600 dark:text-emerald-400">
-                    ↑
-                    {(avgCompletionStats?.percentageDifference / 24)?.toFixed(
-                      2,
-                    ) ?? 0}
-                    %
-                  </span>
-                  {' from previous period'}
-                </>
-              ) : (
-                <>
-                  <span className="text-red-600 dark:text-red-400">
-                    ↓
-                    {(avgCompletionStats?.percentageDifference / 24)?.toFixed(
-                      2,
-                    ) ?? 0}{' '}
-                    days
-                  </span>
-                  {' from previous period'}
-                </>
-              ))}
+            {avgCompletionStats.percentageDifference !== 0 && (
+              <>
+                <span
+                  className={
+                    avgCompletionStats.percentageDirection ===
+                    DirectionIndicators.DOWN
+                      ? 'text-red-600 dark:text-red-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+                  }
+                >
+                  {avgCompletionStats.percentageDirection ===
+                  DirectionIndicators.DOWN
+                    ? '↓'
+                    : '↑'}
+                  {avgCompletionStats.percentageDifference}%
+                </span>{' '}
+                from previous period
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -154,35 +152,30 @@ export default async function TopSectionAnalytics({
             Overdue Rate
           </CardDescription>
           <CardTitle className="text-2xl text-slate-900 dark:text-white">
-            {overdueRateStatsData?.currentPeriodOverdueRate?.toFixed(2)}%
+            {overdueRateStatsData?.currentPeriodOverdueRate}%
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-xs text-slate-700 dark:text-slate-300">
-            {overdueRateStatsData?.percentageDifference !== 0 &&
-              (overdueRateStatsData?.percentageDifference > 0 ? (
-                <>
-                  <span className="text-emerald-600 dark:text-emerald-400">
-                    ↑
-                    {(overdueRateStatsData?.percentageDifference / 24)?.toFixed(
-                      2,
-                    ) ?? 0}
-                    %
-                  </span>
-                  {' from previous period'}
-                </>
-              ) : (
-                <>
-                  <span className="text-red-600 dark:text-red-400">
-                    ↓
-                    {(overdueRateStatsData?.percentageDifference / 24)?.toFixed(
-                      2,
-                    ) ?? 0}{' '}
-                    days
-                  </span>
-                  {' from previous period'}
-                </>
-              ))}
+            {overdueRateStatsData.percentageDifference !== 0 && (
+              <>
+                <span
+                  className={
+                    overdueRateStatsData.percentageDirection ===
+                    DirectionIndicators.DOWN
+                      ? 'text-red-600 dark:text-red-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+                  }
+                >
+                  {overdueRateStatsData.percentageDirection ===
+                  DirectionIndicators.DOWN
+                    ? '↓'
+                    : '↑'}
+                  {overdueRateStatsData.percentageDifference}%
+                </span>{' '}
+                from previous period
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
