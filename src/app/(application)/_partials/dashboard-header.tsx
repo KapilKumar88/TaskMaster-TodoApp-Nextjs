@@ -6,10 +6,12 @@ import { Input } from '@/components/ui/input';
 import { Bell, Menu, Plus, Search } from 'lucide-react';
 import { NotificationPanel } from '@/components/notification-panel';
 import { useSideBarContext } from '@/contextApis/side-bar';
+import { TaskDialog } from '@/components/task/task-dialog';
 
 export function DashboardHeader() {
   const { setSidebarOpen } = useSideBarContext();
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [openTaskDialog, setOpenTaskDialog] = useState(false);
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-white/30 bg-white/30 backdrop-blur-xl px-4 md:px-6">
@@ -60,10 +62,14 @@ export function DashboardHeader() {
           )}
         </div>
 
-        <Button className="hidden bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white sm:flex">
+        <Button
+          className="hidden bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white sm:flex"
+          onClick={() => setOpenTaskDialog(true)}
+        >
           <Plus className="mr-2 h-4 w-4" />
           Add Task
         </Button>
+        <TaskDialog open={openTaskDialog} onOpenChange={setOpenTaskDialog} />
       </div>
     </header>
   );
