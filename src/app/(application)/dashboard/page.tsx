@@ -4,7 +4,7 @@ import { auth } from '@/auth';
 import { getCategoryDistributionTaskStats } from '@/services/task.service';
 import { ChartSkeleton } from '@/components/common/skeletons/chart-skeleton';
 import Unauthorized from '@/components/common/unauthorized';
-import { getDefaultDateTime } from '../analytics/@topSection/page';
+import { getDefaultDateTime } from '@/lib/utils';
 
 export default async function DashboardPage() {
   const userSession = await auth();

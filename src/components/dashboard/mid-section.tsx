@@ -6,7 +6,7 @@ import {
   weeklyProgressChartStats,
 } from '@/services/task.service';
 import { Session } from 'next-auth';
-import { getDefaultDateTime } from '@/app/(application)/analytics/@topSection/page';
+import { getDefaultDateTime } from '@/lib/utils';
 
 export default async function MidSection({
   userSession,

@@ -7,9 +7,16 @@ import {
   addDays,
   differenceInDays,
   endOfDay,
+  endOfMonth,
+  endOfWeek,
+  endOfYear,
   startOfDay,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
   subDays,
 } from 'date-fns';
+import appConfig from '@/config/app.config';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -109,4 +116,34 @@ export const generateRandomDate = (
   }
 
   return subDays(dateToConsider, generateRandomNumber(1, 1460)); // approx 4 years of dates
+};
+
+export const getDefaultDateTime = () => {
+  const dateInstance = new Date();
+
+  if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'weekly') {
+    return {
+      startDate: startOfWeek(dateInstance),
+      endDate: endOfWeek(dateInstance),
+    };
+  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'daily') {
+    return {
+      startDate: startOfDay(dateInstance),
+      endDate: endOfDay(dateInstance),
+    };
+  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'monthly') {
+    return {
+      startDate: startOfMonth(dateInstance),
+      endDate: endOfMonth(dateInstance),
+    };
+  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'yearly') {
+    return {
+      startDate: startOfYear(dateInstance),
+      endDate: endOfYear(dateInstance),
+    };
+  }
+  return {
+    startDate: startOfWeek(dateInstance),
+    endDate: endOfWeek(dateInstance),
+  };
 };

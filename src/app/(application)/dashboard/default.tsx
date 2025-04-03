@@ -3,8 +3,8 @@ import { CategoryDistributionChart } from '@/components/category-distribution-ch
 import { ChartSkeleton } from '@/components/common/skeletons/chart-skeleton';
 import Unauthorized from '@/components/common/unauthorized';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getDefaultDateTime } from '@/lib/utils';
 import { getCategoryDistributionTaskStats } from '@/services/task.service';
-import { getDefaultDateTime } from '../analytics/@topSection/page';
 
 export default async function Default() {
   const userSession = await auth();

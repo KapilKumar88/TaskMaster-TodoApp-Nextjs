@@ -7,59 +7,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import appConfig from '@/config/app.config';
+import { getDefaultDateTime } from '@/lib/utils';
 import {
   avgCompletionTimeStats,
   overdueRateStats,
   taskCompletionRateStats,
   totalTaskStats as totalTaskStatsQuery,
 } from '@/services/task.service';
-import {
-  endOfDay,
-  endOfMonth,
-  endOfWeek,
-  endOfYear,
-  startOfDay,
-  startOfMonth,
-  startOfWeek,
-  startOfYear,
-} from 'date-fns';
-
-export const getDefaultDateTime = () => {
-  const dateInstance = new Date();
-
-  if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'weekly') {
-    return {
-      startDate: startOfWeek(dateInstance),
-      endDate: endOfWeek(dateInstance),
-    };
-  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'daily') {
-    return {
-      startDate: startOfDay(dateInstance),
-      endDate: endOfDay(dateInstance),
-    };
-  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'monthly') {
-    return {
-      startDate: startOfMonth(dateInstance),
-      endDate: endOfMonth(dateInstance),
-    };
-  } else if (appConfig.DEFAULT_PERIOD_FOR_COMPUTATION === 'yearly') {
-    return {
-      startDate: startOfYear(dateInstance),
-      endDate: endOfYear(dateInstance),
-    };
-  }
-  return {
-    startDate: startOfWeek(dateInstance),
-    endDate: endOfWeek(dateInstance),
-  };
-};
 
 export default async function TopSectionAnalytics({
   searchParams,
-}: {
+}: Readonly<{
   searchParams: { startDate: string; endDate: string };
-}) {
+}>) {
   const [userSession, queryParams] = await Promise.all([auth(), searchParams]);
   const defaultDateTime = getDefaultDateTime();
   const startDate = queryParams?.startDate ?? defaultDateTime?.startDate;

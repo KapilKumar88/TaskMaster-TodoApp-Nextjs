@@ -13,26 +13,41 @@ import {
   totalTaskStats,
 } from '@/services/task.service';
 import { Session } from 'next-auth';
-import { endOfWeek, startOfWeek } from 'date-fns';
 import { DirectionIndicators } from '@/lib/enums';
+import { getDefaultDateTime } from '@/lib/utils';
 
 export default async function TopSection({
   userSession,
 }: Readonly<{
   userSession: Session;
 }>) {
-  const startDate = startOfWeek(new Date());
-  const endDate = endOfWeek(new Date());
+  const defaultDates = getDefaultDateTime();
   const [
     totalsTaskCount,
     totalsCompletedTaskCount,
     totalsInProgressTaskCount,
     totalsOverDueTaskCount,
   ] = await Promise.all([
-    totalTaskStats(userSession?.user.id, startDate, endDate),
-    totalCompletedTaskStats(userSession?.user.id, startDate, endDate),
-    totalInprogressTaskStats(userSession?.user.id, startDate, endDate),
-    totalOverDueTaskStats(userSession?.user.id, startDate, endDate),
+    totalTaskStats(
+      userSession?.user.id,
+      defaultDates.startDate,
+      defaultDates.endDate,
+    ),
+    totalCompletedTaskStats(
+      userSession?.user.id,
+      defaultDates.startDate,
+      defaultDates.endDate,
+    ),
+    totalInprogressTaskStats(
+      userSession?.user.id,
+      defaultDates.startDate,
+      defaultDates.endDate,
+    ),
+    totalOverDueTaskStats(
+      userSession?.user.id,
+      defaultDates.startDate,
+      defaultDates.endDate,
+    ),
   ]);
 
   return (
