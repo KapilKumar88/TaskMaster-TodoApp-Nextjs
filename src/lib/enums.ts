@@ -13,3 +13,8 @@ export enum ToastVariation {
   ACTION = 'action',
   DEFAULT = 'default',
 }
+
+export enum DirectionIndicators {
+  UP,
+  DOWN,
+}

@@ -8,9 +8,9 @@ import {
   format,
   startOfDay,
   startOfWeek,
-  subWeeks,
 } from 'date-fns';
 import { capitalizeFirstLetters, getThePreviousDuration } from '@/lib/utils';
+import { DirectionIndicators } from '@/lib/enums';
 
 export async function createTask(payload: {
   title: string;
@@ -188,28 +188,42 @@ export async function totalTaskStats(
       },
     }),
   ]);
-  const percentageDifference =
-    ((currentPeriodCount - previousPeriodCount) / previousPeriodCount) * 100;
+
+  let percentageDifference = 0;
+
+  if (previousPeriodCount > 0 && currentPeriodCount !== 0) {
+    percentageDifference =
+      ((currentPeriodCount - previousPeriodCount) / previousPeriodCount) * 100;
+  }
+
   return {
     currentPeriodCount,
     previousPeriodCount,
-    percentageDifference: percentageDifference,
+    percentageDifference: Number.isInteger(percentageDifference)
+      ? percentageDifference
+      : parseFloat(percentageDifference.toFixed(2)),
+    percentageDirection:
+      percentageDifference > 0
+        ? DirectionIndicators.UP
+        : DirectionIndicators.DOWN,
   };
 }
 
-export async function totalCompletedTaskStats(userId: string) {
-  const currentWeekStartDate = startOfWeek(new Date());
-  const currentWeekEndDate = endOfWeek(new Date());
-  const lastWeek = subWeeks(currentWeekStartDate, 1);
-  const lastWeekStartDate = startOfWeek(lastWeek);
-  const lastWeekEndDate = endOfWeek(lastWeek);
-  const [currentWeekCount, lastWeekCount] = await Promise.all([
+export async function totalCompletedTaskStats(
+  userId: string,
+  startDate: Date | string,
+  endDate: Date | string,
+) {
+  const previousPeriodDates = getThePreviousDuration(startDate, endDate);
+  const currentPeriodStartDate = startOfDay(startDate);
+  const currentPeriodEndDate = endOfDay(endDate);
+  const [currentPeriodCount, lastPeriodCount] = await Promise.all([
     prisma.task.count({
       where: {
         userId: userId,
         dueDate: {
-          gte: currentWeekStartDate,
-          lte: currentWeekEndDate,
+          gte: currentPeriodStartDate,
+          lte: currentPeriodEndDate,
         },
         status: TaskStatus.COMPLETED,
       },
@@ -218,19 +232,30 @@ export async function totalCompletedTaskStats(userId: string) {
       where: {
         userId: userId,
         dueDate: {
-          gte: lastWeekStartDate,
-          lte: lastWeekEndDate,
+          gte: previousPeriodDates.startDate,
+          lte: previousPeriodDates.endDate,
         },
         status: TaskStatus.COMPLETED,
       },
     }),
   ]);
-  const percentageDifference =
-    ((currentWeekCount - lastWeekCount) / lastWeekCount) * 100;
+  let percentageDifference = 0;
+
+  if (lastPeriodCount > 0 && currentPeriodCount !== 0) {
+    percentageDifference =
+      ((currentPeriodCount - lastPeriodCount) / lastPeriodCount) * 100;
+  }
+
   return {
-    currentWeekCount,
-    lastWeekCount,
-    percentageDifference: percentageDifference,
+    currentPeriodCount,
+    lastPeriodCount,
+    percentageDifference: Number.isInteger(percentageDifference)
+      ? percentageDifference
+      : parseFloat(percentageDifference.toFixed(2)),
+    percentageDirection:
+      percentageDifference > 0
+        ? DirectionIndicators.UP
+        : DirectionIndicators.DOWN,
   };
 }
 
@@ -451,19 +476,21 @@ export async function overdueRateStats(
   };
 }
 
-export async function totalInprogressTaskStatsForDashboard(userId: string) {
-  const currentWeekStartDate = startOfWeek(new Date());
-  const currentWeekEndDate = endOfWeek(new Date());
-  const lastWeek = subWeeks(currentWeekStartDate, 1);
-  const lastWeekStartDate = startOfWeek(lastWeek);
-  const lastWeekEndDate = endOfWeek(lastWeek);
-  const [currentWeekCount, lastWeekCount] = await Promise.all([
+export async function totalInprogressTaskStats(
+  userId: string,
+  startDate: Date | string,
+  endDate: Date | string,
+) {
+  const previousPeriodDates = getThePreviousDuration(startDate, endDate);
+  const currentPeriodStartDate = startOfDay(startDate);
+  const currentPeriodEndDate = endOfDay(endDate);
+  const [currentPeriodCount, previousPeriodCount] = await Promise.all([
     prisma.task.count({
       where: {
         userId: userId,
         dueDate: {
-          gte: currentWeekStartDate,
-          lte: currentWeekEndDate,
+          gte: currentPeriodStartDate,
+          lte: currentPeriodEndDate,
         },
         status: TaskStatus.ACTIVE,
       },
@@ -472,35 +499,48 @@ export async function totalInprogressTaskStatsForDashboard(userId: string) {
       where: {
         userId: userId,
         dueDate: {
-          gte: lastWeekStartDate,
-          lte: lastWeekEndDate,
+          gte: previousPeriodDates.startDate,
+          lte: previousPeriodDates.endDate,
         },
         status: TaskStatus.ACTIVE,
       },
     }),
   ]);
-  const percentageDifference =
-    ((currentWeekCount - lastWeekCount) / lastWeekCount) * 100;
+
+  let percentageDifference = 0;
+
+  if (previousPeriodCount > 0 && currentPeriodCount !== 0) {
+    percentageDifference =
+      ((currentPeriodCount - previousPeriodCount) / previousPeriodCount) * 100;
+  }
   return {
-    currentWeekCount,
-    lastWeekCount,
-    percentageDifference: percentageDifference,
+    currentPeriodCount,
+    previousPeriodCount,
+    percentageDifference: Number.isInteger(percentageDifference)
+      ? percentageDifference
+      : parseFloat(percentageDifference.toFixed(2)),
+    percentageDirection:
+      percentageDifference > 0
+        ? DirectionIndicators.UP
+        : DirectionIndicators.DOWN,
   };
 }
 
-export async function totalOverDueTaskStatsForDashboard(userId: string) {
-  const currentWeekStartDate = startOfWeek(new Date());
-  const currentWeekEndDate = endOfWeek(new Date());
-  const lastWeek = subWeeks(currentWeekStartDate, 1);
-  const lastWeekStartDate = startOfWeek(lastWeek);
-  const lastWeekEndDate = endOfWeek(lastWeek);
-  const [currentWeekCount, lastWeekCount] = await Promise.all([
+export async function totalOverDueTaskStats(
+  userId: string,
+  startDate: Date | string,
+  endDate: Date | string,
+) {
+  const previousPeriodDates = getThePreviousDuration(startDate, endDate);
+  const currentPeriodStartDate = startOfDay(startDate);
+  const currentPeriodEndDate = endOfDay(endDate);
+  const [currentPeriodCount, previousPeriodCount] = await Promise.all([
     prisma.task.count({
       where: {
         userId: userId,
         dueDate: {
-          gte: currentWeekStartDate,
-          lte: currentWeekEndDate,
+          gte: currentPeriodStartDate,
+          lte: currentPeriodEndDate,
         },
         status: TaskStatus.OVERDUE,
       },
@@ -509,19 +549,31 @@ export async function totalOverDueTaskStatsForDashboard(userId: string) {
       where: {
         userId: userId,
         dueDate: {
-          gte: lastWeekStartDate,
-          lte: lastWeekEndDate,
+          gte: previousPeriodDates.startDate,
+          lte: previousPeriodDates.endDate,
         },
         status: TaskStatus.OVERDUE,
       },
     }),
   ]);
-  const percentageDifference =
-    ((currentWeekCount - lastWeekCount) / lastWeekCount) * 100;
+
+  let percentageDifference = 0;
+
+  if (previousPeriodCount > 0 && currentPeriodCount !== 0) {
+    percentageDifference =
+      ((currentPeriodCount - previousPeriodCount) / previousPeriodCount) * 100;
+  }
+
   return {
-    currentWeekCount,
-    lastWeekCount,
-    percentageDifference: percentageDifference,
+    currentPeriodCount,
+    previousPeriodCount,
+    percentageDifference: Number.isInteger(percentageDifference)
+      ? percentageDifference
+      : parseFloat(percentageDifference.toFixed(2)),
+    percentageDirection:
+      percentageDifference > 0
+        ? DirectionIndicators.UP
+        : DirectionIndicators.DOWN,
   };
 }
 

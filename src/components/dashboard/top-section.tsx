@@ -8,32 +8,31 @@ import {
 import { Progress } from '../ui/progress';
 import {
   totalCompletedTaskStats,
-  totalInprogressTaskStatsForDashboard,
-  totalOverDueTaskStatsForDashboard,
+  totalInprogressTaskStats,
+  totalOverDueTaskStats,
   totalTaskStats,
 } from '@/services/task.service';
 import { Session } from 'next-auth';
 import { endOfWeek, startOfWeek } from 'date-fns';
+import { DirectionIndicators } from '@/lib/enums';
 
 export default async function TopSection({
   userSession,
 }: Readonly<{
   userSession: Session;
 }>) {
+  const startDate = startOfWeek(new Date());
+  const endDate = endOfWeek(new Date());
   const [
     totalsTaskCount,
     totalsCompletedTaskCount,
     totalsInProgressTaskCount,
     totalsOverDueTaskCount,
   ] = await Promise.all([
-    totalTaskStats(
-      userSession?.user.id,
-      startOfWeek(new Date()),
-      endOfWeek(new Date()),
-    ),
-    totalCompletedTaskStats(userSession?.user.id),
-    totalInprogressTaskStatsForDashboard(userSession?.user.id),
-    totalOverDueTaskStatsForDashboard(userSession?.user.id),
+    totalTaskStats(userSession?.user.id, startDate, endDate),
+    totalCompletedTaskStats(userSession?.user.id, startDate, endDate),
+    totalInprogressTaskStats(userSession?.user.id, startDate, endDate),
+    totalOverDueTaskStats(userSession?.user.id, startDate, endDate),
   ]);
 
   return (
@@ -49,23 +48,25 @@ export default async function TopSection({
         </CardHeader>
         <CardContent>
           <div className="text-xs text-slate-700 dark:text-slate-300">
-            {totalsTaskCount.percentageDifference !== 0 &&
-              (totalsTaskCount.percentageDifference < 0 ? (
-                <>
-                  <span className="text-red-600 dark:text-red-400">
-                    ↓{totalsTaskCount.percentageDifference?.toFixed(2)}%
-                  </span>{' '}
-                  from last week
-                </>
-              ) : (
-                <>
-                  <span className="text-emerald-600 dark:text-emerald-400">
-                    ↑{totalsTaskCount.percentageDifference?.toFixed(2)}%
-                  </span>{' '}
-                  from last week
-                </>
-              ))}
-            {}
+            {totalsTaskCount.percentageDifference !== 0 && (
+              <>
+                <span
+                  className={
+                    totalsTaskCount.percentageDirection ===
+                    DirectionIndicators.DOWN
+                      ? 'text-red-600 dark:text-red-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+                  }
+                >
+                  {totalsTaskCount.percentageDirection ===
+                  DirectionIndicators.DOWN
+                    ? '↓'
+                    : '↑'}
+                  {totalsTaskCount.percentageDifference}%
+                </span>{' '}
+                from last week
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -76,18 +77,35 @@ export default async function TopSection({
             Completed
           </CardDescription>
           <CardTitle className="text-2xl text-slate-900 dark:text-white">
-            {totalsCompletedTaskCount.currentWeekCount}
+            {totalsCompletedTaskCount.currentPeriodCount}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Progress
-            value={totalsCompletedTaskCount.percentageDifference}
-            className="h-2 bg-slate-200/70"
-          />
-          <div className="mt-1 text-xs text-slate-700 dark:text-slate-300">
-            {totalsCompletedTaskCount.percentageDifference?.toFixed(2)}%
-            completion rate
-          </div>
+          {totalsCompletedTaskCount.percentageDifference !== 0 && (
+            <>
+              <Progress
+                value={totalsCompletedTaskCount.percentageDifference}
+                className="h-2 bg-slate-200/70"
+              />
+              <div className="mt-1 text-xs text-slate-700 dark:text-slate-300">
+                <span
+                  className={
+                    totalsCompletedTaskCount.percentageDirection ===
+                    DirectionIndicators.DOWN
+                      ? 'text-red-600 dark:text-red-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+                  }
+                >
+                  {totalsCompletedTaskCount.percentageDirection ===
+                  DirectionIndicators.DOWN
+                    ? '↓'
+                    : '↑'}
+                  {totalsCompletedTaskCount.percentageDifference}%
+                </span>{' '}
+                completion rate
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
 
@@ -97,19 +115,35 @@ export default async function TopSection({
             In Progress
           </CardDescription>
           <CardTitle className="text-2xl text-slate-900 dark:text-white">
-            {totalsInProgressTaskCount.currentWeekCount}
+            {totalsInProgressTaskCount.currentPeriodCount}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Progress
-            value={totalsInProgressTaskCount.percentageDifference}
-            className="h-2 bg-slate-200/70"
-            // indicatorClassName="bg-indigo-500"
-          />
-          <div className="mt-1 text-xs text-slate-700 dark:text-slate-300">
-            {totalsInProgressTaskCount.percentageDifference?.toFixed(2)}% of all
-            tasks
-          </div>
+          {totalsInProgressTaskCount.percentageDifference !== 0 && (
+            <>
+              <Progress
+                value={totalsInProgressTaskCount.percentageDifference}
+                className="h-2 bg-slate-200/70"
+              />
+              <div className="mt-1 text-xs text-slate-700 dark:text-slate-300">
+                <span
+                  className={
+                    totalsInProgressTaskCount.percentageDirection ===
+                    DirectionIndicators.DOWN
+                      ? 'text-red-600 dark:text-red-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+                  }
+                >
+                  {totalsInProgressTaskCount.percentageDirection ===
+                  DirectionIndicators.DOWN
+                    ? '↓'
+                    : '↑'}
+                  {totalsInProgressTaskCount.percentageDifference}%
+                </span>{' '}
+                of all tasks
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
 
@@ -119,21 +153,30 @@ export default async function TopSection({
             Overdue
           </CardDescription>
           <CardTitle className="text-2xl text-slate-900 dark:text-white">
-            {totalsOverDueTaskCount.currentWeekCount}
+            {totalsOverDueTaskCount.currentPeriodCount}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-xs text-slate-700 dark:text-slate-300">
-            {totalsOverDueTaskCount.percentageDifference < 0 ? (
-              <span className="text-red-600 dark:text-red-400">
-                ↓{totalsOverDueTaskCount.percentageDifference?.toFixed(2)}%
-              </span>
-            ) : (
-              <span className="text-emerald-600 dark:text-emerald-400">
-                ↑{totalsOverDueTaskCount.percentageDifference?.toFixed(2)}%
-              </span>
-            )}{' '}
-            from last week
+            {totalsOverDueTaskCount.percentageDifference !== 0 && (
+              <>
+                <span
+                  className={
+                    totalsOverDueTaskCount.percentageDirection ===
+                    DirectionIndicators.DOWN
+                      ? 'text-red-600 dark:text-red-400'
+                      : 'text-emerald-600 dark:text-emerald-400'
+                  }
+                >
+                  {totalsOverDueTaskCount.percentageDirection ===
+                  DirectionIndicators.DOWN
+                    ? '↓'
+                    : '↑'}
+                  {totalsOverDueTaskCount.percentageDifference}%
+                </span>{' '}
+                from last week
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
