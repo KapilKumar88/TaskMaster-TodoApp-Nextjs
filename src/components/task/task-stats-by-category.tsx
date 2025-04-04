@@ -31,13 +31,16 @@ export default function TaskStatsByCategory() {
 
   return (
     <div className="grid gap-2">
-      {categoriesTaskCount.map((category) => (
+      {categoriesTaskCount.map((category, index) => (
         <div
-          key={`${category.name}-${category.count}`}
+          key={`${category.name}-${category.count}-${index}`}
           className="flex items-center justify-between"
         >
           <div className="flex items-center gap-2">
-            <div className={`w-3 h-3 rounded-full ${category.color}`}></div>
+            <div
+              className={`w-3 h-3 rounded-full`}
+              style={{ background: category.color }}
+            ></div>
             <span className="text-sm font-medium text-slate-900 dark:text-white">
               {capitalizeFirstLetters(category.name)}
             </span>

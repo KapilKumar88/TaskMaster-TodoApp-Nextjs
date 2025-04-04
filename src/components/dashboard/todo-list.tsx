@@ -50,6 +50,9 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                   <Badge
                     variant="outline"
                     className={`text-xs text-white ${todo.category?.color}`}
+                    style={{
+                      backgroundColor: todo.category?.color,
+                    }}
                   >
                     {todo.category?.name}
                   </Badge>

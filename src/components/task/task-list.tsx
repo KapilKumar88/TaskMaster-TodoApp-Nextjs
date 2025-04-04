@@ -158,7 +158,10 @@ export function TaskList({ filter = 'all' }: Readonly<TaskListProps>) {
                   </Badge>
                   <Badge
                     variant="outline"
-                    className={`text-xs text-white ${task.category?.color}`}
+                    className={`text-xs text-white`}
+                    style={{
+                      backgroundColor: task.category?.color,
+                    }}
                   >
                     {capitalizeFirstLetters(task?.category?.name ?? '')}
                   </Badge>

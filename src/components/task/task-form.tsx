@@ -17,15 +17,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { CalendarIcon, X } from 'lucide-react';
+import {
+  CalendarIcon,
+  LoaderPinwheel,
+  Plus,
+  PlusCircleIcon,
+  X,
+} from 'lucide-react';
 import { format } from 'date-fns';
 import { capitalizeFirstLetters, cn } from '@/lib/utils';
-import { useActionState, useEffect, useState } from 'react';
-import { CreateTaskFormState } from '@/lib/interfaces/server-action.interface';
+import { startTransition, useActionState, useEffect, useState } from 'react';
+import {
+  AddCategoryFormState,
+  CreateTaskFormState,
+} from '@/lib/interfaces/server-action.interface';
 import { createTaskServerAction } from '@/server-actions/task.actions';
 import { TaskPriority } from '@prisma/client';
 import { ToastVariation } from '@/lib/enums';
 import { toast } from '../common/sonner';
+import { ColorPicker } from '../color-picker';
+import { addNewCategoryAction } from '@/server-actions/category.actions';
 
 interface TaskFormProps {
   onClose: () => void;
@@ -38,7 +49,7 @@ const formDataInitialState = {
   priority: TaskPriority.LOW,
 };
 
-export function TaskForm({ onClose, categories }: TaskFormProps) {
+export function TaskForm({ onClose, categories }: Readonly<TaskFormProps>) {
   const [state, action, pending] = useActionState<
     CreateTaskFormState,
     FormData
@@ -54,6 +65,24 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
     message: '',
     success: false,
   });
+  const [addCategoryState, addCategoryAction, addCategoryPending] =
+    useActionState<AddCategoryFormState, FormData>(addNewCategoryAction, {
+      errors: {},
+      formValues: {
+        name: '',
+        color: '',
+      },
+      message: '',
+      success: false,
+    });
+  const [showAddCategory, setShowAddCategory] = useState(false);
+  const [trackCategoryFormData, setTrackCategoryFormData] = useState<{
+    categoryColor: string;
+    categoryName: string;
+  }>({
+    categoryColor: '',
+    categoryName: '',
+  });
   const [formData, setFormData] = useState<{
     dueDate?: Date;
     categoryId?: string;
@@ -65,15 +94,15 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
     description?: string;
     categoryId?: string;
     priority?: string;
-    dueDate?: string;
-    dueTime?: string;
+    dueDate?: string | Date;
+    dueTime?: string | Date;
   }>({
     title: undefined,
     description: undefined,
     categoryId: undefined,
     priority: undefined,
-    dueDate: undefined,
-    dueTime: undefined,
+    dueDate: new Date(),
+    dueTime: new Date(),
   });
 
   const handleInputChange = (fieldName: string) => {
@@ -130,21 +159,28 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
       }
     }
 
-    if (state?.success) {
+    if (state?.success || addCategoryState?.success) {
       toast({
         variation: ToastVariation.SUCCESS,
-        message: state.message,
+        message: state.message ?? addCategoryState.message,
       });
       setFormData(formDataInitialState);
+      setShowAddCategory(false);
+      if (addCategoryState?.success && addCategoryState?.formValues) {
+        categories.push({
+          name: addCategoryState?.formValues?.name,
+          id: addCategoryState?.formValues?.id ?? 0,
+        });
+      }
     }
-  }, [state]);
+  }, [state, addCategoryState]);
 
   return (
     <form
       action={(payload) => {
-        payload.append('dueDate', formData.dueDate?.toDateString() || '');
+        payload.append('dueDate', formData.dueDate?.toDateString() ?? '');
         payload.append('categoryId', formData?.categoryId?.toString() ?? '');
-        payload.append('priority', formData.priority?.toString() || '');
+        payload.append('priority', formData.priority?.toString() ?? '');
         action(payload);
       }}
     >
@@ -197,12 +233,25 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label
-              htmlFor="category"
-              className="text-slate-900 dark:text-white"
-            >
-              Category <span className="text-red-500">*</span>
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label
+                htmlFor="category"
+                className="text-slate-900 dark:text-white"
+              >
+                Category <span className="text-red-500">*</span>
+              </Label>
+              <Button
+                variant="ghost"
+                size="icon"
+                type="button"
+                onClick={() => {
+                  setShowAddCategory(true);
+                }}
+                className="h-4 w-4"
+              >
+                <PlusCircleIcon className="h-4 w-4" />
+              </Button>
+            </div>
             <Select
               defaultValue={state.formValues?.categoryId}
               value={formData?.categoryId}
@@ -276,6 +325,95 @@ export function TaskForm({ onClose, categories }: TaskFormProps) {
             )}
           </div>
         </div>
+        {showAddCategory && (
+          <div className="p-4 border border-white/30 bg-white/30 rounded-lg">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-sm font-medium text-slate-900 dark:text-white">
+                Add New Category
+              </h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                type="button"
+                onClick={() => setShowAddCategory(false)}
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </Button>
+            </div>
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <Label
+                  htmlFor="new-category"
+                  className="text-slate-900 dark:text-white"
+                >
+                  Category Name
+                </Label>
+                <Input
+                  id="new-category"
+                  name="categoryName"
+                  placeholder="Enter category name"
+                  className="bg-white/40 border-white/30 text-slate-900 dark:text-white"
+                  value={trackCategoryFormData.categoryName}
+                  onChange={(e) => {
+                    setTrackCategoryFormData((previousState) => {
+                      return {
+                        ...previousState,
+                        categoryName: e.target.value,
+                      };
+                    });
+                  }}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-slate-900 dark:text-white">
+                  Category Color
+                </Label>
+                <ColorPicker
+                  value={trackCategoryFormData.categoryColor}
+                  onChange={(color) => {
+                    setTrackCategoryFormData((previousState) => {
+                      return {
+                        ...previousState,
+                        categoryColor: color,
+                      };
+                    });
+                  }}
+                />
+              </div>
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"
+                disabled={addCategoryPending}
+                onClick={() => {
+                  startTransition(() => {
+                    const formData = new FormData();
+                    formData.append(
+                      'categoryName',
+                      trackCategoryFormData.categoryName,
+                    );
+                    formData.append(
+                      'categoryColor',
+                      trackCategoryFormData.categoryColor,
+                    );
+                    addCategoryAction(formData);
+                  });
+                }}
+              >
+                {addCategoryPending && (
+                  <LoaderPinwheel className="mr-2 h-8 w-8 animate-spin" />
+                )}
+                {!addCategoryPending && (
+                  <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Category
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
 
         <div className="space-y-2">
           <Label htmlFor="due-date" className="text-slate-900 dark:text-white">

@@ -142,6 +142,7 @@ export async function changeTaskStatus(
     },
     data: {
       status: status,
+      completedOn: new Date(),
     },
   });
 }

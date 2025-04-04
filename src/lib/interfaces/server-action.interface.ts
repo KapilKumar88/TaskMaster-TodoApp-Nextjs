@@ -114,3 +114,16 @@ export interface NotificationsSettingsFormState extends ServerActionInterface {
     general?: string;
   };
 }
+
+export interface AddCategoryFormState extends ServerActionInterface {
+  errors?: {
+    categoryName?: string[];
+    categoryColor?: string[];
+    general?: string;
+  };
+  formValues?: {
+    name: string;
+    color: string;
+    id?: number;
+  };
+}

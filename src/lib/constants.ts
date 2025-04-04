@@ -1,22 +1,22 @@
 export const DEFAULT_CATEGORIES = [
   {
     name: 'personal',
-    color: 'rgba(99, 102, 241, 0.8)', // bg-indigo-500/80
+    color: '#6366f1', // bg-indigo-500/80
     hoverColor: 'rgb(99, 102, 241)', // bg-indigo-500
   },
   {
     name: 'work',
-    color: 'rgba(139, 92, 246, 0.8)', // bg-violet-500/80
+    color: '#8b5cf6', // bg-violet-500/80
     hoverColor: 'rgb(139, 92, 246)', // bg-violet-500
   },
   {
     name: 'hobbies',
-    color: 'rgba(59, 130, 246, 0.8)', // bg-blue-500/80
+    color: '#3b82f6', // bg-blue-500/80
     hoverColor: 'rgb(59, 130, 246)', // bg-blue-500
   },
   {
     name: 'health',
-    color: 'rgba(20, 184, 166, 0.8)', // bg-teal-500/80
+    color: '#14b8a6', // bg-teal-500/80
     hoverColor: 'rgb(20, 184, 166)', // bg-teal-500
   },
 ];
