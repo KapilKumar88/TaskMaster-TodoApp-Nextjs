@@ -42,6 +42,7 @@ import {
   CommandList,
 } from '../ui/command';
 import AddCategoryForm from '../category/add-category-form';
+import { Switch } from '../ui/switch';
 
 interface TaskFormProps {
   onClose: () => void;
@@ -52,6 +53,7 @@ const formDataInitialState = {
   categoryId: '',
   priority: TaskPriority.LOW,
   categoryName: 'Select Category',
+  markAsDraft: false,
 };
 
 export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
@@ -80,6 +82,7 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
     categoryId?: string;
     categoryName?: string;
     priority?: TaskPriority;
+    markAsDraft: boolean;
   }>(formDataInitialState);
 
   const [formErrors, setFormErrors] = useState<{
@@ -169,6 +172,10 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
         payload.append('dueDate', formData.dueDate?.toDateString() ?? '');
         payload.append('categoryId', formData?.categoryId?.toString() ?? '');
         payload.append('priority', formData.priority?.toString() ?? '');
+        payload.append(
+          'markAsDraft',
+          formData.markAsDraft?.toString() ?? 'false',
+        );
         action(payload);
       }}
     >
@@ -380,6 +387,24 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
           {formErrors?.dueDate && (
             <p className="text-red-500 text-sm">{formErrors?.dueDate}</p>
           )}
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="completed"
+            checked={formData.markAsDraft}
+            onCheckedChange={() => {
+              setFormData((previousState) => {
+                return {
+                  ...previousState,
+                  markAsDraft: !previousState.markAsDraft,
+                };
+              });
+            }}
+          />
+          <Label htmlFor="completed" className="text-slate-900 dark:text-white">
+            Create as draft
+          </Label>
         </div>
 
         <div className="flex justify-end gap-2 pt-2">

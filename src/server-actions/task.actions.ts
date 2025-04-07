@@ -30,6 +30,7 @@ export async function createTaskServerAction(
           : (formData.get('categoryId') as string),
       priority: formData.get('priority') as TaskPriority,
       dueDate: formData.get('dueDate') as string,
+      markAsDraft: (formData.get('markAsDraft') as string) === 'true',
     };
 
     const validatedFields = createTaskSchema.safeParse({
@@ -61,7 +62,7 @@ export async function createTaskServerAction(
       categoryId: validatedFields.data.categoryId,
       priority: validatedFields.data.priority,
       dueDate: validatedFields.data.dueDate,
-      status: TaskStatus.ACTIVE,
+      status: getFormPayload.markAsDraft ? TaskStatus.DRAFT : TaskStatus.ACTIVE,
       userId: userSession?.user?.id,
     });
 
