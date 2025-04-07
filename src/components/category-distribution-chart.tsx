@@ -39,7 +39,10 @@ export function CategoryDistributionChart({
           />
           <Bar dataKey="value" radius={4}>
             {data?.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
+              <Cell
+                key={`cell-${index}-yg-${entry?.value}`}
+                fill={entry.color}
+              />
             ))}
           </Bar>
         </BarChart>

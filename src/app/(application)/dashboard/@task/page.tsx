@@ -1,5 +1,5 @@
 import { TodoList } from '@/components/dashboard/todo-list';
-import { getImportantTaskListOfGivenPeriod } from '@/services/task.service';
+import { getTaskListOfGivenPeriod } from '@/services/task.service';
 import { auth } from '@/auth';
 import Unauthorized from '@/components/common/unauthorized';
 import { getDefaultDateTime } from '@/lib/utils';
@@ -10,7 +10,7 @@ export default async function Task() {
     return <Unauthorized />;
   }
   const defaultDates = getDefaultDateTime();
-  const importantTaskList = await getImportantTaskListOfGivenPeriod({
+  const importantTaskList = await getTaskListOfGivenPeriod({
     userId: userSession?.user.id,
     startDate: defaultDates.startDate,
     endDate: defaultDates.endDate,

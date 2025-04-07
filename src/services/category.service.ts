@@ -35,6 +35,7 @@ export async function getUserCategories(userId: string) {
     select: {
       id: true,
       name: true,
+      color: true,
     },
   });
   if (categories?.length === 0) {

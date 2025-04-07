@@ -19,37 +19,43 @@ import {
 } from '@/components/ui/popover';
 import {
   CalendarIcon,
+  Check,
+  ChevronDown,
   LoaderPinwheel,
-  Plus,
   PlusCircleIcon,
-  X,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { capitalizeFirstLetters, cn } from '@/lib/utils';
-import { startTransition, useActionState, useEffect, useState } from 'react';
-import {
-  AddCategoryFormState,
-  CreateTaskFormState,
-} from '@/lib/interfaces/server-action.interface';
+import { useActionState, useEffect, useState } from 'react';
+import { CreateTaskFormState } from '@/lib/interfaces/server-action.interface';
 import { createTaskServerAction } from '@/server-actions/task.actions';
 import { TaskPriority } from '@prisma/client';
 import { ToastVariation } from '@/lib/enums';
 import { toast } from '../common/sonner';
-import { ColorPicker } from '../color-picker';
-import { addNewCategoryAction } from '@/server-actions/category.actions';
+import { useCategoryContext } from '@/contextApis/categories';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '../ui/command';
+import AddCategoryForm from '../category/add-category-form';
 
 interface TaskFormProps {
   onClose: () => void;
-  categories: { id: number; name: string }[];
 }
 
 const formDataInitialState = {
-  dueDate: undefined,
+  dueDate: new Date(),
   categoryId: '',
   priority: TaskPriority.LOW,
+  categoryName: 'Select Category',
 };
 
-export function TaskForm({ onClose, categories }: Readonly<TaskFormProps>) {
+export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
+  const { categories } = useCategoryContext();
   const [state, action, pending] = useActionState<
     CreateTaskFormState,
     FormData
@@ -60,32 +66,19 @@ export function TaskForm({ onClose, categories }: Readonly<TaskFormProps>) {
       description: '',
       categoryId: '0',
       priority: TaskPriority.LOW,
-      dueDate: '',
+      dueDate: new Date().toISOString(),
     },
     message: '',
     success: false,
   });
-  const [addCategoryState, addCategoryAction, addCategoryPending] =
-    useActionState<AddCategoryFormState, FormData>(addNewCategoryAction, {
-      errors: {},
-      formValues: {
-        name: '',
-        color: '',
-      },
-      message: '',
-      success: false,
-    });
+
   const [showAddCategory, setShowAddCategory] = useState(false);
-  const [trackCategoryFormData, setTrackCategoryFormData] = useState<{
-    categoryColor: string;
-    categoryName: string;
-  }>({
-    categoryColor: '',
-    categoryName: '',
-  });
+  const [openCategoryPopup, setOpenCategoryPopup] = useState<boolean>(false);
+
   const [formData, setFormData] = useState<{
     dueDate?: Date;
     categoryId?: string;
+    categoryName?: string;
     priority?: TaskPriority;
   }>(formDataInitialState);
 
@@ -94,15 +87,15 @@ export function TaskForm({ onClose, categories }: Readonly<TaskFormProps>) {
     description?: string;
     categoryId?: string;
     priority?: string;
-    dueDate?: string | Date;
-    dueTime?: string | Date;
+    dueDate?: string;
+    dueTime?: string;
   }>({
     title: undefined,
     description: undefined,
     categoryId: undefined,
     priority: undefined,
-    dueDate: new Date(),
-    dueTime: new Date(),
+    dueDate: undefined,
+    dueTime: undefined,
   });
 
   const handleInputChange = (fieldName: string) => {
@@ -159,21 +152,16 @@ export function TaskForm({ onClose, categories }: Readonly<TaskFormProps>) {
       }
     }
 
-    if (state?.success || addCategoryState?.success) {
+    if (state?.success) {
       toast({
         variation: ToastVariation.SUCCESS,
-        message: state.message ?? addCategoryState.message,
+        message: state.message,
       });
       setFormData(formDataInitialState);
       setShowAddCategory(false);
-      if (addCategoryState?.success && addCategoryState?.formValues) {
-        categories.push({
-          name: addCategoryState?.formValues?.name,
-          id: addCategoryState?.formValues?.id ?? 0,
-        });
-      }
+      onClose();
     }
-  }, [state, addCategoryState]);
+  }, [state]);
 
   return (
     <form
@@ -189,15 +177,6 @@ export function TaskForm({ onClose, categories }: Readonly<TaskFormProps>) {
           <Label htmlFor="title" className="text-slate-900 dark:text-white">
             Task Title <span className="text-red-500">*</span>
           </Label>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="h-6 w-6"
-          >
-            <X className="h-4 w-4" />
-            <span className="sr-only">Close</span>
-          </Button>
         </div>
         <Input
           id="title"
@@ -252,37 +231,67 @@ export function TaskForm({ onClose, categories }: Readonly<TaskFormProps>) {
                 <PlusCircleIcon className="h-4 w-4" />
               </Button>
             </div>
-            <Select
-              defaultValue={state.formValues?.categoryId}
-              value={formData?.categoryId}
-              onValueChange={(value) => {
-                setFormData((previousState) => {
-                  return {
-                    ...previousState,
-                    categoryId: value,
-                  };
-                });
-                handleInputChange('categoryId');
+            <Popover
+              open={openCategoryPopup}
+              onOpenChange={(eve) => {
+                setOpenCategoryPopup(eve);
               }}
             >
-              <SelectTrigger
-                id="category"
-                name="categoryId"
-                className="bg-white/40 border-white/30 text-slate-900 dark:text-white"
-              >
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent className="bg-white/90 backdrop-blur-xl border-white/30">
-                {categories?.map((category) => (
-                  <SelectItem
-                    key={`category-${category.id}`}
-                    value={`${category.id}`}
-                  >
-                    {capitalizeFirstLetters(category.name)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="bg-white/40 border-white/30 text-slate-900 dark:text-white w-full flex justify-between"
+                >
+                  <span>
+                    {capitalizeFirstLetters(
+                      formData?.categoryName?.trim() ?? '',
+                    )}
+                  </span>
+                  <ChevronDown className="ml-7 h-4 w-4 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="bg-white/90 backdrop-blur-xl border-white/30">
+                <Command>
+                  <CommandInput
+                    placeholder="Search time zone..."
+                    className="h-9"
+                  />
+                  <CommandList>
+                    <CommandEmpty>No category found.</CommandEmpty>
+                    {/* Update the CommandItem to use the handler */}
+                    <CommandGroup className="max-h-[200px] overflow-auto">
+                      {categories.map((category) => (
+                        <CommandItem
+                          key={category.id}
+                          value={category.name}
+                          onSelect={() => {
+                            setFormData((previousState) => {
+                              return {
+                                ...previousState,
+                                categoryId: category.id?.toString(),
+                                categoryName: category.name,
+                              };
+                            });
+                            setOpenCategoryPopup(false);
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <Check
+                            className={cn(
+                              'mr-2 h-4 w-4',
+                              formData?.categoryId === category.id.toString()
+                                ? 'opacity-100'
+                                : 'opacity-0',
+                            )}
+                          />
+                          <span>{capitalizeFirstLetters(category.name)}</span>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
             {formErrors?.categoryId && (
               <p className="text-red-500 text-sm">{formErrors?.categoryId}</p>
             )}
@@ -326,93 +335,7 @@ export function TaskForm({ onClose, categories }: Readonly<TaskFormProps>) {
           </div>
         </div>
         {showAddCategory && (
-          <div className="p-4 border border-white/30 bg-white/30 rounded-lg">
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-sm font-medium text-slate-900 dark:text-white">
-                Add New Category
-              </h3>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6"
-                type="button"
-                onClick={() => setShowAddCategory(false)}
-              >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-              </Button>
-            </div>
-            <div className="space-y-3">
-              <div className="space-y-2">
-                <Label
-                  htmlFor="new-category"
-                  className="text-slate-900 dark:text-white"
-                >
-                  Category Name
-                </Label>
-                <Input
-                  id="new-category"
-                  name="categoryName"
-                  placeholder="Enter category name"
-                  className="bg-white/40 border-white/30 text-slate-900 dark:text-white"
-                  value={trackCategoryFormData.categoryName}
-                  onChange={(e) => {
-                    setTrackCategoryFormData((previousState) => {
-                      return {
-                        ...previousState,
-                        categoryName: e.target.value,
-                      };
-                    });
-                  }}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-slate-900 dark:text-white">
-                  Category Color
-                </Label>
-                <ColorPicker
-                  value={trackCategoryFormData.categoryColor}
-                  onChange={(color) => {
-                    setTrackCategoryFormData((previousState) => {
-                      return {
-                        ...previousState,
-                        categoryColor: color,
-                      };
-                    });
-                  }}
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"
-                disabled={addCategoryPending}
-                onClick={() => {
-                  startTransition(() => {
-                    const formData = new FormData();
-                    formData.append(
-                      'categoryName',
-                      trackCategoryFormData.categoryName,
-                    );
-                    formData.append(
-                      'categoryColor',
-                      trackCategoryFormData.categoryColor,
-                    );
-                    addCategoryAction(formData);
-                  });
-                }}
-              >
-                {addCategoryPending && (
-                  <LoaderPinwheel className="mr-2 h-8 w-8 animate-spin" />
-                )}
-                {!addCategoryPending && (
-                  <>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Category
-                  </>
-                )}
-              </Button>
-            </div>
-          </div>
+          <AddCategoryForm closeForm={() => setShowAddCategory(false)} />
         )}
 
         <div className="space-y-2">
@@ -472,7 +395,13 @@ export function TaskForm({ onClose, categories }: Readonly<TaskFormProps>) {
             className="bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"
             disabled={pending}
           >
-            Create Task
+            {pending && (
+              <>
+                <LoaderPinwheel className="mr-2 h-8 w-8 animate-spin" />
+                Saving...
+              </>
+            )}
+            {!pending && 'Create Task'}
           </Button>
         </div>
       </div>

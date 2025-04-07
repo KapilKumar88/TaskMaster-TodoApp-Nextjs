@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import Unauthorized from '@/components/common/unauthorized';
 import { TodoList } from '@/components/dashboard/todo-list';
 import { getDefaultDateTime } from '@/lib/utils';
-import { getImportantTaskListOfGivenPeriod } from '@/services/task.service';
+import { getTaskListOfGivenPeriod } from '@/services/task.service';
 import { TaskStatus } from '@prisma/client';
 
 export default async function CompletedTask() {
@@ -13,7 +13,7 @@ export default async function CompletedTask() {
   }
 
   const defaultDates = getDefaultDateTime();
-  const taskList = await getImportantTaskListOfGivenPeriod({
+  const taskList = await getTaskListOfGivenPeriod({
     userId: userSession?.user.id,
     startDate: defaultDates.startDate,
     endDate: defaultDates.endDate,

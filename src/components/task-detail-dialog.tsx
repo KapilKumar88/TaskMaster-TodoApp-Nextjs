@@ -87,7 +87,7 @@ export function TaskDetailDialog({
   onOpenChange,
   onTaskUpdate,
   onTaskDelete,
-}: TaskDetailDialogProps) {
+}: Readonly<TaskDetailDialogProps>) {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState<Task | null>(null);
   const [date, setDate] = useState<Date | undefined>();

@@ -32,6 +32,10 @@ export const verifyHash = async (value: string, hash: string) => {
 };
 
 export function capitalizeFirstLetters(words: string): string {
+  if (!words) {
+    return words;
+  }
+
   return words
     .split(' ')
     ?.map((word) => word.charAt(0).toUpperCase() + word.slice(1))

@@ -122,8 +122,8 @@ export interface AddCategoryFormState extends ServerActionInterface {
     general?: string;
   };
   formValues?: {
-    name: string;
-    color: string;
+    categoryName: string;
+    categoryColor: string;
     id?: number;
   };
 }

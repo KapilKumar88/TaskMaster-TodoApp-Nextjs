@@ -16,7 +16,7 @@ export default async function ActiveTask() {
     userId: userSession?.user.id,
     startDate: defaultDates.startDate,
     endDate: defaultDates.endDate,
-    status: TaskStatus.ACTIVE,
+    status: TaskStatus.OVERDUE,
   });
 
   return <TodoList tasks={taskList} />;

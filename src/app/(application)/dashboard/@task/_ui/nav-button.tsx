@@ -17,6 +17,14 @@ export default function NavButton() {
           Important
         </Link>
         <Link
+          href={'/dashboard/overdue'}
+          className={clsx('rounded-lg px-3 py-1 text-sm font-medium', {
+            'bg-indigo-500 text-white': pathname === '/dashboard/overdue',
+          })}
+        >
+          Overdue
+        </Link>
+        <Link
           href={'/dashboard/active'}
           className={clsx('rounded-lg px-3 py-1 text-sm font-medium', {
             'bg-indigo-500 text-white': pathname === '/dashboard/active',

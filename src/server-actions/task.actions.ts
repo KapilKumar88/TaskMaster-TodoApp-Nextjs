@@ -14,6 +14,7 @@ import {
   deleteTask as deleteTaskQuery,
 } from '@/services/task.service';
 import { auth } from '@/auth';
+import { revalidatePath } from 'next/cache';
 
 export async function createTaskServerAction(
   state: CreateTaskFormState,
@@ -63,6 +64,10 @@ export async function createTaskServerAction(
       status: TaskStatus.ACTIVE,
       userId: userSession?.user?.id,
     });
+
+    revalidatePath('/dashboard');
+    revalidatePath('/tasks');
+    revalidatePath('/analytics');
 
     return {
       success: true,

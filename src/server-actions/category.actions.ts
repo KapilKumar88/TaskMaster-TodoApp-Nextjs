@@ -4,6 +4,7 @@ import 'server-only';
 import { auth } from '@/auth';
 import { AddCategoryFormState } from '@/lib/interfaces/server-action.interface';
 import { createCategory } from '@/services/category.service';
+import { addCategorySchema } from '@/validationsSchemas/category.validation';
 
 export async function addNewCategoryAction(
   state: AddCategoryFormState,
@@ -19,18 +20,32 @@ export async function addNewCategoryAction(
       };
     }
 
+    const validatedFields = addCategorySchema.safeParse({
+      categoryName: formData.get('categoryName') as string,
+      categoryColor: formData.get('categoryColor') as string,
+    });
+
+    if (!validatedFields.success) {
+      return {
+        ...state,
+        errors: validatedFields.error.flatten().fieldErrors,
+        success: false,
+        message: 'Validation error',
+      };
+    }
+
     const newCategory = await createCategory({
       userId: userSession.user.id,
-      name: formData.get('categoryName') as string,
-      color: formData.get('categoryColor') as string,
+      name: validatedFields.data.categoryName,
+      color: validatedFields.data.categoryColor,
     });
 
     return {
       success: true,
       errors: {},
       formValues: {
-        name: newCategory.name,
-        color: newCategory.color,
+        categoryName: newCategory.name,
+        categoryColor: newCategory.color,
         id: newCategory.id,
       },
       message: 'Category added successfully',

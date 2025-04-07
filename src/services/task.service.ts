@@ -875,7 +875,7 @@ export async function getTaskCompletionRate(
   return finalOutput;
 }
 
-export async function getImportantTaskListOfGivenPeriod({
+export async function getTaskListOfGivenPeriod({
   userId,
   startDate,
   endDate,
