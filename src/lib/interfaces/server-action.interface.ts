@@ -1,4 +1,4 @@
-import { TaskPriority, WeekStartDay } from '@prisma/client';
+import { TaskPriority, TaskStatus, WeekStartDay } from '@prisma/client';
 
 export interface ServerActionInterface {
   message: string;
@@ -68,6 +68,7 @@ export interface UpdateTaskFormState extends ServerActionInterface {
     description?: string[];
     categoryId?: string[];
     priority?: string[];
+    status?: string[];
     dueDate?: string[];
     dueTime?: string[];
     general?: string;
@@ -82,6 +83,7 @@ export interface UpdateTaskFormState extends ServerActionInterface {
     dueTime?: string;
     markAsImportant?: boolean;
     markAsCompleted?: boolean;
+    status?: TaskStatus;
   };
 }
 

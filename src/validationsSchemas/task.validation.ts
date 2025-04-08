@@ -34,7 +34,9 @@ export const createTaskSchema = object({
 });
 
 export const updateTaskSchema = object({
-  taskId: z.number().min(1, 'Task Id is required'),
+  taskId: z
+    .number({ message: 'Task Id is required' })
+    .min(1, 'Task Id is required'),
   title: string({ required_error: 'Title is required' })
     .trim()
     .min(1, 'Title is required')
@@ -71,6 +73,5 @@ export const updateTaskSchema = object({
     .date({ message: 'Due Date is required' })
     .min(startOfToday(), 'Date must be in the future'),
   dueTime: optional(z.string().time()),
-  markAsCompleted: z.boolean().optional(),
-  markTaskImportant: z.boolean().optional(),
+  markTaskImportant: z.boolean(),
 });

@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
-import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { TaskInterface } from '@/lib/interfaces/task.interface';
 import { TaskDetail } from './task-detail';
 import { TaskEditForm } from './task-edit-form';
@@ -30,12 +36,19 @@ export function TaskDetailDialog({
       }}
     >
       <DialogContent className="sm:max-w-[550px] bg-white/80 backdrop-blur-xl border-white/30">
+        <DialogHeader>
+          <DialogTitle>{isEditing ? 'Edit Task' : 'Task Details'}</DialogTitle>
+        </DialogHeader>
         {isEditing ? (
           <TaskEditForm
             task={task}
-            open={open}
-            onOpenChange={onOpenChange}
-            setIsEditing={setIsEditing}
+            close={() => {
+              onOpenChange(false);
+              setIsEditing(false);
+            }}
+            setIsEditing={() => {
+              setIsEditing(false);
+            }}
           />
         ) : (
           <TaskDetail

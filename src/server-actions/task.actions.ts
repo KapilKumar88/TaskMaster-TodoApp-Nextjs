@@ -15,6 +15,7 @@ import {
   createTask,
   markTaskImportant as starTask,
   deleteTask as deleteTaskQuery,
+  updateTask,
 } from '@/services/task.service';
 import { auth } from '@/auth';
 import { revalidatePath } from 'next/cache';
@@ -116,7 +117,6 @@ export async function updateTaskServerAction(
       priority: formData.get('priority') as TaskPriority,
       status: formData.get('status') as TaskStatus,
       dueDate: formData.get('dueDate') as string,
-      markAsCompleted: (formData.get('markAsCompleted') as string) === 'true',
       markTaskImportant:
         (formData.get('markTaskImportant') as string) === 'true',
     };
@@ -129,7 +129,6 @@ export async function updateTaskServerAction(
       priority: getFormPayload.priority,
       status: getFormPayload.status,
       dueDate: new Date(getFormPayload.dueDate),
-      markAsCompleted: getFormPayload.markAsCompleted,
       markTaskImportant: getFormPayload.markTaskImportant,
     });
 
@@ -147,15 +146,17 @@ export async function updateTaskServerAction(
       throw new Error('User not found');
     }
 
-    // await createTask({
-    //   title: validatedFields.data.title,
-    //   description: validatedFields.data.description,
-    //   categoryId: validatedFields.data.categoryId,
-    //   priority: validatedFields.data.priority,
-    //   dueDate: validatedFields.data.dueDate,
-    //   status: getFormPayload.markAsDraft ? TaskStatus.DRAFT : TaskStatus.ACTIVE,
-    //   userId: userSession?.user?.id,
-    // });
+    await updateTask({
+      userId: userSession?.user?.id,
+      taskId: validatedFields.data.taskId,
+      title: validatedFields.data.title,
+      description: validatedFields.data.description,
+      categoryId: validatedFields.data.categoryId,
+      priority: validatedFields.data.priority,
+      dueDate: validatedFields.data.dueDate,
+      status: validatedFields.data.status,
+      markAsImportant: validatedFields.data.markTaskImportant,
+    });
 
     revalidatePath('/dashboard');
     revalidatePath('/tasks');

@@ -44,6 +44,40 @@ export async function createTask(payload: {
   });
 }
 
+export async function updateTask(payload: {
+  taskId: number;
+  userId: string;
+  title: string;
+  description: string;
+  categoryId: number;
+  priority: TaskPriority;
+  dueDate: Date;
+  status: TaskStatus;
+  markAsImportant: boolean;
+}) {
+  const input: Prisma.TaskUpdateInput = {
+    title: payload.title,
+    description: payload.description,
+    category: {
+      connect: {
+        id: payload.categoryId,
+      },
+    },
+    priority: payload.priority,
+    dueDate: payload.dueDate,
+    status: payload?.status,
+    markAsImportant: payload?.markAsImportant,
+  };
+
+  return await prisma.task.update({
+    where: {
+      id: payload.taskId,
+      userId: payload.userId,
+    },
+    data: input,
+  });
+}
+
 export async function getUserTaskList({
   userId,
   filter,

@@ -1,71 +1,98 @@
+'use client';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { capitalizeFirstLetters } from '@/lib/utils';
-import { PlusCircleIcon } from 'lucide-react';
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { useCategoryContext } from '@/contextApis/categories';
+import { capitalizeFirstLetters, cn } from '@/lib/utils';
+import { Check, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 
 export default function CategorySelectBox({
-  categories,
+  selectedCategoryId,
+  setSelectedCategoryId,
   errorMsg,
 }: Readonly<{
-  categories: { id: number; name: string }[];
-  defaultValue?: number;
-  value?: number;
+  selectedCategoryId: number;
+  setSelectedCategoryId: (id: number) => void;
   errorMsg?: string;
 }>) {
+  const { categories } = useCategoryContext();
+  const [openCategoryPopup, setOpenCategoryPopup] = useState(false);
   return (
     <>
-      <div className="flex items-center justify-between">
-        <Label htmlFor="category" className="text-slate-900 dark:text-white">
-          Category <span className="text-red-500">*</span>
-        </Label>
-        <Button
-          variant="ghost"
-          size="icon"
-          // onClick={onClose}
-          className="h-6 w-6"
-        >
-          <PlusCircleIcon className="h-4 w-4" />
-        </Button>
-      </div>
-      <Select
-      // defaultValue={state.formValues?.categoryId}
-      // value={formData?.categoryId}
-      // onValueChange={(value) => {
-      //   // setFormData((previousState) => {
-      //   //   return {
-      //   //     ...previousState,
-      //   //     categoryId: value,
-      //   //   };
-      //   // });
-      //   // handleInputChange('categoryId');
-      // }}
+      <Popover
+        open={openCategoryPopup}
+        onOpenChange={(eve) => {
+          setOpenCategoryPopup(eve);
+        }}
       >
-        <SelectTrigger
-          id="category"
-          name="categoryId"
-          className="bg-white/40 border-white/30 text-slate-900 dark:text-white"
-        >
-          <SelectValue placeholder="Select category" />
-        </SelectTrigger>
-        <SelectContent className="bg-white/90 backdrop-blur-xl border-white/30">
-          {categories?.map((category) => (
-            <SelectItem
-              key={`category-${category.id}`}
-              value={`${category.id}`}
-            >
-              {capitalizeFirstLetters(category.name)}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className="bg-white/40 border-white/30 text-slate-900 dark:text-white w-full flex justify-between"
+          >
+            <span>
+              {capitalizeFirstLetters(
+                categories
+                  .find((c) => c.id === selectedCategoryId)
+                  ?.name?.trim() ?? 'Select Category',
+              )}
+            </span>
+            <ChevronDown className="ml-7 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-full sm:w-[245px] p-0 bg-white/90 backdrop-blur-xl border-white/30">
+          <Command>
+            <CommandInput placeholder="Search categories..." className="h-9" />
+            <CommandList>
+              <CommandEmpty>No category found.</CommandEmpty>
+              {/* Update the CommandItem to use the handler */}
+              <CommandGroup className="max-h-[200px] overflow-auto">
+                {categories.map((category) => (
+                  <CommandItem
+                    key={category.id}
+                    value={category.name}
+                    onSelect={() => {
+                      setSelectedCategoryId(category.id);
+                      setOpenCategoryPopup(false);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <Check
+                      className={cn(
+                        'mr-2 h-4 w-4',
+                        selectedCategoryId === category.id
+                          ? 'opacity-100'
+                          : 'opacity-0',
+                      )}
+                    />
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: category.color }}
+                      />
+                      <span className="capitalize">
+                        {capitalizeFirstLetters(category.name)}
+                      </span>
+                    </div>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
       {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
     </>
   );
