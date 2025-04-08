@@ -17,32 +17,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import {
-  CalendarIcon,
-  Check,
-  ChevronDown,
-  LoaderPinwheel,
-  PlusCircleIcon,
-} from 'lucide-react';
+import { CalendarIcon, LoaderPinwheel, PlusCircleIcon } from 'lucide-react';
 import { format } from 'date-fns';
-import { capitalizeFirstLetters, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { useActionState, useEffect, useState } from 'react';
 import { CreateTaskFormState } from '@/lib/interfaces/server-action.interface';
 import { createTaskServerAction } from '@/server-actions/task.actions';
 import { TaskPriority } from '@prisma/client';
 import { ToastVariation } from '@/lib/enums';
 import { toast } from '../common/sonner';
-import { useCategoryContext } from '@/contextApis/categories';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '../ui/command';
 import AddCategoryForm from '../category/add-category-form';
 import { Switch } from '../ui/switch';
+import CategorySelectBox from '../common/select/catgeory-select-box';
 
 interface TaskFormProps {
   onClose: () => void;
@@ -50,14 +36,13 @@ interface TaskFormProps {
 
 const formDataInitialState = {
   dueDate: new Date(),
-  categoryId: '',
+  categoryId: 0,
   priority: TaskPriority.LOW,
   categoryName: 'Select Category',
   markAsDraft: false,
 };
 
 export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
-  const { categories } = useCategoryContext();
   const [state, action, pending] = useActionState<
     CreateTaskFormState,
     FormData
@@ -75,11 +60,10 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
   });
 
   const [showAddCategory, setShowAddCategory] = useState(false);
-  const [openCategoryPopup, setOpenCategoryPopup] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<{
     dueDate?: Date;
-    categoryId?: string;
+    categoryId?: number;
     categoryName?: string;
     priority?: TaskPriority;
     markAsDraft: boolean;
@@ -238,75 +222,17 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
                 <PlusCircleIcon className="h-4 w-4" />
               </Button>
             </div>
-            <Popover
-              open={openCategoryPopup}
-              onOpenChange={(eve) => {
-                setOpenCategoryPopup(eve);
+            <CategorySelectBox
+              selectedCategoryId={formData.categoryId ?? 0}
+              setSelectedCategoryId={(id) => {
+                setFormData((previousState) => {
+                  return {
+                    ...previousState,
+                    categoryId: id,
+                  };
+                });
               }}
-            >
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="bg-white/40 border-white/30 text-slate-900 dark:text-white w-full flex justify-between"
-                >
-                  <span>
-                    {capitalizeFirstLetters(
-                      formData?.categoryName?.trim() ?? '',
-                    )}
-                  </span>
-                  <ChevronDown className="ml-7 h-4 w-4 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="bg-white/90 backdrop-blur-xl border-white/30">
-                <Command>
-                  <CommandInput
-                    placeholder="Search time zone..."
-                    className="h-9"
-                  />
-                  <CommandList>
-                    <CommandEmpty>No category found.</CommandEmpty>
-                    {/* Update the CommandItem to use the handler */}
-                    <CommandGroup className="max-h-[200px] overflow-auto">
-                      {categories.map((category) => (
-                        <CommandItem
-                          key={category.id}
-                          value={category.name}
-                          onSelect={() => {
-                            setFormData((previousState) => {
-                              return {
-                                ...previousState,
-                                categoryId: category.id?.toString(),
-                                categoryName: category.name,
-                              };
-                            });
-                            setOpenCategoryPopup(false);
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <Check
-                            className={cn(
-                              'mr-2 h-4 w-4',
-                              formData?.categoryId === category.id.toString()
-                                ? 'opacity-100'
-                                : 'opacity-0',
-                            )}
-                          />
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-3 h-3 rounded-full"
-                              style={{ backgroundColor: category.color }}
-                            />
-                            <span className="capitalize">
-                              {capitalizeFirstLetters(category.name)}
-                            </span>
-                          </div>
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
+            />
             {formErrors?.categoryId && (
               <p className="text-red-500 text-sm">{formErrors?.categoryId}</p>
             )}
