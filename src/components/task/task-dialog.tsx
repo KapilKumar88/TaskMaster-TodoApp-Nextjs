@@ -17,13 +17,7 @@ interface TaskDialogProps {
 export function TaskDialog({ open, onOpenChange }: Readonly<TaskDialogProps>) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="sm:max-w-[425px]"
-        style={{
-          backdropFilter: `blur(300px)`,
-          backgroundColor: `rgba(255, 255, 255, 0.5)`,
-        }}
-      >
+      <DialogContent className="sm:max-w-[550px] bg-white/80 backdrop-blur-xl border-white/30">
         <DialogHeader>
           <DialogTitle>Create New Task</DialogTitle>
           <DialogDescription>

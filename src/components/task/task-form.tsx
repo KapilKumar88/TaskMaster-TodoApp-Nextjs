@@ -411,7 +411,7 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
             }}
           />
           <Label htmlFor="completed" className="text-slate-900 dark:text-white">
-            Create as draft
+            Save as draft
           </Label>
         </div>
 

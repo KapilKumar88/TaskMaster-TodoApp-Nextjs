@@ -3,23 +3,75 @@
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { Edit, MoreHorizontal, Trash2 } from 'lucide-react';
+import { LoaderPinwheel, Star, Trash2 } from 'lucide-react';
 import { TaskInterface } from '@/lib/interfaces/task.interface';
 import { TaskStatus } from '@prisma/client';
 import { capitalizeFirstLetters, getPriorityColor } from '@/lib/utils';
 import { TaskDetailDialog } from '../task/task-detail-dialog';
-import { startTransition, useState } from 'react';
+import { startTransition, useActionState, useEffect, useState } from 'react';
+import { UpdateTaskFormState } from '@/lib/interfaces/server-action.interface';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
+  deleteTask,
+  makeTaskCompleted,
+  markTaskImportant,
+} from '@/server-actions/task.actions';
+import { toast } from '../common/sonner';
+import { ToastVariation } from '@/lib/enums';
 
 export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
   const [openTaskDetailBox, setOpenTaskDetailBox] = useState<boolean>(false);
   const [selectedTask, setSelectedTask] = useState<TaskInterface | null>(null);
+  const [
+    markTaskImportState,
+    markTaskImportantAction,
+    markTaskImportantPending,
+  ] = useActionState<UpdateTaskFormState, FormData>(markTaskImportant, {
+    message: '',
+    success: false,
+  });
+  const [markTaskCompleteState, markTaskCompleteAction] = useActionState<
+    UpdateTaskFormState,
+    FormData
+  >(makeTaskCompleted, {
+    message: '',
+    success: false,
+  });
+  const [deleteTaskState, deleteTaskAction, deleteTaskPending] = useActionState<
+    UpdateTaskFormState,
+    FormData
+  >(deleteTask, {
+    message: '',
+    success: false,
+  });
+
+  useEffect(() => {
+    if (markTaskCompleteState.success) {
+      toast({
+        message: markTaskCompleteState.message,
+        variation: ToastVariation.SUCCESS,
+      });
+      markTaskCompleteState.success = false;
+      markTaskCompleteState.message = '';
+    }
+
+    if (markTaskImportState.success) {
+      toast({
+        message: markTaskImportState.message,
+        variation: ToastVariation.SUCCESS,
+      });
+      markTaskImportState.success = false;
+      markTaskImportState.message = '';
+    }
+
+    if (deleteTaskState.success) {
+      toast({
+        message: deleteTaskState.message,
+        variation: ToastVariation.SUCCESS,
+      });
+      deleteTaskState.success = false;
+      deleteTaskState.message = '';
+    }
+  }, [markTaskCompleteState, markTaskImportState, deleteTaskState]);
 
   return (
     <div className="space-y-2">
@@ -30,22 +82,35 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
       )}
       {tasks?.length > 0 &&
         tasks?.map((todo) => (
-          <button
-            type="button"
+          <div
             key={todo.id}
             className="flex items-center justify-between rounded-lg border border-white/30 bg-white/40 p-3 backdrop-blur-sm w-full"
-            onClick={() => {
-              setOpenTaskDetailBox(true);
-              setSelectedTask(todo);
-            }}
           >
             <div className="flex items-center gap-3">
               <Checkbox
                 checked={todo.status === TaskStatus.COMPLETED}
-                // onCheckedChange={() => toggleTodo(todo.id)}
+                onCheckedChange={() => {
+                  startTransition(() => {
+                    const formData = new FormData();
+                    formData.append('taskId', todo.id.toString());
+                    formData.append(
+                      'markAsCompleted',
+                      todo.status === TaskStatus.COMPLETED
+                        ? TaskStatus.ACTIVE
+                        : TaskStatus.COMPLETED,
+                    );
+                    markTaskCompleteAction(formData);
+                  });
+                }}
                 className="border-slate-400 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
               />
-              <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpenTaskDetailBox(true);
+                  setSelectedTask(todo);
+                }}
+              >
                 <p
                   className={`text-sm font-medium text-left ${
                     todo.status === TaskStatus.COMPLETED
@@ -77,40 +142,60 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                     Due: {new Date(todo.dueDate).toLocaleDateString()}
                   </span>
                 </div>
-              </div>
+              </button>
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-                >
-                  <MoreHorizontal className="h-4 w-4" />
-                  <span className="sr-only">More options</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-white/90 backdrop-blur-xl border-white/30">
-                <DropdownMenuItem onClick={() => {}}>
-                  <Edit className="h-4 w-4 mr-1" /> Edit Task
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="text-red-600"
-                  onClick={() => {
-                    startTransition(() => {
-                      // const formData = new FormData();
-                      // formData.append('taskId', task.id.toString());
-                      // deleteTaskAction(formData);
-                    });
-                  }}
-                >
+            <div className="flex items-start">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-slate-700 dark:text-slate-300 hover:text-amber-500"
+                onClick={() => {
+                  startTransition(() => {
+                    const formData = new FormData();
+                    formData.append('taskId', todo.id.toString());
+                    formData.append(
+                      'markAsImportant',
+                      (!todo?.markAsImportant)?.toString(),
+                    );
+                    markTaskImportantAction(formData);
+                  });
+                }}
+              >
+                {markTaskImportantPending ? (
+                  <LoaderPinwheel className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Star
+                    className={`h-4 w-4 ${
+                      todo.markAsImportant
+                        ? 'fill-amber-400 text-amber-400'
+                        : ''
+                    }`}
+                  />
+                )}
+
+                <span className="sr-only">Star task</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                onClick={() => {
+                  startTransition(() => {
+                    const formData = new FormData();
+                    formData.append('taskId', todo.id.toString());
+                    deleteTaskAction(formData);
+                  });
+                }}
+              >
+                {deleteTaskPending ? (
+                  <LoaderPinwheel className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
                   <Trash2 className="h-4 w-4 mr-1" />
-                  Delete Task
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </button>
+                )}
+                <span className="sr-only">Delete Task</span>
+              </Button>
+            </div>
+          </div>
         ))}
 
       {selectedTask && (
