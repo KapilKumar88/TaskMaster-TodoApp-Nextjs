@@ -59,7 +59,7 @@ model Task {
   priority        TaskPriority @default(MEDIUM)
   dueDate         DateTime
   dueTime         DateTime?
-  markAsImportant Boolean?     @default(false)
+  markAsImportant Boolean      @default(false)
   completedOn     DateTime?
   status          TaskStatus   @default(ACTIVE)
   createdAt       DateTime     @default(now())
@@ -90,19 +90,19 @@ model Settings {
 
   timeZone                 String
   dateFormat               String
-  weekStartDay             WeekStartDay      @default(sunday)
-  autoArchive              Boolean           @default(false)
-  autoArchiveTime          Int?              @default(30)
+  weekStartDay             WeekStartDay  @default(sunday)
+  autoArchive              Boolean       @default(false)
+  autoArchiveTime          Int?          @default(30)
   autoArchiveTimeFrequency TimeFrequency @default(day)
-  emailNotifications       Boolean           @default(true)
-  pushNotification         Boolean           @default(true)
-  taskDueReminder          Boolean           @default(true)
-  taskDueTime              Int               @default(1)
+  emailNotifications       Boolean       @default(true)
+  pushNotification         Boolean       @default(true)
+  taskDueReminder          Boolean       @default(true)
+  taskDueTime              Int           @default(1)
   taskDueTimeFrequency     TimeFrequency @default(hour)
-  weeklySummary            Boolean           @default(false)
-  appTheme                 AppTheme          @default(system)
+  weeklySummary            Boolean       @default(false)
+  appTheme                 AppTheme      @default(system)
   accentColor              String?
-  glassEffectIntensity     Int               @default(50)
+  glassEffectIntensity     Int           @default(50)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

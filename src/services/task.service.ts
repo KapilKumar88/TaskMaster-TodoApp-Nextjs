@@ -142,7 +142,7 @@ export async function changeTaskStatus(
     },
     data: {
       status: status,
-      completedOn: new Date(),
+      completedOn: status === TaskStatus.COMPLETED ? new Date() : null,
     },
   });
 }

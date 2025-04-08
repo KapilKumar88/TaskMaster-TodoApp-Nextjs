@@ -76,6 +76,8 @@ export const getStatusColor = (status: TaskStatus) => {
       return 'bg-emerald-500/80 hover:bg-emerald-500';
     case TaskStatus.OVERDUE:
       return 'bg-red-500/80 hover:bg-red-500';
+    case TaskStatus.DRAFT:
+      return 'bg-gray-500/80 hover:bg-gray-500';
   }
 };
 

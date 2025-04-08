@@ -3,12 +3,24 @@
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { MoreHorizontal } from 'lucide-react';
+import { Edit, MoreHorizontal, Trash2 } from 'lucide-react';
 import { TaskInterface } from '@/lib/interfaces/task.interface';
 import { TaskStatus } from '@prisma/client';
-import { getPriorityColor } from '@/lib/utils';
+import { capitalizeFirstLetters, getPriorityColor } from '@/lib/utils';
+import { TaskDetailDialog } from '../task/task-detail-dialog';
+import { startTransition, useState } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 
 export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
+  const [openTaskDetailBox, setOpenTaskDetailBox] = useState<boolean>(false);
+  const [selectedTask, setSelectedTask] = useState<TaskInterface | null>(null);
+
   return (
     <div className="space-y-2">
       {tasks?.length === 0 && (
@@ -18,9 +30,14 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
       )}
       {tasks?.length > 0 &&
         tasks?.map((todo) => (
-          <div
+          <button
+            type="button"
             key={todo.id}
-            className="flex items-center justify-between rounded-lg border border-white/30 bg-white/40 p-3 backdrop-blur-sm"
+            className="flex items-center justify-between rounded-lg border border-white/30 bg-white/40 p-3 backdrop-blur-sm w-full"
+            onClick={() => {
+              setOpenTaskDetailBox(true);
+              setSelectedTask(todo);
+            }}
           >
             <div className="flex items-center gap-3">
               <Checkbox
@@ -30,7 +47,7 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
               />
               <div>
                 <p
-                  className={`text-sm font-medium ${
+                  className={`text-sm font-medium text-left ${
                     todo.status === TaskStatus.COMPLETED
                       ? 'text-slate-500 line-through'
                       : 'text-slate-900 dark:text-white'
@@ -54,7 +71,7 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                       backgroundColor: todo.category?.color,
                     }}
                   >
-                    {todo.category?.name}
+                    {capitalizeFirstLetters(todo.category?.name ?? '')}
                   </Badge>
                   <span className="text-xs text-slate-700 dark:text-slate-300">
                     Due: {new Date(todo.dueDate).toLocaleDateString()}
@@ -62,16 +79,47 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                 </div>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">More options</span>
-            </Button>
-          </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                  <span className="sr-only">More options</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-white/90 backdrop-blur-xl border-white/30">
+                <DropdownMenuItem onClick={() => {}}>
+                  <Edit className="h-4 w-4 mr-1" /> Edit Task
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-red-600"
+                  onClick={() => {
+                    startTransition(() => {
+                      // const formData = new FormData();
+                      // formData.append('taskId', task.id.toString());
+                      // deleteTaskAction(formData);
+                    });
+                  }}
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Delete Task
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </button>
         ))}
+
+      {selectedTask && (
+        <TaskDetailDialog
+          task={selectedTask}
+          open={openTaskDetailBox}
+          onOpenChange={setOpenTaskDetailBox}
+        />
+      )}
     </div>
   );
 }

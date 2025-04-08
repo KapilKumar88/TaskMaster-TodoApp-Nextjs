@@ -5,7 +5,10 @@ import {
   CreateTaskFormState,
   UpdateTaskFormState,
 } from '@/lib/interfaces/server-action.interface';
-import { createTaskSchema } from '@/validationsSchemas/task.validation';
+import {
+  createTaskSchema,
+  updateTaskSchema,
+} from '@/validationsSchemas/task.validation';
 import { TaskPriority, TaskStatus } from '@prisma/client';
 import {
   changeTaskStatus,
@@ -94,6 +97,87 @@ export async function createTaskServerAction(
   }
 }
 
+export async function updateTaskServerAction(
+  state: UpdateTaskFormState,
+  formData: FormData,
+): Promise<UpdateTaskFormState> {
+  try {
+    const getFormPayload = {
+      taskId:
+        formData.get('taskId') === ''
+          ? '0'
+          : (formData.get('taskId') as string),
+      title: formData.get('title') as string,
+      description: formData.get('description') as string,
+      categoryId:
+        formData.get('categoryId') === ''
+          ? '0'
+          : (formData.get('categoryId') as string),
+      priority: formData.get('priority') as TaskPriority,
+      status: formData.get('status') as TaskStatus,
+      dueDate: formData.get('dueDate') as string,
+      markAsCompleted: (formData.get('markAsCompleted') as string) === 'true',
+      markTaskImportant:
+        (formData.get('markTaskImportant') as string) === 'true',
+    };
+
+    const validatedFields = updateTaskSchema.safeParse({
+      taskId: parseInt(getFormPayload.taskId),
+      title: getFormPayload.title,
+      description: getFormPayload.description,
+      categoryId: parseInt(getFormPayload.categoryId),
+      priority: getFormPayload.priority,
+      status: getFormPayload.status,
+      dueDate: new Date(getFormPayload.dueDate),
+      markAsCompleted: getFormPayload.markAsCompleted,
+      markTaskImportant: getFormPayload.markTaskImportant,
+    });
+
+    if (!validatedFields.success) {
+      return {
+        ...state,
+        errors: validatedFields.error.flatten().fieldErrors,
+        success: false,
+        message: 'Validation error',
+      };
+    }
+
+    const userSession = await auth();
+    if (!userSession?.user?.id) {
+      throw new Error('User not found');
+    }
+
+    // await createTask({
+    //   title: validatedFields.data.title,
+    //   description: validatedFields.data.description,
+    //   categoryId: validatedFields.data.categoryId,
+    //   priority: validatedFields.data.priority,
+    //   dueDate: validatedFields.data.dueDate,
+    //   status: getFormPayload.markAsDraft ? TaskStatus.DRAFT : TaskStatus.ACTIVE,
+    //   userId: userSession?.user?.id,
+    // });
+
+    revalidatePath('/dashboard');
+    revalidatePath('/tasks');
+    revalidatePath('/analytics');
+
+    return {
+      success: true,
+      message: 'Task updated Successfully',
+    };
+  } catch (error) {
+    return {
+      ...state,
+      errors: {
+        general:
+          (error as Error)?.message ?? 'Something went wrong. Please try again',
+      },
+      success: false,
+      message: 'Server error',
+    };
+  }
+}
+
 export async function makeTaskCompleted(
   state: UpdateTaskFormState,
   formData: FormData,
@@ -105,16 +189,23 @@ export async function makeTaskCompleted(
     }
     const getFormPayload = {
       taskId: parseInt(formData.get('taskId') as string),
-      status: formData.get('status') as TaskStatus,
+      markAsCompleted: formData.get('markAsCompleted') as string,
     };
-    await changeTaskStatus(
+
+    const updatedTask = await changeTaskStatus(
       getFormPayload.taskId,
       userSession?.user.id,
-      getFormPayload.status,
+      getFormPayload.markAsCompleted === 'true'
+        ? TaskStatus.COMPLETED
+        : TaskStatus.ACTIVE,
     );
+
     return {
       success: true,
-      message: 'Task marked as completed',
+      message: `Task marked as ${getFormPayload.markAsCompleted === 'true' ? 'completed' : 'active'}`,
+      formValues: {
+        markAsCompleted: updatedTask.status === TaskStatus.COMPLETED,
+      },
     };
   } catch (error) {
     return {
@@ -140,17 +231,21 @@ export async function markTaskImportant(
     }
     const getFormPayload = {
       taskId: parseInt(formData.get('taskId') as string),
-      isImportant:
-        (formData.get('isImportant') as string) === 'true' ? true : false,
+      markAsImportant: (formData.get('markAsImportant') as string) === 'true',
     };
-    await starTask(
+
+    const updatedTask = await starTask(
       getFormPayload.taskId,
-      getFormPayload.isImportant,
+      getFormPayload.markAsImportant,
       userSession?.user.id,
     );
+
     return {
       success: true,
-      message: 'Task marked as important',
+      message: `Task marked as ${getFormPayload.markAsImportant ? 'important' : 'not important'}`,
+      formValues: {
+        markAsImportant: updatedTask.markAsImportant,
+      },
     };
   } catch (error) {
     return {
@@ -178,6 +273,7 @@ export async function deleteTask(
       taskId: parseInt(formData.get('taskId') as string),
     };
     await deleteTaskQuery(getFormPayload.taskId, userSession?.user.id);
+    revalidatePath('/dashboard');
     return {
       success: true,
       message: 'Task deleted successfully',

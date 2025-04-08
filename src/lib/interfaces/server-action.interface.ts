@@ -63,6 +63,7 @@ export interface CreateTaskFormState extends ServerActionInterface {
 
 export interface UpdateTaskFormState extends ServerActionInterface {
   errors?: {
+    taskId?: string[];
     title?: string[];
     description?: string[];
     categoryId?: string[];
@@ -72,14 +73,14 @@ export interface UpdateTaskFormState extends ServerActionInterface {
     general?: string;
   };
   formValues?: {
-    taskId?: string;
+    taskId?: number;
     title?: string;
     description?: string;
     categoryId?: string;
     priority?: TaskPriority;
     dueDate?: string;
     dueTime?: string;
-    isImportant?: boolean;
+    markAsImportant?: boolean;
     markAsCompleted?: boolean;
   };
 }
