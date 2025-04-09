@@ -39,9 +39,19 @@ const generateRandomDate = (
   }
 
   const randomDays = Math.floor(generateRandomNumber(1, 1460)); // approx 4 years of dates
-  const randomDate = new Date(
-    startOfDayV2.getTime() - randomDays * 24 * 60 * 60 * 1000,
-  );
+  const futurePast = generateRandomNumber(0, 1);
+  let randomDate = startOfDayV2;
+  if (futurePast === 0) {
+    randomDate = new Date(
+      startOfDayV2.getTime() - randomDays * 24 * 60 * 60 * 1000,
+    );
+  }
+
+  if (futurePast === 1) {
+    randomDate = new Date(
+      startOfDayV2.getTime() + randomDays * 24 * 60 * 60 * 1000,
+    );
+  }
   return randomDate;
 };
 
@@ -54,8 +64,8 @@ export default async function seedTasks(
   }>,
 ) {
   for (let i = 0; i < userIds?.length; i++) {
+    const categories = categoryIds.find((x) => x.userId === userIds[i]);
     for (let j = 0; j < numberOfTask; j++) {
-      const categories = categoryIds.find((x) => x.userId === userIds[i]);
       const categoryId =
         categories?.categoryId[
           generateRandomNumber(0, categories?.categoryId.length - 1)

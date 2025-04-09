@@ -17,9 +17,11 @@ import {
 } from '@/server-actions/task.actions';
 import { toast } from '../common/sonner';
 import { ToastVariation } from '@/lib/enums';
+import ErrorAlertDialogBox from '../common/alert-box/error-alert-box';
 
 export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
   const [openTaskDetailBox, setOpenTaskDetailBox] = useState<boolean>(false);
+  const [openDeleteAlertBox, setOpenDeleteAlertBox] = useState<boolean>(false);
   const [selectedTask, setSelectedTask] = useState<TaskInterface | null>(null);
   const [
     markTaskImportState,
@@ -180,11 +182,7 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                 size="icon"
                 className="text-red-600 hover:text-red-700 hover:bg-red-50"
                 onClick={() => {
-                  startTransition(() => {
-                    const formData = new FormData();
-                    formData.append('taskId', todo.id.toString());
-                    deleteTaskAction(formData);
-                  });
+                  setOpenDeleteAlertBox(true);
                 }}
               >
                 {deleteTaskPending ? (
@@ -194,10 +192,22 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                 )}
                 <span className="sr-only">Delete Task</span>
               </Button>
+              <ErrorAlertDialogBox
+                open={openDeleteAlertBox}
+                onConfirm={() => {
+                  startTransition(() => {
+                    const formData = new FormData();
+                    formData.append('taskId', todo.id.toString());
+                    deleteTaskAction(formData);
+                  });
+                }}
+                onCancel={() => {
+                  setOpenDeleteAlertBox(false);
+                }}
+              />
             </div>
           </div>
         ))}
-
       {selectedTask && (
         <TaskDetailDialog
           task={selectedTask}

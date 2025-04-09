@@ -20,7 +20,9 @@ export default async function seedCategories(
         data: {
           name: faker.lorem.word(),
           color:
-            DIFFERENT_COLOR_CODES[generateRandomNumber(0, numberOfCategories)],
+            DIFFERENT_COLOR_CODES[
+              generateRandomNumber(0, DIFFERENT_COLOR_CODES.length - 1)
+            ],
           user: {
             connect: {
               id: userIds[i],
