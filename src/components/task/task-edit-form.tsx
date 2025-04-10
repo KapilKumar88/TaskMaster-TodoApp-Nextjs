@@ -39,7 +39,7 @@ import { updateTaskServerAction } from '@/server-actions/task.actions';
 import { UpdateTaskFormState } from '@/lib/interfaces/server-action.interface';
 import { toast } from '../common/sonner';
 import { ToastVariation } from '@/lib/enums';
-import CategorySelectBox from '../common/select/catgeory-select-box';
+import CategorySelectBox from '../common/select/category-select-box';
 import AddCategoryForm from '../category/add-category-form';
 
 interface TaskDetailDialogProps {

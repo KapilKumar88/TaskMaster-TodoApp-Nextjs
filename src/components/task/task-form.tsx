@@ -11,15 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { CalendarIcon, LoaderPinwheel, PlusCircleIcon } from 'lucide-react';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
+import { LoaderPinwheel, PlusCircleIcon } from 'lucide-react';
 import { useActionState, useEffect, useState } from 'react';
 import { CreateTaskFormState } from '@/lib/interfaces/server-action.interface';
 import { createTaskServerAction } from '@/server-actions/task.actions';
@@ -28,8 +20,9 @@ import { ToastVariation } from '@/lib/enums';
 import { toast } from '../common/sonner';
 import AddCategoryForm from '../category/add-category-form';
 import { Switch } from '../ui/switch';
-import CategorySelectBox from '../common/select/catgeory-select-box';
+import CategorySelectBox from '../common/select/category-select-box';
 import { TimePicker } from '../common/time-picker';
+import { DatePicker } from '../common/date-picker';
 
 interface TaskFormProps {
   onClose: () => void;
@@ -41,6 +34,7 @@ const formDataInitialState = {
   priority: TaskPriority.LOW,
   categoryName: 'Select Category',
   markAsDraft: false,
+  dueTime: '23:59:00',
 };
 
 export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
@@ -64,6 +58,7 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
 
   const [formData, setFormData] = useState<{
     dueDate?: Date;
+    dueTime?: string;
     categoryId?: number;
     categoryName?: string;
     priority?: TaskPriority;
@@ -155,6 +150,7 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
     <form
       action={(payload) => {
         payload.append('dueDate', formData.dueDate?.toDateString() ?? '');
+        payload.append('dueTime', formData.dueTime?.toString() ?? '');
         payload.append('categoryId', formData?.categoryId?.toString() ?? '');
         payload.append('priority', formData.priority?.toString() ?? '');
         payload.append(
@@ -279,58 +275,48 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
           <AddCategoryForm closeForm={() => setShowAddCategory(false)} />
         )}
 
-        <div className="space-y-2">
-          <Label htmlFor="due-date" className="text-slate-900 dark:text-white">
-            Due Date <span className="text-red-500">*</span>
-          </Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                id="due-date"
-                variant="outline"
-                className={cn(
-                  'w-full justify-start text-left font-normal border-white/30 bg-white/40',
-                  !formData.dueDate && 'text-muted-foreground',
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {formData.dueDate ? (
-                  format(formData.dueDate, 'PPP')
-                ) : (
-                  <span>Pick a date</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-white/90 backdrop-blur-xl border-white/30">
-              <Calendar
-                mode="single"
-                selected={formData.dueDate}
-                onSelect={(payload) => {
-                  setFormData((previousState) => {
-                    return {
-                      ...previousState,
-                      dueDate: payload,
-                    };
-                  });
-                  handleInputChange('dueDate');
-                }}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-          {formErrors?.dueDate && (
-            <p className="text-red-500 text-sm">{formErrors?.dueDate}</p>
-          )}
-        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label
+              htmlFor="due-date"
+              className="text-slate-900 dark:text-white"
+            >
+              Due Date <span className="text-red-500">*</span>
+            </Label>
+            <DatePicker
+              date={formData?.dueDate}
+              setDate={(date?: Date) => {
+                setFormData((previousState) => {
+                  return {
+                    ...previousState,
+                    dueDate: date,
+                  };
+                });
+                handleInputChange('dueDate');
+              }}
+            />
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="due-date" className="text-slate-900 dark:text-white">
-            Due Time <span className="text-red-500">*</span>
-          </Label>
-          <TimePicker value={undefined} onChange={() => {}} />
-          {formErrors?.dueDate && (
-            <p className="text-red-500 text-sm">{formErrors?.dueDate}</p>
-          )}
+          <div className="space-y-2">
+            <Label
+              htmlFor="due-date"
+              className="text-slate-900 dark:text-white"
+            >
+              Due Time <span className="text-red-500">*</span>
+            </Label>
+            <TimePicker
+              time={formData?.dueTime}
+              setTime={(time: string) => {
+                setFormData((previousState) => {
+                  return {
+                    ...previousState,
+                    dueTime: time,
+                  };
+                });
+              }}
+              errorMsg={formErrors?.dueTime}
+            />
+          </div>
         </div>
 
         <div className="flex items-center space-x-2">

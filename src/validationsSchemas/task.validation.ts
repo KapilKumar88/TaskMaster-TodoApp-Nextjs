@@ -1,6 +1,6 @@
 import { TaskPriority, TaskStatus } from '@prisma/client';
 import { startOfToday } from 'date-fns';
-import { object, optional, string } from 'zod';
+import { object, string } from 'zod';
 import z from 'zod';
 
 export const alphaNumericRegex = /^[a-zA-Z0-9 _-]+$/; // it will allow the alphanumeric character, spaces, underscore, hyphens
@@ -30,7 +30,7 @@ export const createTaskSchema = object({
   dueDate: z
     .date({ message: 'Due Date is required' })
     .min(startOfToday(), 'Date must be in the future'),
-  dueTime: optional(z.string().time()),
+  dueTime: z.string({ message: 'Due Time is required' }).time(),
 });
 
 export const updateTaskSchema = object({
@@ -72,6 +72,6 @@ export const updateTaskSchema = object({
   dueDate: z
     .date({ message: 'Due Date is required' })
     .min(startOfToday(), 'Date must be in the future'),
-  dueTime: optional(z.string().time()),
+  dueTime: z.string().time(),
   markTaskImportant: z.boolean(),
 });

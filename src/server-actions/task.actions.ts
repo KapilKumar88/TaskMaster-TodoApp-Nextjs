@@ -19,6 +19,7 @@ import {
 } from '@/services/task.service';
 import { auth } from '@/auth';
 import { revalidatePath } from 'next/cache';
+import { notificationQueue } from '@/lib/queue-bull-mq';
 
 export async function createTaskServerAction(
   state: CreateTaskFormState,
@@ -34,6 +35,7 @@ export async function createTaskServerAction(
           : (formData.get('categoryId') as string),
       priority: formData.get('priority') as TaskPriority,
       dueDate: formData.get('dueDate') as string,
+      dueTime: formData.get('dueTime') as string,
       markAsDraft: (formData.get('markAsDraft') as string) === 'true',
     };
 
@@ -43,6 +45,7 @@ export async function createTaskServerAction(
       categoryId: parseInt(getFormPayload.categoryId),
       priority: getFormPayload.priority,
       dueDate: new Date(getFormPayload.dueDate),
+      dueTime: getFormPayload.dueTime,
     });
 
     if (!validatedFields.success) {
@@ -60,7 +63,7 @@ export async function createTaskServerAction(
       throw new Error('User not found');
     }
 
-    await createTask({
+    const task = await createTask({
       title: validatedFields.data.title,
       description: validatedFields.data.description,
       categoryId: validatedFields.data.categoryId,
@@ -69,6 +72,12 @@ export async function createTaskServerAction(
       status: getFormPayload.markAsDraft ? TaskStatus.DRAFT : TaskStatus.ACTIVE,
       userId: userSession?.user?.id,
     });
+
+    await notificationQueue.add(
+      'notify-user',
+      { taskId: task.id, userId: task.userId },
+      { delay: 1000 },
+    );
 
     revalidatePath('/dashboard');
     revalidatePath('/tasks');

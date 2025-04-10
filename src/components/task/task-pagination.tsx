@@ -11,9 +11,9 @@ import { useTaskContext } from '@/contextApis/task';
 
 export default function TaskPagination({
   totalNumberOfRecords,
-}: {
+}: Readonly<{
   totalNumberOfRecords: number;
-}) {
+}>) {
   const { pagination, setPagination } = useTaskContext();
   const totalPages = Math.ceil(totalNumberOfRecords / pagination.pageSize);
   if (totalPages <= 1) return null;
