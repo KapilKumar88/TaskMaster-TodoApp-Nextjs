@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 import { sendResponse } from '@/lib/utils';
 import { getUserTaskList } from '@/services/task.service';
+import { TaskPriority, TaskStatus } from '@prisma/client';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -14,7 +15,11 @@ export async function GET(req: NextRequest) {
   }
 
   const searchParams = req.nextUrl.searchParams;
-  const query = searchParams.get('filter') ?? '';
+  const query = searchParams.get('filter') ?? 'all';
+  const status = (searchParams.get('status') as TaskStatus) ?? 'all';
+  const priority = (searchParams.get('priority') as TaskPriority) ?? 'all';
+  const sortBy = searchParams.get('sort') ?? 'dueDate';
+  const sortOrder = searchParams.get('order') ?? 'asc';
   const pageNumber = searchParams.get('page');
   const pageLimit = searchParams.get('limit');
 
@@ -23,6 +28,10 @@ export async function GET(req: NextRequest) {
     filter: query,
     pageNumber: parseInt(pageNumber ?? '1'),
     pageLimit: parseInt(pageLimit ?? '10'),
+    status,
+    priority,
+    sortBy,
+    sortOrder,
   });
 
   return sendResponse({

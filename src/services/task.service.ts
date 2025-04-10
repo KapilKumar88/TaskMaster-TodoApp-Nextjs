@@ -83,11 +83,19 @@ export async function getUserTaskList({
   filter,
   pageNumber,
   pageLimit,
+  status,
+  sortBy,
+  sortOrder,
+  priority,
 }: {
   userId: string;
-  filter?: string;
-  pageNumber?: number;
-  pageLimit?: number;
+  filter: string;
+  pageNumber: number;
+  pageLimit: number;
+  sortOrder: string | 'asc' | 'desc';
+  sortBy: string;
+  status: TaskStatus | 'all';
+  priority: TaskPriority | 'all';
 }) {
   const conditions: {
     where: {
@@ -97,12 +105,17 @@ export async function getUserTaskList({
         lte?: Date;
       };
       status?: TaskStatus;
+      priority?: TaskPriority;
     };
   } = {
     where: {
       userId: userId,
       dueDate: undefined,
     },
+  };
+
+  const orderBy = {
+    [sortBy]: sortOrder,
   };
 
   if (filter === 'today') {
@@ -122,6 +135,14 @@ export async function getUserTaskList({
     conditions.where['status'] = TaskStatus.COMPLETED;
   }
 
+  if (status && status !== 'all') {
+    conditions.where['status'] = status;
+  }
+
+  if (priority && priority !== 'all') {
+    conditions.where['priority'] = priority;
+  }
+
   const omitRecords =
     pageNumber && pageLimit ? (pageNumber - 1) * pageLimit : 0;
 
@@ -130,6 +151,7 @@ export async function getUserTaskList({
   });
 
   const records = await prisma.task.findMany({
+    orderBy: orderBy,
     take: pageLimit,
     skip: omitRecords,
     include: {

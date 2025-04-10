@@ -28,12 +28,14 @@ import {
   makeTaskCompleted,
   markTaskImportant,
 } from '@/server-actions/task.actions';
+import { TaskListSkeleton } from '../common/skeletons/task-list-skeleton';
 
 interface TaskListProps {
   filter?: 'all' | 'today' | 'upcoming' | 'completed';
 }
 
 export function TaskList({ filter = 'all' }: Readonly<TaskListProps>) {
+  const [loading, setLoading] = useState(true);
   const [markTaskImportState, markTaskImportantAction] = useActionState(
     markTaskImportant,
     {
@@ -57,11 +59,12 @@ export function TaskList({ filter = 'all' }: Readonly<TaskListProps>) {
   const [tasks, setTasks] = useState<TaskInterface[]>([]);
 
   const fetchTaskList = async () => {
+    setLoading(true);
     let apiUrl = `${API_ENDPOINTS.TASK.LIST}?filter=${encodeURIComponent(
       filter,
     )}&page=${pagination.page}&limit=${pagination.pageSize}`;
     if (taskFilter) {
-      apiUrl += `?status=${taskFilter.status}&priority=${taskFilter.priority}`;
+      apiUrl += `&status=${taskFilter.status}&priority=${taskFilter.priority}`;
     }
 
     if (taskSorting) {
@@ -80,6 +83,7 @@ export function TaskList({ filter = 'all' }: Readonly<TaskListProps>) {
         : previousState;
     });
     setTotalNumberOfRecords(apiResponseJson?.data?.totalRecordsCount ?? 0);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -99,145 +103,155 @@ export function TaskList({ filter = 'all' }: Readonly<TaskListProps>) {
 
   return (
     <div className="space-y-3">
-      {tasks.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-slate-700 dark:text-slate-300">No tasks found</p>
-        </div>
-      ) : (
-        tasks.map((task) => (
-          <div
-            key={`task-Id-${task.id}-${task.categoryId}`}
-            className="flex items-start justify-between rounded-lg border border-white/30 bg-white/40 p-4 backdrop-blur-sm"
-          >
-            <div className="flex items-start gap-3 flex-1">
-              <Checkbox
-                checked={task?.status === TaskStatus.COMPLETED}
-                onCheckedChange={() => {
-                  startTransition(() => {
-                    const formData = new FormData();
-                    formData.append('taskId', task.id.toString());
-                    formData.append(
-                      'status',
-                      task.status === TaskStatus.COMPLETED
-                        ? TaskStatus.ACTIVE
-                        : TaskStatus.COMPLETED,
-                    );
-                    markTaskCompleteAction(formData);
-                  });
-                }}
-                className="mt-1 border-slate-400 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
-              />
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <p
-                    className={`text-sm font-medium ${
-                      task.status === TaskStatus.COMPLETED
-                        ? 'text-slate-500 line-through'
-                        : 'text-slate-900 dark:text-white'
-                    }`}
-                  >
-                    {task.title}
-                  </p>
-                  {task.starred && (
-                    <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                  )}
-                </div>
-                {task.description && (
-                  <p className="text-xs text-slate-700 dark:text-slate-300 mt-1 line-clamp-2">
-                    {task.description}
-                  </p>
-                )}
-                <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <Badge
-                    variant="outline"
-                    className={`text-xs text-white ${getPriorityColor(
-                      task.priority,
-                    )}`}
-                  >
-                    {task.priority}
-                  </Badge>
-                  <Badge
-                    variant="outline"
-                    className={`text-xs text-white`}
-                    style={{
-                      backgroundColor: task.category?.color,
-                    }}
-                  >
-                    {capitalizeFirstLetters(task?.category?.name ?? '')}
-                  </Badge>
-                  <Badge
-                    variant="outline"
-                    className={`text-xs text-white ${getStatusColor(
-                      task.status,
-                    )}`}
-                  >
-                    {task.status}
-                  </Badge>
-                  <span className="text-xs text-slate-700 dark:text-slate-300">
-                    Due: {new Date(task.dueDate).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
+      {!loading && (
+        <>
+          {tasks.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-slate-700 dark:text-slate-300">
+                No tasks found
+              </p>
             </div>
-            <div className="flex items-start">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-slate-700 dark:text-slate-300 hover:text-amber-500"
-                onClick={() => {
-                  startTransition(() => {
-                    const formData = new FormData();
-                    formData.append('taskId', task.id.toString());
-                    formData.append(
-                      'isImportant',
-                      (!task?.markAsImportant)?.toString(),
-                    );
-                    markTaskImportantAction(formData);
-                  });
-                }}
+          ) : (
+            tasks.map((task) => (
+              <div
+                key={`task-Id-${task.id}-${task.categoryId}`}
+                className="flex items-start justify-between rounded-lg border border-white/30 bg-white/40 p-4 backdrop-blur-sm"
               >
-                <Star
-                  className={`h-4 w-4 ${
-                    task.markAsImportant ? 'fill-amber-400 text-amber-400' : ''
-                  }`}
-                />
-                <span className="sr-only">Star task</span>
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <div className="flex items-start gap-3 flex-1">
+                  <Checkbox
+                    checked={task?.status === TaskStatus.COMPLETED}
+                    onCheckedChange={() => {
+                      startTransition(() => {
+                        const formData = new FormData();
+                        formData.append('taskId', task.id.toString());
+                        formData.append(
+                          'status',
+                          task.status === TaskStatus.COMPLETED
+                            ? TaskStatus.ACTIVE
+                            : TaskStatus.COMPLETED,
+                        );
+                        markTaskCompleteAction(formData);
+                      });
+                    }}
+                    className="mt-1 border-slate-400 data-[state=checked]:bg-indigo-600 data-[state=checked]:border-indigo-600"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p
+                        className={`text-sm font-medium ${
+                          task.status === TaskStatus.COMPLETED
+                            ? 'text-slate-500 line-through'
+                            : 'text-slate-900 dark:text-white'
+                        }`}
+                      >
+                        {task.title}
+                      </p>
+                      {task.starred && (
+                        <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                      )}
+                    </div>
+                    {task.description && (
+                      <p className="text-xs text-slate-700 dark:text-slate-300 mt-1 line-clamp-2">
+                        {task.description}
+                      </p>
+                    )}
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      <Badge
+                        variant="outline"
+                        className={`text-xs text-white ${getPriorityColor(
+                          task.priority,
+                        )}`}
+                      >
+                        {task.priority}
+                      </Badge>
+                      <Badge
+                        variant="outline"
+                        className={`text-xs text-white`}
+                        style={{
+                          backgroundColor: task.category?.color,
+                        }}
+                      >
+                        {capitalizeFirstLetters(task?.category?.name ?? '')}
+                      </Badge>
+                      <Badge
+                        variant="outline"
+                        className={`text-xs text-white ${getStatusColor(
+                          task.status,
+                        )}`}
+                      >
+                        {task.status}
+                      </Badge>
+                      <span className="text-xs text-slate-700 dark:text-slate-300">
+                        Due: {new Date(task.dueDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-start">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-                  >
-                    <MoreHorizontal className="h-4 w-4" />
-                    <span className="sr-only">More options</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 bg-white/90 backdrop-blur-xl border-white/30">
-                  <DropdownMenuLabel>Task Actions</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Edit Task</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="text-red-600"
+                    className="text-slate-700 dark:text-slate-300 hover:text-amber-500"
                     onClick={() => {
                       startTransition(() => {
                         const formData = new FormData();
                         formData.append('taskId', task.id.toString());
-                        deleteTaskAction(formData);
+                        formData.append(
+                          'isImportant',
+                          (!task?.markAsImportant)?.toString(),
+                        );
+                        markTaskImportantAction(formData);
                       });
                     }}
                   >
-                    Delete Task
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        ))
+                    <Star
+                      className={`h-4 w-4 ${
+                        task.markAsImportant
+                          ? 'fill-amber-400 text-amber-400'
+                          : ''
+                      }`}
+                    />
+                    <span className="sr-only">Star task</span>
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                      >
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">More options</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56 bg-white/90 backdrop-blur-xl border-white/30">
+                      <DropdownMenuLabel>Task Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>Edit Task</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="text-red-600"
+                        onClick={() => {
+                          startTransition(() => {
+                            const formData = new FormData();
+                            formData.append('taskId', task.id.toString());
+                            deleteTaskAction(formData);
+                          });
+                        }}
+                      >
+                        Delete Task
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            ))
+          )}
+          <TaskPagination totalNumberOfRecords={totalNumberOfRecords} />
+        </>
       )}
-      <TaskPagination totalNumberOfRecords={totalNumberOfRecords} />
+
+      {loading && <TaskListSkeleton length={10} />}
     </div>
   );
 }

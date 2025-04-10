@@ -1,12 +1,14 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function TaskListSkeleton() {
+export function TaskListSkeleton({
+  length = 5,
+}: Readonly<{ length?: number }>) {
   return (
     <div className="space-y-3">
-      {Array.from({ length: 5 }).map((_, index) => (
+      {Array.from({ length: length }).map((_, index) => (
         <div
-          key={index}
-          className="flex items-start justify-between rounded-lg border border-white/30 bg-white/40 p-4 backdrop-blur-sm"
+          key={`skeleton-${index * 2}-length`}
+          className="flex items-start justify-between rounded-lg border border-white/30 p-4 backdrop-blur-sm"
         >
           <div className="flex items-start gap-3 flex-1">
             <Skeleton className="h-5 w-5 rounded-sm mt-1" />

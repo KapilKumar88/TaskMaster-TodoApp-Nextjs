@@ -51,7 +51,7 @@ export const TaskContextProvider = ({
 
   const [taskSorting, setTaskSorting] = useState<TaskSort>({
     sortBy: 'dueDate',
-    sortDirection: 'asc',
+    sortDirection: 'desc',
   });
 
   const [pagination, setPagination] = useState<TaskPagination>({
