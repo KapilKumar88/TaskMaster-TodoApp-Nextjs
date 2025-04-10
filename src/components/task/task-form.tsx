@@ -29,6 +29,7 @@ import { toast } from '../common/sonner';
 import AddCategoryForm from '../category/add-category-form';
 import { Switch } from '../ui/switch';
 import CategorySelectBox from '../common/select/catgeory-select-box';
+import { TimePicker } from '../common/time-picker';
 
 interface TaskFormProps {
   onClose: () => void;
@@ -223,8 +224,10 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
               </Button>
             </div>
             <CategorySelectBox
+              errorMsg={formErrors?.categoryId}
               selectedCategoryId={formData.categoryId ?? 0}
               setSelectedCategoryId={(id) => {
+                console.log('id', id);
                 setFormData((previousState) => {
                   return {
                     ...previousState,
@@ -233,9 +236,6 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
                 });
               }}
             />
-            {formErrors?.categoryId && (
-              <p className="text-red-500 text-sm">{formErrors?.categoryId}</p>
-            )}
           </div>
 
           <div className="space-y-2">
@@ -318,6 +318,16 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
               />
             </PopoverContent>
           </Popover>
+          {formErrors?.dueDate && (
+            <p className="text-red-500 text-sm">{formErrors?.dueDate}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="due-date" className="text-slate-900 dark:text-white">
+            Due Time <span className="text-red-500">*</span>
+          </Label>
+          <TimePicker value={undefined} onChange={() => {}} />
           {formErrors?.dueDate && (
             <p className="text-red-500 text-sm">{formErrors?.dueDate}</p>
           )}

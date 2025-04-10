@@ -200,6 +200,7 @@ export async function makeTaskCompleted(
         ? TaskStatus.COMPLETED
         : TaskStatus.ACTIVE,
     );
+    revalidatePath('/dashboard');
 
     return {
       success: true,
@@ -240,6 +241,7 @@ export async function markTaskImportant(
       getFormPayload.markAsImportant,
       userSession?.user.id,
     );
+    revalidatePath('/dashboard');
 
     return {
       success: true,

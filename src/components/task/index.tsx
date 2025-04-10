@@ -13,11 +13,7 @@ import FilterButton from './filter-button';
 import SortButton from './sort-button';
 import SearchInput from './search-input';
 
-export default function Task({
-  categories,
-}: Readonly<{
-  categories: { id: number; name: string }[];
-}>) {
+export default function Task() {
   const [showTaskForm, setShowTaskForm] = useState(false);
   return (
     <TaskContextProvider>
@@ -98,10 +94,7 @@ export default function Task({
               </CardHeader>
               <CardContent>
                 {showTaskForm ? (
-                  <TaskForm
-                    categories={categories}
-                    onClose={() => setShowTaskForm(false)}
-                  />
+                  <TaskForm onClose={() => setShowTaskForm(false)} />
                 ) : (
                   <div className="space-y-4">
                     <TaskStatsByCategory />

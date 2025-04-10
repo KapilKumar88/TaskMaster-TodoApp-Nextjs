@@ -91,16 +91,11 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
             <div className="flex items-center gap-3">
               <Checkbox
                 checked={todo.status === TaskStatus.COMPLETED}
-                onCheckedChange={() => {
+                onCheckedChange={(value) => {
                   startTransition(() => {
                     const formData = new FormData();
                     formData.append('taskId', todo.id.toString());
-                    formData.append(
-                      'markAsCompleted',
-                      todo.status === TaskStatus.COMPLETED
-                        ? TaskStatus.ACTIVE
-                        : TaskStatus.COMPLETED,
-                    );
+                    formData.append('markAsCompleted', value.toString());
                     markTaskCompleteAction(formData);
                   });
                 }}
@@ -152,6 +147,7 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                 size="icon"
                 className="text-slate-700 dark:text-slate-300 hover:text-amber-500"
                 onClick={() => {
+                  setSelectedTask(todo);
                   startTransition(() => {
                     const formData = new FormData();
                     formData.append('taskId', todo.id.toString());
@@ -163,7 +159,7 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                   });
                 }}
               >
-                {markTaskImportantPending ? (
+                {markTaskImportantPending && selectedTask?.id === todo.id ? (
                   <LoaderPinwheel className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   <Star
@@ -185,7 +181,7 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                   setOpenDeleteAlertBox(true);
                 }}
               >
-                {deleteTaskPending ? (
+                {deleteTaskPending && selectedTask?.id === todo.id ? (
                   <LoaderPinwheel className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   <Trash2 className="h-4 w-4 mr-1" />
@@ -195,11 +191,13 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
               <ErrorAlertDialogBox
                 open={openDeleteAlertBox}
                 onConfirm={() => {
+                  setSelectedTask(todo);
                   startTransition(() => {
                     const formData = new FormData();
                     formData.append('taskId', todo.id.toString());
                     deleteTaskAction(formData);
                   });
+                  setOpenDeleteAlertBox(false);
                 }}
                 onCancel={() => {
                   setOpenDeleteAlertBox(false);

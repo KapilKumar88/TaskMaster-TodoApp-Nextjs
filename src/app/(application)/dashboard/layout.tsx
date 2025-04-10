@@ -1,15 +1,16 @@
 import { auth } from '@/auth';
-import MidSection from '@/components/dashboard/mid-section';
 import Unauthorized from '@/components/common/unauthorized';
 
 export default async function DashboardLayout({
   children,
   task,
   topSection,
+  midSection,
 }: Readonly<{
   children: React.ReactNode;
   task: React.ReactNode;
   topSection: React.ReactNode;
+  midSection: React.ReactNode;
 }>) {
   const userSession = await auth();
   if (userSession === null) {
@@ -19,7 +20,7 @@ export default async function DashboardLayout({
   return (
     <main className="p-6">
       {topSection}
-      <MidSection userSession={userSession} />
+      {midSection}
 
       <div className="grid gap-6 mt-6 md:grid-cols-2 lg:grid-cols-7">
         {children}
