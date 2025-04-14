@@ -39,13 +39,15 @@ enum AppTheme {
 }
 
 model User {
-  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email        String   @unique
-  name         String?
-  password     String
-  profileImage String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                  String    @unique
+  name                   String
+  password               String
+  profileImage           String?
+  emailVerifiedAt        DateTime?
+  emailVerificationToken String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
 
   categories Category[]
   tasks      Task[]
@@ -57,8 +59,7 @@ model Task {
   title           String
   description     String
   priority        TaskPriority @default(MEDIUM)
-  dueDate         DateTime
-  dueTime         DateTime?
+  dueDateTime     DateTime
   markAsImportant Boolean      @default(false)
   completedOn     DateTime?
   status          TaskStatus   @default(ACTIVE)

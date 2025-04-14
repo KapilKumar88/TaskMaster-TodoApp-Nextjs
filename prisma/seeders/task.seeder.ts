@@ -24,34 +24,41 @@ const generateRandomDate = (
     dateToConsider.getDate(),
   );
 
+  let randomDate = startOfDayV2;
+
   if (numOfDaysInPast) {
-    const pastDate = new Date(
+    randomDate = new Date(
       startOfDayV2.getTime() - numOfDaysInPast * 24 * 60 * 60 * 1000,
     );
-    return pastDate;
   }
 
   if (numOfDaysInFuture) {
-    const futureDate = new Date(
+    randomDate = new Date(
       startOfDayV2.getTime() + numOfDaysInFuture * 24 * 60 * 60 * 1000,
     );
-    return futureDate;
+  } else {
+    const randomDays = Math.floor(generateRandomNumber(1, 1460)); // approx 4 years of dates
+    const futurePast = generateRandomNumber(0, 1);
+    if (futurePast === 0) {
+      randomDate = new Date(
+        startOfDayV2.getTime() - randomDays * 24 * 60 * 60 * 1000,
+      );
+    }
+
+    if (futurePast === 1) {
+      randomDate = new Date(
+        startOfDayV2.getTime() + randomDays * 24 * 60 * 60 * 1000,
+      );
+    }
   }
 
-  const randomDays = Math.floor(generateRandomNumber(1, 1460)); // approx 4 years of dates
-  const futurePast = generateRandomNumber(0, 1);
-  let randomDate = startOfDayV2;
-  if (futurePast === 0) {
-    randomDate = new Date(
-      startOfDayV2.getTime() - randomDays * 24 * 60 * 60 * 1000,
-    );
-  }
+  const randomHours = Math.floor(generateRandomNumber(1, 23) * 24);
+  const randomMinutes = Math.floor(generateRandomNumber(1, 59) * 60);
+  const randomSeconds = Math.floor(generateRandomNumber(1, 59) * 60);
+  randomDate.setHours(randomHours);
+  randomDate.setMinutes(randomMinutes);
+  randomDate.setSeconds(randomSeconds);
 
-  if (futurePast === 1) {
-    randomDate = new Date(
-      startOfDayV2.getTime() + randomDays * 24 * 60 * 60 * 1000,
-    );
-  }
   return randomDate;
 };
 
@@ -72,7 +79,7 @@ export default async function seedTasks(
         ];
       const taskStatus = status[generateRandomNumber(0, status.length - 1)];
       const createdAtDate = generateRandomDate();
-      const dueDate = generateRandomDate(
+      const dueDateTime = generateRandomDate(
         createdAtDate,
         undefined,
         generateRandomNumber(1, 10),
@@ -92,7 +99,7 @@ export default async function seedTasks(
               id: categoryId,
             },
           },
-          dueDate: dueDate,
+          dueDateTime: dueDateTime,
           priority: priority[generateRandomNumber(0, priority.length - 1)],
           status: taskStatus,
           completedOn:
