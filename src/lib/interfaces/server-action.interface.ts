@@ -112,6 +112,12 @@ export interface AppearanceSettingsFormState extends ServerActionInterface {
   };
 }
 
+export interface ResendVerificationMailFormState extends ServerActionInterface {
+  errors?: {
+    general?: string;
+  };
+}
+
 export interface NotificationsSettingsFormState extends ServerActionInterface {
   errors?: {
     general?: string;

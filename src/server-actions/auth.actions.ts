@@ -12,8 +12,10 @@ import {
   ChangePasswordState,
   LoginFormState,
   RegisterFormState,
+  ResendVerificationMailFormState,
 } from '@/lib/interfaces/server-action.interface';
 import { changePassword } from '@/services/user.service';
+import { sendVerificationEmail } from '@/lib/helpers/email-helper';
 
 export async function registerUserServerAction(
   state: RegisterFormState,
@@ -188,6 +190,56 @@ export async function changePasswordAction(
   } catch (error) {
     return {
       ...state,
+      errors: {
+        general:
+          (error as { message: string })?.message ??
+          'Something went wrong. Please try again',
+      },
+      success: false,
+      message: 'Server error',
+    };
+  }
+}
+
+export async function resendVerificationLink(): Promise<ResendVerificationMailFormState> {
+  try {
+    const userSession = await auth();
+
+    if (
+      !userSession?.user.id ||
+      !userSession?.user.email ||
+      !userSession?.user.name
+    ) {
+      return {
+        success: false,
+        message: 'Unauthorized',
+      };
+    }
+
+    const response = await sendVerificationEmail(
+      userSession?.user.id,
+      userSession?.user.email,
+      userSession?.user.name,
+    );
+
+    if (!response) {
+      return {
+        errors: {
+          general:
+            'Unable to send the verification link at the moment. Try after sometime',
+        },
+        success: false,
+        message: 'Server error',
+      };
+    }
+
+    return {
+      success: true,
+      errors: {},
+      message: 'Link sent successfully',
+    };
+  } catch (error) {
+    return {
       errors: {
         general:
           (error as { message: string })?.message ??

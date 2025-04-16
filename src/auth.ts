@@ -5,7 +5,10 @@ import { createUser, getUserDetailsByEmailId } from './services/user.service';
 import { prisma } from './lib/prisma';
 import serverSideConfig from './config/server.config';
 import { verifyHash } from './lib/utils';
-import { welcomeEmail } from './lib/helpers/email-helper';
+import {
+  sendVerificationEmail,
+  welcomeEmail,
+} from './lib/helpers/email-helper';
 
 const newPrismaAdapter = PrismaAdapter(prisma);
 
@@ -35,6 +38,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
 
         welcomeEmail(user.name, user.email);
+        sendVerificationEmail(user.id, user.email, user.name);
 
         return {
           id: user.id.toString(),

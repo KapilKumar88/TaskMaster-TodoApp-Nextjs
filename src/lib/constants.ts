@@ -60,3 +60,18 @@ export const ACCENT_COLORS = [
   { name: 'amber', class: 'bg-amber-500' },
   { name: 'rose', class: 'bg-rose-500' },
 ];
+
+export const CUSTOM_ERROR_CODES = {
+  TASK_001: {
+    message: 'Invalid Verification Link',
+    code: 'TASK_001',
+  },
+  TASK_002: {
+    message: 'Email already verified',
+    code: 'TASK_002',
+  },
+  TASK_003: {
+    message: 'Token Expired',
+    code: 'TASK_003',
+  },
+};

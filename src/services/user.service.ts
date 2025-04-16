@@ -2,10 +2,11 @@ import 'server-only';
 import { generateHashedValue, verifyHash } from '@/lib/utils';
 import { prisma } from '@/lib/prisma';
 import { createCategoryBulk } from './category.service';
-import { DEFAULT_CATEGORIES } from '@/lib/constants';
+import { CUSTOM_ERROR_CODES, DEFAULT_CATEGORIES } from '@/lib/constants';
 import { createUserSettings } from './settings.service';
 import appConfig from '@/config/app.config';
 import { User } from '@prisma/client';
+import moment from 'moment';
 
 export async function createUser(payload: {
   name: string;
@@ -76,4 +77,83 @@ export async function changePassword(payload: {
       password: hashedPassword,
     },
   });
+}
+
+export async function updateEmailVerificationToken(
+  token: string,
+  userId: string,
+) {
+  return prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      emailVerificationToken: token,
+    },
+  });
+}
+
+export async function verifyUserEmail(
+  userId: string,
+  token: string,
+  expireTime: number,
+) {
+  const currentTime = moment().unix();
+
+  if (currentTime > expireTime) {
+    return {
+      success: false,
+      message: CUSTOM_ERROR_CODES.TASK_003.message,
+      code: CUSTOM_ERROR_CODES.TASK_003.code,
+    };
+  }
+
+  const checkToken = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!checkToken) {
+    // invalid Link
+    return {
+      success: false,
+      message: CUSTOM_ERROR_CODES.TASK_001.message,
+      code: CUSTOM_ERROR_CODES.TASK_001.code,
+    };
+  }
+
+  if (checkToken.emailVerifiedAt !== null) {
+    // email already verified
+    return {
+      success: false,
+      message: CUSTOM_ERROR_CODES.TASK_002.message,
+      code: CUSTOM_ERROR_CODES.TASK_002.code,
+    };
+  }
+
+  if (checkToken?.emailVerificationToken !== token) {
+    //invalid token
+    return {
+      success: false,
+      message: CUSTOM_ERROR_CODES.TASK_001.message,
+      code: CUSTOM_ERROR_CODES.TASK_001.code,
+    };
+  }
+
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      emailVerifiedAt: new Date(),
+      emailVerificationToken: null,
+    },
+  });
+
+  return {
+    success: true,
+    message: 'Email verified successfully',
+    code: '0',
+  };
 }
