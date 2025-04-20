@@ -9,8 +9,8 @@ const transporter = nodemailer.createTransport({
     user: serverSideConfig.MAIL_USERNAME,
     pass: serverSideConfig.MAIL_PASSWORD,
   },
-  debug: serverSideConfig.NODE_ENV !== 'production',
-  logger: serverSideConfig.NODE_ENV !== 'production',
+  // debug: serverSideConfig.NODE_ENV !== 'production',
+  // logger: serverSideConfig.NODE_ENV !== 'production',
   port: parseInt(serverSideConfig.MAIL_PORT),
   secure: serverSideConfig.MAIL_SECURE === 'true',
 });

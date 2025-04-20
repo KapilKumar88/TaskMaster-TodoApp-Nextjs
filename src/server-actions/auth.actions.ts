@@ -4,18 +4,26 @@ import 'server-only';
 import { auth, signIn, signOut } from '@/auth';
 import {
   changePasswordSchema,
+  forgotPasswordSchema,
   loginSchema,
   registerSchema,
+  resetPasswordSchema,
 } from '@/validationsSchemas/auth.validation';
 import { AuthError } from 'next-auth';
 import {
   ChangePasswordState,
+  ForgotPasswordFormState,
   LoginFormState,
   RegisterFormState,
   ResendVerificationMailFormState,
+  ResetPasswordState,
 } from '@/lib/interfaces/server-action.interface';
-import { changePassword } from '@/services/user.service';
-import { sendVerificationEmail } from '@/lib/helpers/email-helper';
+import { changePassword, resetPassword } from '@/services/user.service';
+import {
+  sendForgotPasswordEmail,
+  sendVerificationEmail,
+} from '@/lib/helpers/email-helper';
+import { decryptHelper } from '@/lib/helpers/server-helper-fn';
 
 export async function registerUserServerAction(
   state: RegisterFormState,
@@ -201,7 +209,7 @@ export async function changePasswordAction(
   }
 }
 
-export async function resendVerificationLink(): Promise<ResendVerificationMailFormState> {
+export async function resendVerificationLinkServerAction(): Promise<ResendVerificationMailFormState> {
   try {
     const userSession = await auth();
 
@@ -244,6 +252,106 @@ export async function resendVerificationLink(): Promise<ResendVerificationMailFo
         general:
           (error as { message: string })?.message ??
           'Something went wrong. Please try again',
+      },
+      success: false,
+      message: 'Server error',
+    };
+  }
+}
+
+export async function forgotPasswordServerAction(
+  state: ForgotPasswordFormState,
+  formData: FormData,
+): Promise<ForgotPasswordFormState> {
+  try {
+    const getFormPayload = {
+      email: formData.get('email') as string,
+    };
+
+    const validatedFields = forgotPasswordSchema.safeParse({
+      email: getFormPayload.email,
+    });
+
+    if (!validatedFields.success) {
+      return {
+        ...state,
+        errors: validatedFields.error.flatten().fieldErrors,
+        formValues: {
+          email: getFormPayload.email,
+        },
+        success: false,
+        message: 'Validation error',
+      };
+    }
+
+    await sendForgotPasswordEmail(validatedFields.data.email);
+
+    return {
+      success: true,
+      message: 'Instructions sent on your mailId',
+    };
+  } catch (error) {
+    return {
+      ...state,
+      errors: {
+        general:
+          error instanceof AuthError
+            ? error.message
+            : 'Something went wrong. Please try again',
+      },
+      success: false,
+      message: 'Server error',
+    };
+  }
+}
+
+export async function resetPasswordServerAction(
+  state: ResetPasswordState,
+  formData: FormData,
+): Promise<ResetPasswordState> {
+  try {
+    const getFormPayload = {
+      password: formData.get('password') as string,
+      confirmPassword: formData.get('confirmPassword') as string,
+      token: formData.get('token') as string,
+    };
+
+    const validatedFields = resetPasswordSchema.safeParse({
+      password: getFormPayload.password,
+      confirmPassword: getFormPayload.confirmPassword,
+      token: getFormPayload.token,
+    });
+
+    if (!validatedFields.success) {
+      return {
+        ...state,
+        errors: validatedFields.error.flatten().fieldErrors,
+        formValues: {
+          password: getFormPayload.password,
+          confirmPassword: getFormPayload.confirmPassword,
+          token: getFormPayload.token,
+        },
+        success: false,
+        message: 'Validation error',
+      };
+    }
+
+    const token = JSON.parse(await decryptHelper(validatedFields.data.token));
+    console.log(token, '>>>>>>>>>>>>>>>>>>>>>>')
+    await resetPassword(validatedFields.data.password, token);
+
+    return {
+      success: true,
+      message: 'Password Changed Successfully',
+    };
+  } catch (error) {
+    return {
+      ...state,
+      errors: {
+        general:
+          error instanceof AuthError
+            ? error.message
+            : 'Something went wrong. Please try again',
       },
       success: false,
       message: 'Server error',

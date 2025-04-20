@@ -7,7 +7,7 @@ import { toast } from '../common/sonner';
 import { ToastVariation } from '@/lib/enums';
 import { CUSTOM_ERROR_CODES } from '@/lib/constants';
 import { useEffect, useState } from 'react';
-import { resendVerificationLink } from '@/server-actions/auth.actions';
+import { resendVerificationLinkServerAction } from '@/server-actions/auth.actions';
 
 export default function EmailVerification({
   response,
@@ -22,7 +22,7 @@ export default function EmailVerification({
 
   const resentLink = async () => {
     setLoading(true);
-    const result = await resendVerificationLink();
+    const result = await resendVerificationLinkServerAction();
     setLoading(false);
     toast({
       message: result.message,
@@ -65,8 +65,7 @@ export default function EmailVerification({
             onClick={() => {
               resentLink();
             }}
-            className="w-full bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"
-          >
+            className="w-full bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white">
             {!loading && (
               <>
                 <RefreshCw className="h-4 w-4 mr-2" />
@@ -86,8 +85,7 @@ export default function EmailVerification({
           <Button
             asChild
             variant="outline"
-            className="w-full border-white/30 bg-white/30 hover:bg-white/40"
-          >
+            className="w-full border-white/30 bg-white/30 hover:bg-white/40">
             <Link href="/dashboard">Back to Dashboard</Link>
           </Button>
         )}

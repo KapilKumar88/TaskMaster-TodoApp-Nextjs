@@ -83,7 +83,7 @@ export default function RegisterForm() {
         message: state.message,
         variation: ToastVariation.SUCCESS,
       });
-      redirect('/dashboard');
+      redirect('/');
     }
   }, [state]);
 
@@ -142,8 +142,7 @@ export default function RegisterForm() {
       <div className="space-y-2">
         <Label
           htmlFor="confirmPassword"
-          className="text-slate-900 dark:text-white"
-        >
+          className="text-slate-900 dark:text-white">
           Confirm Password
         </Label>
         <Input
@@ -161,8 +160,7 @@ export default function RegisterForm() {
       <Button
         // type="submit"
         className="w-full bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"
-        disabled={pending}
-      >
+        disabled={pending}>
         {pending && <LoaderPinwheel className="mr-2 h-8 w-8 animate-spin" />}
         {!pending && 'Register'}
       </Button>

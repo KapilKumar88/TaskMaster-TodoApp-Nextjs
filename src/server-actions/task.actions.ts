@@ -20,6 +20,7 @@ import {
 import { auth } from '@/auth';
 import { revalidatePath } from 'next/cache';
 import { notificationQueue } from '@/lib/queue-bull-mq';
+import moment from 'moment';
 
 export async function createTaskServerAction(
   state: CreateTaskFormState,
@@ -63,6 +64,13 @@ export async function createTaskServerAction(
       throw new Error('User not found');
     }
 
+    const dueTime =  time.match(/(\d+):(\d+):(\d+)/);
+    if (match) {
+      setHours(match[1]);
+      setMinutes(match[2]);
+      setSeconds(match[2]);
+    }
+
     const task = await createTask({
       title: validatedFields.data.title,
       description: validatedFields.data.description,
@@ -71,12 +79,17 @@ export async function createTaskServerAction(
       dueDate: validatedFields.data.dueDate,
       status: getFormPayload.markAsDraft ? TaskStatus.DRAFT : TaskStatus.ACTIVE,
       userId: userSession?.user?.id,
+      dueTime: new Date(`${validatedFields.data.dueDate} ${validatedFields.data.dueTime}`),
     });
+
+
+
+    const delayTime = `${moment(task.dueDate).format('YYYY-mm-dd')} ${task.dueTime}`;
 
     await notificationQueue.add(
       'notify-user',
       { taskId: task.id, userId: task.userId },
-      { delay: 1000 },
+      { delay: moment(delayTime).valueOf() },
     );
 
     revalidatePath('/dashboard');

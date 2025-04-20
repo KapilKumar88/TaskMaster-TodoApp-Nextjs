@@ -18,6 +18,7 @@ export async function createTask(payload: {
   categoryId: number;
   priority: TaskPriority;
   dueDate: Date;
+  dueTime: Date;
   userId: string;
   status?: TaskStatus;
 }) {
@@ -32,7 +33,7 @@ export async function createTask(payload: {
     priority: payload.priority,
     dueDate: payload.dueDate,
     status: payload?.status ?? TaskStatus.ACTIVE,
-    // dueTime: payload.dueDate,
+    dueTime: payload.dueTime,
     user: {
       connect: {
         id: payload?.userId,
@@ -52,6 +53,7 @@ export async function updateTask(payload: {
   categoryId: number;
   priority: TaskPriority;
   dueDate: Date;
+  // dueTime: string;
   status: TaskStatus;
   markAsImportant: boolean;
 }) {
@@ -67,6 +69,7 @@ export async function updateTask(payload: {
     dueDate: payload.dueDate,
     status: payload?.status,
     markAsImportant: payload?.markAsImportant,
+    // dueTime: payload.dueTime
   };
 
   return await prisma.task.update({

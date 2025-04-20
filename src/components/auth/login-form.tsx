@@ -10,6 +10,7 @@ import { useActionState, useEffect, useState } from 'react';
 import { LoginFormState } from '@/lib/interfaces/server-action.interface';
 import { toast } from '../common/sonner';
 import { ToastVariation } from '@/lib/enums';
+import Link from 'next/link';
 
 export default function LoginForm() {
   const [state, action, pending] = useActionState<LoginFormState, FormData>(
@@ -92,9 +93,16 @@ export default function LoginForm() {
         )}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-slate-900 dark:text-white">
-          Password
-        </Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password" className="text-slate-900 dark:text-white">
+            Password
+          </Label>
+          <Link
+            href="/forgot-password"
+            className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+            Forgot password?
+          </Link>
+        </div>
         <Input
           id="password"
           type="password"
@@ -109,8 +117,7 @@ export default function LoginForm() {
       </div>
       <Button
         className="w-full bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"
-        disabled={pending}
-      >
+        disabled={pending}>
         {pending && <LoaderPinwheel className="mr-2 h-8 w-8 animate-spin" />}
         {!pending && 'Login'}
       </Button>

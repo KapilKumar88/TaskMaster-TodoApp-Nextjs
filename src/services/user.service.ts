@@ -93,6 +93,81 @@ export async function updateEmailVerificationToken(
   });
 }
 
+export async function setResetPasswordToken(
+  token: string | null,
+  userId: string,
+) {
+  return prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      resetPasswordToken: token,
+    },
+  });
+}
+
+export async function resetPassword(
+  password: string,
+  token: {
+    token: string;
+    expiryTime: string;
+    userId: string;
+  },
+) {
+  const currentTime = moment().unix();
+
+  if (currentTime > token.expiryTime) {
+    return {
+      success: false,
+      message: CUSTOM_ERROR_CODES.TASK_003.message,
+      code: CUSTOM_ERROR_CODES.TASK_003.code,
+    };
+  }
+
+  const checkToken = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!checkToken) {
+    // invalid Link
+    return {
+      success: false,
+      message: CUSTOM_ERROR_CODES.TASK_001.message,
+      code: CUSTOM_ERROR_CODES.TASK_001.code,
+    };
+  }
+
+  if (checkToken.emailVerifiedAt !== null) {
+    // email already verified
+    return {
+      success: false,
+      message: CUSTOM_ERROR_CODES.TASK_002.message,
+      code: CUSTOM_ERROR_CODES.TASK_002.code,
+    };
+  }
+
+  if (checkToken?.emailVerificationToken !== token) {
+    //invalid token
+    return {
+      success: false,
+      message: CUSTOM_ERROR_CODES.TASK_001.message,
+      code: CUSTOM_ERROR_CODES.TASK_001.code,
+    };
+  }
+  const hashedPassword = await generateHashedValue(password);
+  return prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+}
+
 export async function verifyUserEmail(
   userId: string,
   token: string,
