@@ -18,12 +18,14 @@ interface TimePickerProps {
   time?: string;
   setTime: (time: string) => void;
   errorMsg?: string;
+  disablePortal?: boolean;
 }
 
 export function TimePicker({
   time,
   setTime,
   errorMsg,
+  disablePortal,
 }: Readonly<TimePickerProps>) {
   const [hours, setHours] = useState<string>('12');
   const [minutes, setMinutes] = useState<string>('00');
@@ -95,7 +97,10 @@ export function TimePicker({
             {time ?? <span>Set time</span>}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-4 bg-white/90 backdrop-blur-xl border-white/30">
+        <PopoverContent
+          className="w-auto p-4 bg-white/90 backdrop-blur-xl border-white/30"
+          disablePortal={disablePortal}
+        >
           <div className="space-y-4">
             <div className="flex items-center justify-center gap-2">
               <div className="grid gap-1">
@@ -144,6 +149,7 @@ export function TimePicker({
 
             <div className="flex justify-end">
               <Button
+                type="button"
                 size="sm"
                 onClick={handleApply}
                 className="bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"

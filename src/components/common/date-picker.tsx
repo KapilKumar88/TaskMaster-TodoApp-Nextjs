@@ -17,10 +17,12 @@ export function DatePicker({
   date,
   setDate,
   errorMsg,
+  disablePortal,
 }: Readonly<{
   date?: Date;
   setDate: (date?: Date) => void;
   errorMsg?: string;
+  disablePortal?: boolean;
 }>) {
   const [openDatePicker, setOpenDatePicker] = useState(false);
 
@@ -43,7 +45,10 @@ export function DatePicker({
             {date ? format(date, 'PPP') : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-4 bg-white/90 backdrop-blur-xl border-white/30">
+        <PopoverContent
+          className="w-auto p-4 bg-white/90 backdrop-blur-xl border-white/30"
+          disablePortal={disablePortal}
+        >
           <Calendar
             mode="single"
             selected={date}

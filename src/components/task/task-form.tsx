@@ -220,6 +220,7 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
               </Button>
             </div>
             <CategorySelectBox
+              disablePortal={true}
               errorMsg={formErrors?.categoryId}
               selectedCategoryId={formData.categoryId ?? 0}
               setSelectedCategoryId={(id) => {
@@ -284,6 +285,7 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
               Due Date <span className="text-red-500">*</span>
             </Label>
             <DatePicker
+              disablePortal={true}
               date={formData?.dueDate}
               setDate={(date?: Date) => {
                 setFormData((previousState) => {
@@ -305,6 +307,7 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
               Due Time <span className="text-red-500">*</span>
             </Label>
             <TimePicker
+              disablePortal={true}
               time={formData?.dueTime}
               setTime={(time: string) => {
                 setFormData((previousState) => {

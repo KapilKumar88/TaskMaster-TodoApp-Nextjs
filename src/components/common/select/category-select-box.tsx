@@ -22,10 +22,12 @@ export default function CategorySelectBox({
   selectedCategoryId,
   setSelectedCategoryId,
   errorMsg,
+  disablePortal,
 }: Readonly<{
   selectedCategoryId: number;
   setSelectedCategoryId: (id: number) => void;
   errorMsg?: string;
+  disablePortal?: boolean;
 }>) {
   const { categories } = useCategoryContext();
   const [openCategoryPopup, setOpenCategoryPopup] = useState(false);
@@ -52,7 +54,10 @@ export default function CategorySelectBox({
             <ChevronDown className="ml-7 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full sm:w-[245px] p-0 bg-white/90 backdrop-blur-xl border-white/30">
+        <PopoverContent
+          className="w-full sm:w-[245px] p-0 bg-white/90 backdrop-blur-xl border-white/30"
+          disablePortal={disablePortal}
+        >
           <Command>
             <CommandInput placeholder="Search categories..." className="h-9" />
             <CommandList>
