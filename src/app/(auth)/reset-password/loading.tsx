@@ -1,20 +1,13 @@
-import ForgotPasswordForm from '@/components/auth/forgot-password-form';
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Metadata } from 'next';
-import Link from 'next/link';
+import { Skeleton } from '@/components/ui/skeleton';
 
-export const metadata: Metadata = {
-  title: `Forgot Password`,
-};
-
-export default function ForgotPasswordPage() {
+export default function Loading() {
   return (
     <Card className="w-full max-w-md border border-white/30 bg-white/20 backdrop-blur-xl shadow-xl">
       <CardHeader className="space-y-1 text-center">
@@ -24,26 +17,25 @@ export default function ForgotPasswordPage() {
           </div>
         </div>
         <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white">
-          Forgot Password
+          Reset Password
         </CardTitle>
         <CardDescription className="text-slate-700 dark:text-slate-200">
-          Enter your email to receive password reset instructions
+          Enter your new password
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <ForgotPasswordForm />
-      </CardContent>
-      <CardFooter className="flex flex-col space-y-4">
-        <div className="text-center text-slate-700 dark:text-slate-200 text-sm">
-          Already have an account?{' '}
-          <Link
-            href="/login"
-            className="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
-          >
-            Login
-          </Link>
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-6 w-full mb-1" />
         </div>
-      </CardFooter>
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-20" />
+          <Skeleton className="h-6 w-full mb-1" />
+        </div>
+        <div className="flex justify-center gap-2 mb-4">
+          <Skeleton className="h-6 w-60 rounded-full" />
+        </div>
+      </CardContent>
     </Card>
   );
 }

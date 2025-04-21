@@ -93,6 +93,57 @@ export async function updateEmailVerificationToken(
   });
 }
 
+export async function setResetPasswordToken(
+  token: string | null,
+  userId: string,
+) {
+  return prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      resetPasswordToken: token,
+    },
+  });
+}
+
+export async function resetPassword(
+  password: string,
+  token: {
+    token: string;
+    expiryTime: number;
+    userId: string;
+  },
+) {
+  const currentTime = moment().unix();
+
+  if (currentTime > token.expiryTime) {
+    throw new Error(CUSTOM_ERROR_CODES.TASK_003.message);
+  }
+
+  const checkToken = await prisma.user.findUnique({
+    where: {
+      id: token.userId,
+      resetPasswordToken: token.token,
+    },
+  });
+
+  if (checkToken === null) {
+    throw new Error(CUSTOM_ERROR_CODES.TASK_001.message);
+  }
+
+  const hashedPassword = await generateHashedValue(password);
+  return prisma.user.update({
+    where: {
+      id: token.userId,
+    },
+    data: {
+      password: hashedPassword,
+      resetPasswordToken: null,
+    },
+  });
+}
+
 export async function verifyUserEmail(
   userId: string,
   token: string,

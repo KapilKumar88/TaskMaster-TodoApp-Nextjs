@@ -63,7 +63,7 @@ export const ACCENT_COLORS = [
 
 export const CUSTOM_ERROR_CODES = {
   TASK_001: {
-    message: 'Invalid Verification Link',
+    message: 'Invalid Link',
     code: 'TASK_001',
   },
   TASK_002: {

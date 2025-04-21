@@ -32,6 +32,25 @@ export interface LoginFormState extends ServerActionInterface {
   };
 }
 
+export interface ForgotPasswordFormState extends ServerActionInterface {
+  errors?: {
+    email?: string[];
+    general?: string;
+  };
+  formValues?: {
+    email: string;
+  };
+}
+
+export interface ResetPasswordState extends ServerActionInterface {
+  errors?: {
+    password?: string[];
+    confirmPassword?: string[];
+    token?: string[];
+    general?: string;
+  };
+}
+
 export interface ChangePasswordState extends ServerActionInterface {
   errors?: {
     currentPassword?: string[];
