@@ -285,6 +285,7 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
               Due Date <span className="text-red-500">*</span>
             </Label>
             <DatePicker
+              errorMsg={formErrors?.dueDate}
               disablePortal={true}
               date={formData?.dueDate}
               setDate={(date?: Date) => {

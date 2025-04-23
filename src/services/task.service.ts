@@ -17,7 +17,7 @@ export async function createTask(payload: {
   description: string;
   categoryId: number;
   priority: TaskPriority;
-  dueDate: Date;
+  dueDateTime: Date;
   userId: string;
   status?: TaskStatus;
 }) {
@@ -30,9 +30,8 @@ export async function createTask(payload: {
       },
     },
     priority: payload.priority,
-    dueDate: payload.dueDate,
+    dueDateTime: payload.dueDateTime,
     status: payload?.status ?? TaskStatus.ACTIVE,
-    // dueTime: payload.dueDate,
     user: {
       connect: {
         id: payload?.userId,
@@ -51,7 +50,7 @@ export async function updateTask(payload: {
   description: string;
   categoryId: number;
   priority: TaskPriority;
-  dueDate: Date;
+  dueDateTime: Date;
   status: TaskStatus;
   markAsImportant: boolean;
 }) {
@@ -64,7 +63,7 @@ export async function updateTask(payload: {
       },
     },
     priority: payload.priority,
-    dueDate: payload.dueDate,
+    dueDateTime: payload.dueDateTime,
     status: payload?.status,
     markAsImportant: payload?.markAsImportant,
   };
@@ -100,7 +99,7 @@ export async function getUserTaskList({
   const conditions: {
     where: {
       userId: string;
-      dueDate?: {
+      dueDateTime?: {
         gte?: Date;
         lte?: Date;
       };
@@ -110,7 +109,7 @@ export async function getUserTaskList({
   } = {
     where: {
       userId: userId,
-      dueDate: undefined,
+      dueDateTime: undefined,
     },
   };
 
@@ -119,14 +118,14 @@ export async function getUserTaskList({
   };
 
   if (filter === 'today') {
-    conditions.where['dueDate'] = {
+    conditions.where['dueDateTime'] = {
       gte: startOfDay(new Date()),
       lte: endOfDay(new Date()),
     };
   }
 
   if (filter === 'upcoming') {
-    conditions.where['dueDate'] = {
+    conditions.where['dueDateTime'] = {
       gte: endOfDay(new Date()),
     };
   }
@@ -209,7 +208,7 @@ export async function totalUserTasksCountByDate(
 ) {
   return await prisma.task.count({
     where: {
-      dueDate: {
+      dueDateTime: {
         gte: startDate,
         lte: endDate,
       },
@@ -229,7 +228,7 @@ export async function totalTaskStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: currentPeriodStartDate,
           lte: currentPeriodEndDate,
         },
@@ -238,7 +237,7 @@ export async function totalTaskStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: previousPeriodDates.startDate,
           lte: previousPeriodDates.endDate,
         },
@@ -278,7 +277,7 @@ export async function totalCompletedTaskStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: currentPeriodStartDate,
           lte: currentPeriodEndDate,
         },
@@ -288,7 +287,7 @@ export async function totalCompletedTaskStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: previousPeriodDates.startDate,
           lte: previousPeriodDates.endDate,
         },
@@ -333,7 +332,7 @@ export async function taskCompletionRateStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: currentPeriodStartDate,
           lte: currentPeriodEndDate,
         },
@@ -342,7 +341,7 @@ export async function taskCompletionRateStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: previousPeriodDates.startDate,
           lte: previousPeriodDates.endDate,
         },
@@ -351,7 +350,7 @@ export async function taskCompletionRateStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: currentPeriodStartDate,
           lte: currentPeriodEndDate,
         },
@@ -361,7 +360,7 @@ export async function taskCompletionRateStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: previousPeriodDates.startDate,
           lte: previousPeriodDates.endDate,
         },
@@ -416,7 +415,7 @@ export async function avgCompletionTimeStats(
       },
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: currentPeriodStartDate,
           lte: currentPeriodEndDate,
         },
@@ -431,7 +430,7 @@ export async function avgCompletionTimeStats(
       },
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: previousPeriodDates.startDate,
           lte: previousPeriodDates.endDate,
         },
@@ -529,7 +528,7 @@ export async function overdueRateStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: currentPeriodStartDate,
           lte: currentPeriodEndDate,
         },
@@ -538,7 +537,7 @@ export async function overdueRateStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: previousPeriodDates.startDate,
           lte: previousPeriodDates.endDate,
         },
@@ -547,7 +546,7 @@ export async function overdueRateStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: currentPeriodStartDate,
           lte: currentPeriodEndDate,
         },
@@ -557,7 +556,7 @@ export async function overdueRateStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: previousPeriodDates.startDate,
           lte: previousPeriodDates.endDate,
         },
@@ -606,7 +605,7 @@ export async function totalInprogressTaskStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: currentPeriodStartDate,
           lte: currentPeriodEndDate,
         },
@@ -616,7 +615,7 @@ export async function totalInprogressTaskStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: previousPeriodDates.startDate,
           lte: previousPeriodDates.endDate,
         },
@@ -656,7 +655,7 @@ export async function totalOverDueTaskStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: currentPeriodStartDate,
           lte: currentPeriodEndDate,
         },
@@ -666,7 +665,7 @@ export async function totalOverDueTaskStats(
     prisma.task.count({
       where: {
         userId: userId,
-        dueDate: {
+        dueDateTime: {
           gte: previousPeriodDates.startDate,
           lte: previousPeriodDates.endDate,
         },
@@ -946,7 +945,7 @@ export async function getTaskListOfGivenPeriod({
 }) {
   const whereCondition: Prisma.TaskWhereInput = {
     userId: userId,
-    dueDate: {
+    dueDateTime: {
       gte: startOfDay(startDate),
       lte: endOfDay(endDate),
     },

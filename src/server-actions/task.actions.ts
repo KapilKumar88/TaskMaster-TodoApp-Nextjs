@@ -20,6 +20,7 @@ import {
 import { auth } from '@/auth';
 import { revalidatePath } from 'next/cache';
 import { notificationQueue } from '@/lib/queue-bull-mq';
+import moment from 'moment';
 
 export async function createTaskServerAction(
   state: CreateTaskFormState,
@@ -63,12 +64,19 @@ export async function createTaskServerAction(
       throw new Error('User not found');
     }
 
+    const dueTime = validatedFields.data.dueTime.split(':');
+    const taskDueDateTime = moment(validatedFields.data.dueDate).set({
+      hour: parseInt(dueTime[0] ?? '23'),
+      minute: parseInt(dueTime[1] ?? '59'),
+      second: parseInt(dueTime[2] ?? '59'),
+    });
+
     const task = await createTask({
       title: validatedFields.data.title,
       description: validatedFields.data.description,
       categoryId: validatedFields.data.categoryId,
       priority: validatedFields.data.priority,
-      dueDate: validatedFields.data.dueDate,
+      dueDateTime: taskDueDateTime.toDate(),
       status: getFormPayload.markAsDraft ? TaskStatus.DRAFT : TaskStatus.ACTIVE,
       userId: userSession?.user?.id,
     });
