@@ -4,7 +4,11 @@ type ServerSideConfig = {
   APP_NAME: string;
   APP_URL: string;
   ENCRYPTION_ALGORITHM: string;
-  REDIS_URL: string;
+  REDIS: {
+    URL: string;
+    HOST: string;
+    PORT: string;
+  };
   MAIL: {
     MAIL_HOST: string;
     MAIL_USERNAME: string;
@@ -24,7 +28,11 @@ const serverSideConfig: ServerSideConfig = Object.freeze({
   NODE_ENV: process.env.NODE_ENV,
   APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
   APP_URL: process.env.APP_URL,
-  REDIS_URL: process.env.REDIS_URL,
+  REDIS: {
+    URL: process.env.REDIS_URL,
+    HOST: process.env.REDIS_HOST,
+    PORT: process.env.REDIS_PORT,
+  },
   ENCRYPTION_ALGORITHM: process.env.ENCRYPTION_ALGORITHM ?? 'aes-256-cbc',
   MAIL: {
     MAIL_HOST: process.env.MAIL_HOST,

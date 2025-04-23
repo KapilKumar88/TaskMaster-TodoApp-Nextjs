@@ -19,8 +19,9 @@ import {
 } from '@/services/task.service';
 import { auth } from '@/auth';
 import { revalidatePath } from 'next/cache';
-import { notificationQueue } from '@/lib/queue-bull-mq';
+import { notificationQueue } from '@/lib/queue/bullmq-queue';
 import moment from 'moment';
+import { WORKER_QUEUE } from '@/lib/constants';
 
 export async function createTaskServerAction(
   state: CreateTaskFormState,
@@ -81,11 +82,14 @@ export async function createTaskServerAction(
       userId: userSession?.user?.id,
     });
 
-    await notificationQueue.add(
-      'notify-user',
-      { taskId: task.id, userId: task.userId },
-      { delay: 1000 },
-    );
+    const notificationTime = taskDueDateTime.diff(moment(), 'milliseconds');
+    if (notificationTime > 0) {
+      notificationQueue.add(
+        WORKER_QUEUE.TASK_NAME.NOTIFY_ABOUT_TASK_DUE,
+        { taskId: task.id, title: task.title },
+        { delay: notificationTime },
+      );
+    }
 
     revalidatePath('/dashboard');
     revalidatePath('/tasks');

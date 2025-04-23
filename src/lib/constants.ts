@@ -75,3 +75,16 @@ export const CUSTOM_ERROR_CODES = {
     code: 'TASK_003',
   },
 };
+
+export const WORKER_QUEUE = {
+  QUEUE_NAMES: {
+    TASK_NOTIFICATION: 'task-notification',
+  },
+  TASK_NAME: {
+    NOTIFY_ABOUT_TASK_EXPIRED: 'notify-about-task-expired',
+    NOTIFY_ABOUT_TASK_DUE: 'notify-about-task-due',
+    NOTIFY_ABOUT_TASK_COMPLETED: 'notify-about-task-completed',
+    NOTIFY_ABOUT_TASK_CREATED: 'notify-about-task-created',
+    NOTIFY_ABOUT_TASK_UPDATED: 'notify-about-task-updated',
+  },
+};

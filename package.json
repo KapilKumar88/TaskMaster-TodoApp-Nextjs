@@ -14,7 +14,7 @@
     "lint:fix": "next lint --fix",
     "prepare": "husky",
     "prettier": "prettier --write .",
-    "start:queue-worker": "node queue-worker.js"
+    "start:queue-worker": "npx tsx scripts/worker.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seeders/seed.ts"
