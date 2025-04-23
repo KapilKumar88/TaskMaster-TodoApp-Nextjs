@@ -17,8 +17,13 @@ import {
   RegisterFormState,
   ResendVerificationMailFormState,
   ResetPasswordState,
+  ServerActionInterface,
 } from '@/lib/interfaces/server-action.interface';
-import { changePassword, resetPassword } from '@/services/user.service';
+import {
+  changePassword,
+  resetPassword,
+  saveFCMToken,
+} from '@/services/user.service';
 import {
   sendForgotPasswordEmail,
   sendVerificationEmail,
@@ -346,6 +351,32 @@ export async function resetPasswordServerAction(
   } catch (error) {
     return {
       ...state,
+      errors: {
+        general:
+          (error as { message: string }).message ??
+          'Something went wrong. Please try again',
+      },
+      success: false,
+      message: 'Server error',
+    };
+  }
+}
+
+export async function saveFCMTokenServerAction(
+  fcmToken: string,
+): Promise<ServerActionInterface> {
+  try {
+    const userSession = await auth();
+    if (!userSession?.user.id) {
+      throw new Error('Unauthorized');
+    }
+    await saveFCMToken(userSession?.user.id, fcmToken);
+    return {
+      success: true,
+      message: 'Token saved successfully',
+    };
+  } catch (error) {
+    return {
       errors: {
         general:
           (error as { message: string }).message ??

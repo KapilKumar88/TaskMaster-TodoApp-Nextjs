@@ -47,6 +47,7 @@ model User {
   emailVerifiedAt        DateTime?
   emailVerificationToken String?
   resetPasswordToken     String?
+  fcmToken               String?
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt
 

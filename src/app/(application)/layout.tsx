@@ -8,6 +8,7 @@ import { Toaster } from '@/components/common/sonner';
 import Unauthorized from '@/components/common/unauthorized';
 import { getUserCategories } from '@/services/category.service';
 import { CategoryContextProvider } from '@/contextApis/categories';
+import NotificationPermission from '@/components/common/notification-permission';
 
 export default async function ApplicationLayout({
   children,
@@ -41,6 +42,7 @@ export default async function ApplicationLayout({
             </div>
           </div>
           <Toaster position="top-right" theme={userSettings?.appTheme} />
+          <NotificationPermission />
         </SidebarContextProvider>
       </CategoryContextProvider>
     </UserSettingProvider>

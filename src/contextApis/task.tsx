@@ -16,7 +16,7 @@ type TaskFilter = {
 };
 
 type TaskSort = {
-  sortBy?: 'dueDate' | 'priority' | 'alphabetical';
+  sortBy?: 'dueDateTime' | 'priority' | 'alphabetical';
   sortDirection?: 'asc' | 'desc';
 };
 
@@ -50,7 +50,7 @@ export const TaskContextProvider = ({
   });
 
   const [taskSorting, setTaskSorting] = useState<TaskSort>({
-    sortBy: 'dueDate',
+    sortBy: 'dueDateTime',
     sortDirection: 'desc',
   });
 

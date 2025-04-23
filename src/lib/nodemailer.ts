@@ -4,15 +4,15 @@ import Mail from 'nodemailer/lib/mailer';
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
-  host: serverSideConfig.MAIL_HOST,
+  host: serverSideConfig.MAIL.MAIL_HOST,
   auth: {
-    user: serverSideConfig.MAIL_USERNAME,
-    pass: serverSideConfig.MAIL_PASSWORD,
+    user: serverSideConfig.MAIL.MAIL_USERNAME,
+    pass: serverSideConfig.MAIL.MAIL_PASSWORD,
   },
-  debug: serverSideConfig.NODE_ENV !== 'production',
-  logger: serverSideConfig.NODE_ENV !== 'production',
-  port: parseInt(serverSideConfig.MAIL_PORT),
-  secure: serverSideConfig.MAIL_SECURE === 'true',
+  // debug: serverSideConfig.NODE_ENV !== 'production',
+  // logger: serverSideConfig.NODE_ENV !== 'production',
+  port: parseInt(serverSideConfig.MAIL.MAIL_PORT),
+  secure: serverSideConfig.MAIL.MAIL_SECURE === 'true',
 });
 
 export default async function sendMail(
@@ -26,7 +26,7 @@ export default async function sendMail(
   try {
     // send mail with defined transport object
     const info = await transporter.sendMail({
-      from: serverSideConfig.MAIL_FROM_ADDRESS,
+      from: serverSideConfig.MAIL.MAIL_FROM_ADDRESS,
       to,
       cc,
       bcc,

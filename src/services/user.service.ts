@@ -208,3 +208,14 @@ export async function verifyUserEmail(
     code: '0',
   };
 }
+
+export async function saveFCMToken(userId: string, fcmToken: string) {
+  return await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      fcmToken: fcmToken,
+    },
+  });
+}

@@ -28,6 +28,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/lib/types/next-auth.d.ts"
-  ],
+, "public/firebase-messaging-sw.js"  ],
   "exclude": ["node_modules"]
 }

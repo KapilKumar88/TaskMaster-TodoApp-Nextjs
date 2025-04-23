@@ -3,8 +3,8 @@ import { TaskPriority, TaskStatus, WeekStartDay } from '@prisma/client';
 export interface ServerActionInterface {
   message: string;
   success: boolean;
-  errors?: unknown;
-  formValues?: unknown;
+  errors?: Record<string, unknown> | { general?: string };
+  formValues?: Record<string, unknown>;
 }
 
 export interface RegisterFormState extends ServerActionInterface {
