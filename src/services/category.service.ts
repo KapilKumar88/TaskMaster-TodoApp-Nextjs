@@ -63,7 +63,7 @@ export async function allCategoryTaskCount(userId: string) {
         select: {
           tasks: {
             where: {
-              dueDate: {
+              dueDateTime: {
                 gte: startOfDay(new Date()),
               },
             },

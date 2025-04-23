@@ -370,9 +370,13 @@ export async function taskCompletionRateStats(
   ]);
 
   const currentPeriodCompletionRate =
-    currentPeriodCompletedTask / currentPeriodTaskCount / 100;
+    currentPeriodCompletedTask && currentPeriodTaskCount
+      ? currentPeriodCompletedTask / currentPeriodTaskCount / 100
+      : 0;
   const previousPeriodCompletionRate =
-    previousPeriodCompletedTask / previousPeriodTaskCount / 100;
+    previousPeriodCompletedTask && previousPeriodTaskCount
+      ? previousPeriodCompletedTask / previousPeriodTaskCount / 100
+      : 0;
 
   let percentageDifference = 0;
   if (previousPeriodCompletionRate > 0 && previousPeriodCompletionRate !== 0) {
@@ -566,9 +570,13 @@ export async function overdueRateStats(
   ]);
 
   const currentPeriodOverdueRate =
-    currentPeriodOverdueTaskCount / currentPeriodTaskCount / 100;
+    currentPeriodOverdueTaskCount && currentPeriodTaskCount
+      ? currentPeriodOverdueTaskCount / currentPeriodTaskCount / 100
+      : 0;
   const previousPeriodOverdueRate =
-    previousPeriodOverdueTaskCount / previousPeriodTaskCount / 100;
+    previousPeriodOverdueTaskCount && previousPeriodTaskCount
+      ? previousPeriodOverdueTaskCount / previousPeriodTaskCount / 100
+      : 0;
   let percentageDifference = 0;
 
   if (previousPeriodOverdueRate > 0 && currentPeriodOverdueRate !== 0) {
