@@ -224,7 +224,6 @@ export function TaskForm({ onClose }: Readonly<TaskFormProps>) {
               errorMsg={formErrors?.categoryId}
               selectedCategoryId={formData.categoryId ?? 0}
               setSelectedCategoryId={(id) => {
-                console.log('id', id);
                 setFormData((previousState) => {
                   return {
                     ...previousState,

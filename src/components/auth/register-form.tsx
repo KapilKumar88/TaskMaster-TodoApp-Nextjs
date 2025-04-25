@@ -12,6 +12,7 @@ import { toast } from '../common/sonner';
 import { ToastVariation } from '@/lib/enums';
 
 export default function RegisterForm() {
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [state, action, pending] = useActionState<RegisterFormState, FormData>(
     registerUserServerAction,
     {
@@ -88,7 +89,13 @@ export default function RegisterForm() {
   }, [state]);
 
   return (
-    <form action={action} className="space-y-4">
+    <form
+      action={(formData) => {
+        formData.append('timeZone', timeZone);
+        action(formData);
+      }}
+      className="space-y-4"
+    >
       <div className="space-y-2">
         <Label htmlFor="fullName" className="text-slate-900 dark:text-white">
           Full Name
