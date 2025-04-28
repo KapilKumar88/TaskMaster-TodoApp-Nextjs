@@ -86,7 +86,11 @@ export async function createTaskServerAction(
     if (notificationTime > 0) {
       notificationQueue.add(
         WORKER_QUEUE.TASK_NAME.NOTIFY_ABOUT_TASK_DUE,
-        { taskId: task.id, title: task.title },
+        {
+          taskId: task.id,
+          title: task.title,
+          fcmToken: userSession?.user?.fcmToken,
+        },
         { delay: notificationTime },
       );
     }
