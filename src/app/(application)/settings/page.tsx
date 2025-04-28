@@ -15,6 +15,7 @@ import EmailAddress from '@/components/settings/account-settings/email-address';
 import PasswordChange from '@/components/settings/account-settings/password-change';
 import ExportData from '@/components/settings/account-settings/data-export';
 import DeleteAccount from '@/components/settings/account-settings/delete-account';
+import CustomErrorBoundary from '@/components/common/ErrorBoundary';
 
 export default function SettingsPage() {
   return (
@@ -56,77 +57,83 @@ export default function SettingsPage() {
         <div className="grid gap-6 md:grid-cols-7">
           <div className="md:col-span-5">
             <TabsContent value="general" className="mt-0">
-              <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
-                <CardHeader>
-                  <CardTitle className="text-slate-900 dark:text-white">
-                    General Settings
-                  </CardTitle>
-                  <CardDescription className="text-slate-700 dark:text-slate-300">
-                    Manage your general application preferences
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <GeneralSettingsForm />
-                </CardContent>
-              </Card>
+              <CustomErrorBoundary>
+                <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-slate-900 dark:text-white">
+                      General Settings
+                    </CardTitle>
+                    <CardDescription className="text-slate-700 dark:text-slate-300">
+                      Manage your general application preferences
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <GeneralSettingsForm />
+                  </CardContent>
+                </Card>
+              </CustomErrorBoundary>
             </TabsContent>
 
             <TabsContent value="notifications" className="mt-0">
-              <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
-                <CardHeader>
-                  <CardTitle className="text-slate-900 dark:text-white">
-                    Notification Settings
-                  </CardTitle>
-                  <CardDescription className="text-slate-700 dark:text-slate-300">
-                    Manage how and when you receive notifications
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <NotificationSettingsForm />
-                </CardContent>
-              </Card>
+              <CustomErrorBoundary>
+                <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-slate-900 dark:text-white">
+                      Notification Settings
+                    </CardTitle>
+                    <CardDescription className="text-slate-700 dark:text-slate-300">
+                      Manage how and when you receive notifications
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <NotificationSettingsForm />
+                  </CardContent>
+                </Card>
+              </CustomErrorBoundary>
             </TabsContent>
+
             <TabsContent value="appearance" className="mt-0">
-              <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
-                <CardHeader>
-                  <CardTitle className="text-slate-900 dark:text-white">
-                    Appearance Settings
-                  </CardTitle>
-                  <CardDescription className="text-slate-700 dark:text-slate-300">
-                    Customize how the application looks
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <AppearanceSettingsForm />
-                </CardContent>
-              </Card>
+              <CustomErrorBoundary>
+                <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-slate-900 dark:text-white">
+                      Appearance Settings
+                    </CardTitle>
+                    <CardDescription className="text-slate-700 dark:text-slate-300">
+                      Customize how the application looks
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <AppearanceSettingsForm />
+                  </CardContent>
+                </Card>
+              </CustomErrorBoundary>
             </TabsContent>
 
             <TabsContent value="account" className="mt-0">
-              <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
-                <CardHeader>
-                  <CardTitle className="text-slate-900 dark:text-white">
-                    Account Settings
-                  </CardTitle>
-                  <CardDescription className="text-slate-700 dark:text-slate-300">
-                    Manage your account information and security
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
-                    <EmailAddress />
-                    <Separator className="bg-white/30" />
-                    <PasswordChange />
-                    <Separator className="bg-white/30" />
-
-                    <ExportData />
-
-                    <Separator className="bg-white/30" />
-
-                    <DeleteAccount />
-                  </div>
-                </CardContent>
-              </Card>
+              <CustomErrorBoundary>
+                <Card className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-slate-900 dark:text-white">
+                      Account Settings
+                    </CardTitle>
+                    <CardDescription className="text-slate-700 dark:text-slate-300">
+                      Manage your account information and security
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                      <EmailAddress />
+                      <Separator className="bg-white/30" />
+                      <PasswordChange />
+                      <Separator className="bg-white/30" />
+                      <ExportData />
+                      <Separator className="bg-white/30" />
+                      <DeleteAccount />
+                    </div>
+                  </CardContent>
+                </Card>
+              </CustomErrorBoundary>
             </TabsContent>
           </div>
 
