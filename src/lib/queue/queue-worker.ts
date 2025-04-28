@@ -22,6 +22,7 @@ const worker = new Worker(
         body: job.data.body,
       },
       data: {
+        link: job.data.link,
         taskId: job.data.taskId.toString(),
       },
     });

@@ -22,6 +22,7 @@ import { revalidatePath } from 'next/cache';
 import { notificationQueue } from '@/lib/queue/bullmq-queue';
 import moment from 'moment';
 import { WORKER_QUEUE } from '@/lib/constants';
+import serverSideConfig from '@/config/server.config';
 
 export async function createTaskServerAction(
   state: CreateTaskFormState,
@@ -90,6 +91,7 @@ export async function createTaskServerAction(
           taskId: task.id,
           title: task.title,
           fcmToken: userSession?.user?.fcmToken,
+          link: serverSideConfig.APP_URL + '?taskId=' + task.id,
         },
         { delay: notificationTime },
       );
