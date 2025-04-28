@@ -27,14 +27,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: {},
         password: {},
         fullName: {},
-        timezone: {},
+        timeZone: {},
       },
       async authorize(credentials) {
         const user = await createUser({
           name: credentials.fullName as string,
           email: credentials.email as string,
           password: credentials.password as string,
-          timeZone: credentials.timezone as string,
+          timeZone: credentials.timeZone as string,
         });
 
         welcomeEmail(user.name, user.email);

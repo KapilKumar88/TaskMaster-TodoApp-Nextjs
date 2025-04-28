@@ -24,6 +24,6 @@ export default function NotificationPermission() {
     if (token !== userSession?.user.fcmToken && token) {
       saveFCMToken();
     }
-  }, [token, userSession]);
+  }, [token]);
   return null;
 }
