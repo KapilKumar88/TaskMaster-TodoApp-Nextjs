@@ -41,8 +41,8 @@ export default async function ApplicationLayout({
               </div>
             </div>
           </div>
-          <Toaster position="top-right" theme={userSettings?.appTheme} />
           <NotificationPermission />
+          <Toaster position="top-right" theme={userSettings?.appTheme} />
         </SidebarContextProvider>
       </CategoryContextProvider>
     </UserSettingProvider>

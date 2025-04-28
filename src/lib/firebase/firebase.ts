@@ -1,6 +1,6 @@
 import clientSideConfig from '@/config/client.config';
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import { getApp, getApps, initializeApp } from 'firebase/app';
+import { getMessaging, getToken, isSupported } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: clientSideConfig.FIREBASE.API_KEY,
@@ -11,12 +11,27 @@ const firebaseConfig = {
   appId: clientSideConfig.FIREBASE.APP_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-let messaging: ReturnType<typeof getMessaging> | null = null;
+const messaging = async () => {
+  const supported = await isSupported();
+  return supported ? getMessaging(app) : null;
+};
 
-if (typeof window !== 'undefined') {
-  messaging = getMessaging(app);
-}
+export const fetchToken = async () => {
+  try {
+    const fcmMessaging = await messaging();
+    if (fcmMessaging) {
+      const token = await getToken(fcmMessaging, {
+        vapidKey: clientSideConfig.FIREBASE.VAPID_KEY,
+      });
+      return token;
+    }
+    return null;
+  } catch (err) {
+    console.error('An error occurred while fetching the token:', err);
+    return null;
+  }
+};
 
-export { messaging, getToken, onMessage };
+export { app, messaging };

@@ -1,48 +1,123 @@
 import { toast } from '@/components/common/sonner';
-import clientSideConfig from '@/config/client.config';
 import { ToastVariation } from '@/lib/enums';
-import { messaging, getToken, onMessage } from '@/lib/firebase/firebase';
-import { saveFCMTokenServerAction } from '@/server-actions/auth.actions';
-import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { messaging, fetchToken } from '@/lib/firebase/firebase';
+import { onMessage, Unsubscribe } from 'firebase/messaging';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+
+async function getNotificationPermissionAndToken() {
+  if (!('Notification' in window)) {
+    return null;
+  }
+
+  if (Notification.permission === 'granted') {
+    return await fetchToken();
+  }
+
+  if (Notification.permission !== 'denied') {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      return await fetchToken();
+    }
+  }
+  return null;
+}
 
 const useFCM = () => {
-  const { data: userSession, update } = useSession();
-  useEffect(() => {
-    if (!messaging) return;
+  const router = useRouter();
+  const [notificationPermissionStatus, setNotificationPermissionStatus] =
+    useState<NotificationPermission | null>(null); // State to store the notification permission status.
+  const [token, setToken] = useState<string | null>(null); // State to store the FCM token.
+  const retryLoadToken = useRef(0); // Ref to keep track of retry attempts.
+  const isLoading = useRef(false); // Ref to keep track if a token fetch is currently in progress.
 
-    Notification.requestPermission().then((permission) => {
-      if (permission === 'granted' && messaging) {
-        getToken(messaging, {
-          vapidKey: clientSideConfig.FIREBASE.VAPID_KEY,
-        }).then((currentToken) => {
-          if (currentToken !== userSession?.user.fcmToken) {
-            saveFCMTokenServerAction(currentToken);
-            if (userSession) {
-              update({
-                user: {
-                  ...userSession.user,
-                  fcmToken: currentToken,
-                },
-              });
-            }
-          }
-        });
+  const loadToken = async () => {
+    if (isLoading.current) return;
+
+    isLoading.current = true;
+    const token = await getNotificationPermissionAndToken();
+
+    if (Notification.permission === 'denied') {
+      setNotificationPermissionStatus('denied');
+      console.info(
+        '%cPush Notifications issue - permission denied',
+        'color: green; background: #c7c7c7; padding: 8px; font-size: 20px',
+      );
+      isLoading.current = false;
+      return;
+    }
+
+    if (!token) {
+      if (retryLoadToken.current >= 3) {
+        alert('Unable to load token, refresh the browser');
+        console.info(
+          '%cPush Notifications issue - unable to load token after 3 retries',
+          'color: green; background: #c7c7c7; padding: 8px; font-size: 20px',
+        );
+        isLoading.current = false;
+        return;
+      }
+
+      retryLoadToken.current += 1;
+      console.error('An error occurred while retrieving token. Retrying...');
+      isLoading.current = false;
+      await loadToken();
+      return;
+    }
+
+    setNotificationPermissionStatus(Notification.permission);
+    setToken(token);
+    isLoading.current = false;
+  };
+
+  useEffect(() => {
+    if ('Notification' in window) {
+      loadToken();
+    }
+  }, []);
+
+  useEffect(() => {
+    const setupListener = async () => {
+      if (!token) return;
+
+      const m = await messaging();
+      if (!m) return;
+
+      const unsubscribe = onMessage(m, (payload) => {
+        if (Notification.permission !== 'granted') return;
+
+        const link = payload.fcmOptions?.link ?? payload.data?.link;
+
+        if (link) {
+          toast({
+            variation: ToastVariation.LINK,
+            message: payload.notification?.title ?? '',
+            linkAction: () =>
+              router.push(payload.fcmOptions?.link ?? payload.data?.link ?? ''),
+          });
+        } else {
+          toast({
+            variation: ToastVariation.INFO,
+            message: payload.notification?.title ?? '',
+          });
+        }
+      });
+
+      return unsubscribe;
+    };
+
+    let unsubscribe: Unsubscribe | null = null;
+
+    setupListener().then((unsub) => {
+      if (unsub) {
+        unsubscribe = unsub;
       }
     });
 
-    // Listen for messages when app is active
-    const unsubscribe = onMessage(messaging, (payload) => {
-      const title = payload.notification?.title ?? 'Notification';
-      const body = payload.notification?.body ?? '';
-      toast({
-        variation: ToastVariation.INFO,
-        message: `${title}: ${body}`,
-      });
-    });
+    return () => unsubscribe?.();
+  }, [token, router, toast]);
 
-    return () => unsubscribe();
-  }, [messaging, userSession]);
+  return { token, notificationPermissionStatus };
 };
 
 export default useFCM;

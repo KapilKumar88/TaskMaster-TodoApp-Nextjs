@@ -12,6 +12,7 @@ export enum ToastVariation {
   WARNING = 'warning',
   ACTION = 'action',
   DEFAULT = 'default',
+  LINK = 'link',
 }
 
 export enum DirectionIndicators {
