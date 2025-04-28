@@ -40,6 +40,7 @@ export async function registerUserServerAction(
       email: formData.get('email') as string,
       password: formData.get('password') as string,
       confirmPassword: formData.get('confirmPassword') as string,
+      timeZone: formData.get('timeZone') as string,
     };
 
     const validatedFields = registerSchema.safeParse({
@@ -66,6 +67,7 @@ export async function registerUserServerAction(
       fullName: validatedFields.data.fullName,
       email: validatedFields.data.email,
       password: validatedFields.data.password,
+      timeZone: getFormPayload.timeZone,
       redirect: false,
     });
 

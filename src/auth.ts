@@ -27,14 +27,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: {},
         password: {},
         fullName: {},
+        timezone: {},
       },
       async authorize(credentials) {
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         const user = await createUser({
           name: credentials.fullName as string,
           email: credentials.email as string,
           password: credentials.password as string,
-          timeZone: timezone,
+          timeZone: credentials.timezone as string,
         });
 
         welcomeEmail(user.name, user.email);
@@ -45,6 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           name: user.name,
           email: user.email,
           image: user.profileImage,
+          fcmToken: null,
         };
       },
     }),
@@ -76,6 +77,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           name: user.name,
           email: user.email,
           image: user.profileImage,
+          fcmToken: user.fcmToken,
         };
       },
     }),
@@ -84,11 +86,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt({ token, user }) {
       if (user) {
         token.id = user.id!;
+        token.fcmToken = user.fcmToken!;
       }
       return token;
     },
     session({ session, token }) {
       session.user.id = token.id;
+      session.user.fcmToken = token.fcmToken;
       return session;
     },
   },

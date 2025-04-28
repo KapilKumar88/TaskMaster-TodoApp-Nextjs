@@ -5,6 +5,7 @@ import { JWT } from 'next-auth/jwt';
 declare module 'next-auth' {
   interface User {
     id: string;
+    fcmToken?: string | null;
   }
   interface Session {
     user: {
@@ -12,6 +13,7 @@ declare module 'next-auth' {
       name?: string | null;
       email?: string | null;
       image?: string | null;
+      fcmToken?: string | null;
     };
   }
 }
@@ -19,5 +21,6 @@ declare module 'next-auth' {
 declare module 'next-auth/jwt' {
   interface JWT {
     id: string;
+    fcmToken?: string | null;
   }
 }
