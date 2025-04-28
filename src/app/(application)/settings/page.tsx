@@ -8,14 +8,13 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
-import { AlertCircle, Trash2 } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import GeneralSettingsForm from '@/components/settings/general-settings-form';
 import NotificationSettingsForm from '@/components/settings/notification-settings-form';
 import AppearanceSettingsForm from '@/components/settings/appearance-settings-form';
 import EmailAddress from '@/components/settings/account-settings/email-address';
 import PasswordChange from '@/components/settings/account-settings/password-change';
 import ExportData from '@/components/settings/account-settings/data-export';
+import DeleteAccount from '@/components/settings/account-settings/delete-account';
 
 export default function SettingsPage() {
   return (
@@ -124,27 +123,7 @@ export default function SettingsPage() {
 
                     <Separator className="bg-white/30" />
 
-                    <div>
-                      <h3 className="text-sm font-medium text-red-600 dark:text-red-400 mb-2">
-                        Danger Zone
-                      </h3>
-                      <Alert
-                        variant="destructive"
-                        className="bg-red-100/50 border-red-300 text-red-800"
-                      >
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertTitle>Warning</AlertTitle>
-                        <AlertDescription>
-                          This action cannot be undone. This will permanently
-                          delete your account and remove your data from our
-                          servers.
-                        </AlertDescription>
-                      </Alert>
-                      <Button variant="destructive" className="mt-4">
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete Account
-                      </Button>
-                    </div>
+                    <DeleteAccount />
                   </div>
                 </CardContent>
               </Card>

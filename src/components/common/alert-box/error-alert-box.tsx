@@ -11,10 +11,14 @@ import {
 
 export default function ErrorAlertDialogBox({
   open,
+  dialogTitle,
+  dialogDescription,
   onConfirm,
   onCancel,
 }: Readonly<{
   open: boolean;
+  dialogTitle: string;
+  dialogDescription: string;
   onConfirm: () => void;
   onCancel: () => void;
 }>) {
@@ -22,11 +26,8 @@ export default function ErrorAlertDialogBox({
     <AlertDialog open={open}>
       <AlertDialogContent className="sm:max-w-[550px] bg-white/80 backdrop-blur-xl border-white/30">
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the task
-            and remove it from your task list.
-          </AlertDialogDescription>
+          <AlertDialogTitle>{dialogTitle}</AlertDialogTitle>
+          <AlertDialogDescription>{dialogDescription}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel

@@ -219,3 +219,11 @@ export async function saveFCMToken(userId: string, fcmToken: string) {
     },
   });
 }
+
+export async function deleteUserAccount(userId: string) {
+  return await prisma.user.delete({
+    where: {
+      id: userId,
+    },
+  });
+}

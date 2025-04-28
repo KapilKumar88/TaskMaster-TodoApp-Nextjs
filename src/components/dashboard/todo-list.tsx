@@ -136,7 +136,7 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                     {capitalizeFirstLetters(todo.category?.name ?? '')}
                   </Badge>
                   <span className="text-xs text-slate-700 dark:text-slate-300">
-                    Due: {new Date(todo.dueDate).toLocaleDateString()}
+                    Due: {new Date(todo.dueDateTime).toLocaleDateString()}
                   </span>
                 </div>
               </button>
@@ -190,6 +190,8 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
               </Button>
               <ErrorAlertDialogBox
                 open={openDeleteAlertBox}
+                dialogTitle="Delete Task?"
+                dialogDescription="Are you sure you want to delete this task? This action cannot be undone."
                 onConfirm={() => {
                   setSelectedTask(todo);
                   startTransition(() => {
