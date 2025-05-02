@@ -18,8 +18,10 @@ import {
 import { toast } from '../common/sonner';
 import { ToastVariation } from '@/lib/enums';
 import ErrorAlertDialogBox from '../common/alert-box/error-alert-box';
+import { useDateTimeSettingContext } from '@/contextApis/date-time-setting';
 
 export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
+  const { formatDateTime } = useDateTimeSettingContext();
   const [openTaskDetailBox, setOpenTaskDetailBox] = useState<boolean>(false);
   const [openDeleteAlertBox, setOpenDeleteAlertBox] = useState<boolean>(false);
   const [selectedTask, setSelectedTask] = useState<TaskInterface | null>(null);
@@ -136,7 +138,7 @@ export function TodoList({ tasks }: Readonly<{ tasks: TaskInterface[] }>) {
                     {capitalizeFirstLetters(todo.category?.name ?? '')}
                   </Badge>
                   <span className="text-xs text-slate-700 dark:text-slate-300">
-                    Due: {new Date(todo.dueDateTime).toLocaleDateString()}
+                    Due: {formatDateTime(todo.dueDateTime)}
                   </span>
                 </div>
               </button>

@@ -29,12 +29,14 @@ import {
   markTaskImportant,
 } from '@/server-actions/task.actions';
 import { TaskListSkeleton } from '../common/skeletons/task-list-skeleton';
+import { useDateTimeSettingContext } from '@/contextApis/date-time-setting';
 
 interface TaskListProps {
   filter?: 'all' | 'today' | 'upcoming' | 'completed';
 }
 
 export function TaskList({ filter = 'all' }: Readonly<TaskListProps>) {
+  const { formatDateTime } = useDateTimeSettingContext();
   const [loading, setLoading] = useState(true);
   const [markTaskImportState, markTaskImportantAction] = useActionState(
     markTaskImportant,
@@ -182,7 +184,7 @@ export function TaskList({ filter = 'all' }: Readonly<TaskListProps>) {
                         {task.status}
                       </Badge>
                       <span className="text-xs text-slate-700 dark:text-slate-300">
-                        Due: {new Date(task.dueDate).toLocaleDateString()}
+                        Due: {formatDateTime(task.dueDateTime)}
                       </span>
                     </div>
                   </div>

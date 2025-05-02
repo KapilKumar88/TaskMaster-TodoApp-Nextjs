@@ -235,9 +235,12 @@ export default function GeneralSettingsForm() {
               <SelectValue placeholder="Select date format" />
             </SelectTrigger>
             <SelectContent className="bg-white/90 backdrop-blur-xl border-white/30">
-              <SelectItem value="mm-dd-yyyy">MM/DD/YYYY</SelectItem>
-              <SelectItem value="dd-mm-yyyy">DD/MM/YYYY</SelectItem>
-              <SelectItem value="yyyy-mm-dd">YYYY/MM/DD</SelectItem>
+              <SelectItem value="YYYY-MM-DD HH:mm:ss">
+                YYYY-MM-DD HH:mm:ss
+              </SelectItem>
+              <SelectItem value="DD-MM-YYYY hh:mm:ss A">
+                DD-MM-YYYY hh:mm:ss A
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>

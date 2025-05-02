@@ -12,6 +12,9 @@ import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { useUserSettingContext } from '@/contextApis/user-settings';
+import { WeekStartDay } from '@prisma/client';
+import { DayPickerDefaultProps } from 'react-day-picker';
 
 export function DatePicker({
   date,
@@ -25,6 +28,14 @@ export function DatePicker({
   disablePortal?: boolean;
 }>) {
   const [openDatePicker, setOpenDatePicker] = useState(false);
+  const { userSettings } = useUserSettingContext();
+  let weekStartDay: DayPickerDefaultProps['weekStartsOn'] = 0; // 0 is for sunday
+
+  if (userSettings?.weekStartDay === WeekStartDay.monday) {
+    weekStartDay = 1;
+  } else if (userSettings?.weekStartDay === WeekStartDay.saturday) {
+    weekStartDay = 6;
+  }
 
   return (
     <>
@@ -51,6 +62,7 @@ export function DatePicker({
         >
           <Calendar
             mode="single"
+            weekStartsOn={weekStartDay}
             selected={date}
             onSelect={(payload) => {
               setDate(payload);

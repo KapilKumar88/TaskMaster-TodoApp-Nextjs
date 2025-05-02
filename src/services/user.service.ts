@@ -26,7 +26,7 @@ export async function createUser(payload: {
   createUserSettings({
     userId: user.id,
     timeZone: payload.timeZone,
-    dateFormat: appConfig.DEFAULT_DATE_FORMAT,
+    dateFormat: appConfig.DEFAULT_DATE_TIME_FORMAT,
   });
 
   createCategoryBulk(
