@@ -5,11 +5,15 @@ import { NextRequest } from 'next/server';
 import moment from 'moment-timezone';
 import { Jobs, JobStatus, Prisma } from '@prisma/client';
 import appConfig from '@/config/app.config';
-import { emailNotification } from '@/services/notification.service';
+import {
+  emailNotification,
+  fcmNotification,
+} from '@/services/notification.service';
 import { WORKER_QUEUE } from '@/lib/constants';
 import { EMAIL_NOTIFICATION_TEMPLATE } from '@/lib/enums';
 
 export async function GET(req: NextRequest) {
+  let jobId = null;
   try {
     if (req.headers.get('authorization') !== serverSideConfig.CRON_JOB_SECRET) {
       return sendResponse({
@@ -62,9 +66,13 @@ export async function GET(req: NextRequest) {
         continue;
       }
       for (const job of groupByUserId[userJobs]) {
+        jobId = job.id;
         const updateJobPayload: Prisma.JobsUpdateInput = {
           status: JobStatus.COMPLETED,
+          emailSent: false,
+          fcmSent: false,
         };
+
         const taskDetails = await prisma.task.findFirst({
           include: {
             category: {
@@ -81,10 +89,20 @@ export async function GET(req: NextRequest) {
         if (!taskDetails) {
           updateJobPayload.status = JobStatus.FAILED;
           updateJobPayload.retryCount = job.retryCount + 1;
+          updateJobPayload.errorLog = `Task with id ${job.taskId} not found`;
+          await prisma.jobs.update({
+            where: {
+              id: jobId,
+            },
+            data: updateJobPayload,
+          });
           continue;
         }
-        // if (job.fcmNotificationRequested) {
-        // }
+
+        if (job.fcmNotificationRequested && !job.fcmSent && user.fcmToken) {
+          const response = await fcmNotification(user.fcmToken, taskDetails);
+          updateJobPayload.fcmSent = response;
+        }
 
         if (job.emailNotificationRequested && !job.emailSent) {
           let emailTemplate = null;
@@ -101,18 +119,41 @@ export async function GET(req: NextRequest) {
               emailTemplate,
             );
             updateJobPayload.emailSent = response;
-            updateJobPayload.retryCount = job.retryCount + 1;
-          } else {
-            updateJobPayload.emailSent = false;
-            updateJobPayload.status = JobStatus.FAILED;
-            updateJobPayload.retryCount = job.retryCount + 1;
           }
         }
+
+        let notification = null;
+        if (!job.notificationAdded) {
+          notification = await prisma.notification.create({
+            data: {
+              name: taskDetails.title,
+              description: taskDetails.description,
+              notificationReceivedTime: job.scheduledTime,
+              user: {
+                connect: {
+                  id: taskDetails.userId,
+                },
+              },
+            },
+          });
+        }
+
         await prisma.jobs.update({
           where: {
             id: job.id,
           },
-          data: updateJobPayload,
+          data: {
+            ...updateJobPayload,
+            notificationAdded: notification !== null,
+            status:
+              updateJobPayload.fcmSent && updateJobPayload.emailSent
+                ? JobStatus.COMPLETED
+                : JobStatus.FAILED,
+            retryCount:
+              updateJobPayload.fcmSent && updateJobPayload.emailSent
+                ? job.retryCount
+                : job.retryCount + 1,
+          },
         });
       }
     }
@@ -122,6 +163,18 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.log(error);
+    if (jobId) {
+      prisma.jobs.update({
+        where: {
+          id: jobId,
+        },
+        data: {
+          status: JobStatus.FAILED,
+          retryCount: appConfig.MAX_JOB_RETRY_COUNT,
+          errorLog: (error as Error)?.message,
+        },
+      });
+    }
     return sendResponse({
       status: 'error',
       statusCode: 500,

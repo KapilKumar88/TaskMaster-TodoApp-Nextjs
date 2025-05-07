@@ -101,6 +101,27 @@ const useFCM = () => {
             message: payload.notification?.title ?? '',
           });
         }
+
+        // --------------------------------------------
+        // Disable this if you only want toast notifications.
+        // const n = new Notification(
+        //   payload.notification?.title ?? 'New message',
+        //   {
+        //     body: payload.notification?.body ?? 'This is a new message',
+        //     data: link ? { url: link } : undefined,
+        //   },
+        // );
+
+        // n.onclick = (event) => {
+        //   event.preventDefault();
+        //   const link = (event.target as Notification)?.data?.url;
+        //   if (link) {
+        //     router.push(link);
+        //   } else {
+        //     console.log('No link found in the notification payload');
+        //   }
+        // };
+        // --------------------------------------------
       });
 
       return unsubscribe;

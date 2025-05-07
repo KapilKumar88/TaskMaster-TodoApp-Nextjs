@@ -5,28 +5,30 @@ import { EMAIL_NOTIFICATION_TEMPLATE } from '@/lib/enums';
 import admin from '@/lib/firebase/firebase-admin';
 import serverSideConfig from '@/config/server.config';
 
-export const fcmNotification = (
+export const fcmNotification = async (
   userFCMToken: string,
-  taskList: Array<Task>,
+  task: Task & { category: { name: string } },
 ) => {
-  if (userFCMToken) {
-    for (const task of taskList) {
-      console.log(task, 'task');
-      admin.messaging().send({
-        token: userFCMToken,
-        notification: {
-          title: task.title,
-          body: task.description,
-        },
-        data: {
-          link: `${serverSideConfig.APP_URL}/dashboard`,
-          taskId: task.id?.toString(),
-        },
-      });
-    }
+  try {
+    await admin.messaging().send({
+      token: userFCMToken,
+      notification: {
+        title: task.title,
+        body: task.description,
+      },
+      data: {
+        link: `${serverSideConfig.APP_URL}/dashboard`,
+        taskId: task.id?.toString(),
+      },
+    });
     return true;
+  } catch (error) {
+    console.error(
+      'Internal server error in fcmNotification',
+      (error as Error)?.message,
+    );
+    return false;
   }
-  return false;
 };
 
 export const emailNotification = async (
