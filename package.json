@@ -14,7 +14,8 @@
     "lint:fix": "next lint --fix",
     "prepare": "husky",
     "prettier": "prettier --write .",
-    "start:queue-worker": "NODE_OPTIONS='--require dotenv/config' npx tsx scripts/worker.ts"
+    "start:queue-worker": "npx tsx scripts/worker-script.ts",
+    "start:cron": "npx tsx scripts/cron-script.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seeders/seed.ts"

@@ -19,10 +19,10 @@ import {
 } from '@/services/task.service';
 import { auth } from '@/auth';
 import { revalidatePath } from 'next/cache';
-import { notificationQueue } from '@/lib/queue/bullmq-queue';
 import moment from 'moment';
 import { WORKER_QUEUE } from '@/lib/constants';
-import serverSideConfig from '@/config/server.config';
+import { processTaskQueue } from '@/lib/queue/bullmq-queue';
+import appConfig from '@/config/app.config';
 
 export async function createTaskServerAction(
   state: CreateTaskFormState,
@@ -83,17 +83,20 @@ export async function createTaskServerAction(
       userId: userSession?.user?.id,
     });
 
-    const notificationTime = taskDueDateTime.diff(moment(), 'milliseconds');
-    if (notificationTime > 0) {
-      notificationQueue.add(
-        WORKER_QUEUE.TASK_NAME.NOTIFY_ABOUT_TASK_DUE,
+    if (task.id && TaskStatus.DRAFT !== task.status) {
+      processTaskQueue.add(
+        WORKER_QUEUE.QUEUE_NAMES.PROCESS_TASK,
         {
           taskId: task.id,
-          title: task.title,
-          fcmToken: userSession?.user?.fcmToken,
-          link: serverSideConfig.APP_URL + '?taskId=' + task.id,
+          userId: userSession?.user?.id,
         },
-        { delay: notificationTime },
+        {
+          delay: appConfig.PROCESS_TASK_DELAY,
+          attempts: 3,
+          backoff: { type: 'exponential', delay: 60000 },
+          removeOnComplete: true,
+          removeOnFail: false,
+        },
       );
     }
 
@@ -180,7 +183,7 @@ export async function updateTaskServerAction(
       description: validatedFields.data.description,
       categoryId: validatedFields.data.categoryId,
       priority: validatedFields.data.priority,
-      dueDate: validatedFields.data.dueDate,
+      dueDateTime: validatedFields.data.dueDate,
       status: validatedFields.data.status,
       markAsImportant: validatedFields.data.markTaskImportant,
     });

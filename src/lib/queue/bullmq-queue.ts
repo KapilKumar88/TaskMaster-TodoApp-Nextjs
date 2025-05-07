@@ -1,3 +1,4 @@
+import 'server-only';
 import serverSideConfig from '@/config/server.config';
 import { Queue } from 'bullmq';
 import IORedis from 'ioredis';
@@ -9,18 +10,23 @@ const connection = new IORedis(
   {},
 );
 
-export const notificationQueue = new Queue(
-  WORKER_QUEUE.QUEUE_NAMES.TASK_NOTIFICATION,
+export const processTaskQueue = new Queue(
+  WORKER_QUEUE.QUEUE_NAMES.PROCESS_TASK,
   {
     connection,
   },
 );
 
-notificationQueue
+processTaskQueue
   .waitUntilReady()
   .then(() => {
-    console.info('✅ Queue is connected to Redis');
+    console.info(
+      `✅ ${WORKER_QUEUE.QUEUE_NAMES.PROCESS_TASK} Queue is connected to Redis`,
+    );
   })
   .catch((err) => {
-    console.error('❌ Queue failed to connect to Redis:', err);
+    console.error(
+      `❌ ${WORKER_QUEUE.QUEUE_NAMES.PROCESS_TASK} Queue failed to connect to Redis:`,
+      err,
+    );
   });

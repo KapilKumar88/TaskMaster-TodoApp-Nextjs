@@ -3,6 +3,7 @@ type ServerSideConfig = {
   NODE_ENV: string;
   APP_NAME: string;
   APP_URL: string;
+  CRON_JOB_SECRET: string;
   ENCRYPTION_ALGORITHM: string;
   REDIS: {
     URL: string;
@@ -28,6 +29,7 @@ const serverSideConfig: ServerSideConfig = Object.freeze({
   NODE_ENV: process.env.NODE_ENV,
   APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
   APP_URL: process.env.APP_URL,
+  CRON_JOB_SECRET: process.env.CRON_JOB_SECRET,
   REDIS: {
     URL: process.env.REDIS_URL,
     HOST: process.env.REDIS_HOST,

@@ -78,13 +78,20 @@ export const CUSTOM_ERROR_CODES = {
 
 export const WORKER_QUEUE = {
   QUEUE_NAMES: {
-    TASK_NOTIFICATION: 'task-notification',
+    PROCESS_TASK: 'process-task',
+    FCM_TASK_NOTIFICATION: 'fcm-task-notification',
+    EMAIL_TASK_NOTIFICATION: 'email-task-notification',
   },
   TASK_NAME: {
+    PROCESS_TASK_JOB: 'process-task-job',
     NOTIFY_ABOUT_TASK_EXPIRED: 'notify-about-task-expired',
     NOTIFY_ABOUT_TASK_DUE: 'notify-about-task-due',
     NOTIFY_ABOUT_TASK_COMPLETED: 'notify-about-task-completed',
     NOTIFY_ABOUT_TASK_CREATED: 'notify-about-task-created',
     NOTIFY_ABOUT_TASK_UPDATED: 'notify-about-task-updated',
   },
+};
+
+export const NOTIFICATION_MESSAGES = {
+  TASK_DUE_MESSAGE: 'Task Due Soon',
 };

@@ -12,6 +12,8 @@ import WelcomeEmailHtmlTemplate from '@/components/email-templates/welcome-email
 import serverSideConfig from '@/config/server.config';
 import EmailVerificationMailHtmlTemplate from '@/components/email-templates/email-verification-template';
 import ForgotPasswordEmailHtmlTemplate from '@/components/email-templates/forgot-password-email';
+import DueTaskMailHtmlTemplate from '@/components/email-templates/due-task-email-template';
+import { Task } from '@prisma/client';
 
 export const welcomeEmail = async (username: string, email: string) => {
   try {
@@ -90,6 +92,26 @@ export const sendForgotPasswordEmail = async (email: string) => {
   } catch (error) {
     console.error(
       'Internal server error in sendForgotPasswordEmail',
+      (error as Error)?.message,
+    );
+    return false;
+  }
+};
+
+export const sendDueTaskEmailNotification = async (
+  email: string,
+  username: string,
+  taskList: Array<Task & { category: { name: string } }>,
+) => {
+  try {
+    const templateStr = await DueTaskMailHtmlTemplate({
+      username,
+      tasks: taskList,
+    });
+    return sendMail(email, 'Due Task Email', templateStr);
+  } catch (error) {
+    console.error(
+      'Internal server error in sendDueTaskEmailNotification',
       (error as Error)?.message,
     );
     return false;
