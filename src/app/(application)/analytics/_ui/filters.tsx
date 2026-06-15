@@ -118,7 +118,7 @@ export default function AnalyticsFilter() {
           align="end"
         >
           {/* <Calendar
-            initialFocus
+            autoFocus
             mode="range"
             defaultMonth={date?.from}
             selected={date}
@@ -127,7 +127,7 @@ export default function AnalyticsFilter() {
             className="bg-transparent md:hidden"
           /> */}
           <Calendar
-            initialFocus
+            autoFocus
             mode="range"
             defaultMonth={customDateRange?.from}
             selected={customDateRange}

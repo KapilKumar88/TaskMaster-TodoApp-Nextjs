@@ -379,7 +379,7 @@ export function TaskEditForm({
                     };
                   });
                 }}
-                initialFocus
+                autoFocus
               />
             </PopoverContent>
           </Popover>

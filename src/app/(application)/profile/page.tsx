@@ -20,17 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
-import {
-  Camera,
-  Check,
-  Edit,
-  Github,
-  Instagram,
-  Linkedin,
-  Mail,
-  Save,
-  Twitter,
-} from 'lucide-react';
+import { Camera, Check, Edit, Link, Mail, Save } from 'lucide-react';
 
 export default function ProfilePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -148,32 +138,8 @@ export default function ProfilePage() {
                           variant="outline"
                           className="rounded-full border-white/30 bg-white/40"
                         >
-                          <Twitter className="h-4 w-4 text-slate-700 dark:text-slate-300" />
-                          <span className="sr-only">Twitter</span>
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="rounded-full border-white/30 bg-white/40"
-                        >
-                          <Linkedin className="h-4 w-4 text-slate-700 dark:text-slate-300" />
-                          <span className="sr-only">LinkedIn</span>
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="rounded-full border-white/30 bg-white/40"
-                        >
-                          <Github className="h-4 w-4 text-slate-700 dark:text-slate-300" />
-                          <span className="sr-only">GitHub</span>
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="rounded-full border-white/30 bg-white/40"
-                        >
-                          <Instagram className="h-4 w-4 text-slate-700 dark:text-slate-300" />
-                          <span className="sr-only">Instagram</span>
+                          <Link className="h-4 w-4 text-slate-700 dark:text-slate-300" />
+                          <span className="sr-only">Social links</span>
                         </Button>
                       </div>
                     </div>

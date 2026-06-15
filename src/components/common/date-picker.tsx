@@ -14,8 +14,6 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import { useUserSettingContext } from '@/contextApis/user-settings';
 import { WeekStartDay } from '@prisma/client';
-import { DayPickerDefaultProps } from 'react-day-picker';
-
 export function DatePicker({
   date,
   setDate,
@@ -29,7 +27,7 @@ export function DatePicker({
 }>) {
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const { userSettings } = useUserSettingContext();
-  let weekStartDay: DayPickerDefaultProps['weekStartsOn'] = 0; // 0 is for sunday
+  let weekStartDay: 0 | 1 | 6 = 0; // 0 is for sunday
 
   if (userSettings?.weekStartDay === WeekStartDay.monday) {
     weekStartDay = 1;
@@ -68,7 +66,7 @@ export function DatePicker({
               setDate(payload);
               setOpenDatePicker(false);
             }}
-            initialFocus
+            autoFocus
           />
         </PopoverContent>
       </Popover>
