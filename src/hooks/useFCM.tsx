@@ -1,12 +1,12 @@
 import { toast } from '@/components/common/sonner';
 import { ToastVariation } from '@/lib/enums';
 import { messaging, fetchToken } from '@/lib/firebase/firebase';
-import { onMessage, Unsubscribe } from 'firebase/messaging';
+import { onMessage, Unsubscribe, MessagePayload } from 'firebase/messaging';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 async function getNotificationPermissionAndToken() {
-  if (!('Notification' in window)) {
+  if (!('Notification' in globalThis)) {
     return null;
   }
 
@@ -71,60 +71,39 @@ const useFCM = () => {
   };
 
   useEffect(() => {
-    if ('Notification' in window) {
+    if ('Notification' in globalThis) {
       loadToken();
     }
   }, []);
 
   useEffect(() => {
+    const handleMessage = (payload: MessagePayload) => {
+      if (Notification.permission !== 'granted') return;
+
+      const link = payload.fcmOptions?.link ?? payload.data?.link;
+
+      if (link) {
+        toast({
+          variation: ToastVariation.LINK,
+          message: payload.notification?.title ?? '',
+          linkAction: () =>
+            router.push(payload.fcmOptions?.link ?? payload.data?.link ?? ''),
+        });
+      } else {
+        toast({
+          variation: ToastVariation.INFO,
+          message: payload.notification?.title ?? '',
+        });
+      }
+    };
+
     const setupListener = async () => {
       if (!token) return;
 
       const m = await messaging();
       if (!m) return;
 
-      const unsubscribe = onMessage(m, (payload) => {
-        if (Notification.permission !== 'granted') return;
-
-        const link = payload.fcmOptions?.link ?? payload.data?.link;
-
-        if (link) {
-          toast({
-            variation: ToastVariation.LINK,
-            message: payload.notification?.title ?? '',
-            linkAction: () =>
-              router.push(payload.fcmOptions?.link ?? payload.data?.link ?? ''),
-          });
-        } else {
-          toast({
-            variation: ToastVariation.INFO,
-            message: payload.notification?.title ?? '',
-          });
-        }
-
-        // --------------------------------------------
-        // Disable this if you only want toast notifications.
-        // const n = new Notification(
-        //   payload.notification?.title ?? 'New message',
-        //   {
-        //     body: payload.notification?.body ?? 'This is a new message',
-        //     data: link ? { url: link } : undefined,
-        //   },
-        // );
-
-        // n.onclick = (event) => {
-        //   event.preventDefault();
-        //   const link = (event.target as Notification)?.data?.url;
-        //   if (link) {
-        //     router.push(link);
-        //   } else {
-        //     console.log('No link found in the notification payload');
-        //   }
-        // };
-        // --------------------------------------------
-      });
-
-      return unsubscribe;
+      return onMessage(m, handleMessage);
     };
 
     let unsubscribe: Unsubscribe | null = null;

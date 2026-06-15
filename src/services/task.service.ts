@@ -91,7 +91,7 @@ export async function getUserTaskList({
   filter: string;
   pageNumber: number;
   pageLimit: number;
-  sortOrder: string | 'asc' | 'desc';
+  sortOrder: string;
   sortBy: string;
   status: TaskStatus | 'all';
   priority: TaskPriority | 'all';
@@ -257,7 +257,7 @@ export async function totalTaskStats(
     previousPeriodCount,
     percentageDifference: Number.isInteger(percentageDifference)
       ? percentageDifference
-      : parseFloat(percentageDifference.toFixed(2)),
+      : Number.parseFloat(percentageDifference.toFixed(2)),
     percentageDirection:
       percentageDifference > 0
         ? DirectionIndicators.UP
@@ -307,7 +307,7 @@ export async function totalCompletedTaskStats(
     lastPeriodCount,
     percentageDifference: Number.isInteger(percentageDifference)
       ? percentageDifference
-      : parseFloat(percentageDifference.toFixed(2)),
+      : Number.parseFloat(percentageDifference.toFixed(2)),
     percentageDirection:
       percentageDifference > 0
         ? DirectionIndicators.UP
@@ -388,13 +388,13 @@ export async function taskCompletionRateStats(
   return {
     currentPeriodCompletionRate: Number.isInteger(currentPeriodCompletionRate)
       ? currentPeriodCompletionRate
-      : parseFloat(currentPeriodCompletionRate.toFixed(2)),
+      : Number.parseFloat(currentPeriodCompletionRate.toFixed(2)),
     previousPeriodCompletionRate: Number.isInteger(previousPeriodCompletionRate)
       ? previousPeriodCompletionRate
-      : parseFloat(previousPeriodCompletionRate.toFixed(2)),
+      : Number.parseFloat(previousPeriodCompletionRate.toFixed(2)),
     percentageDifference: Number.isInteger(percentageDifference)
       ? percentageDifference
-      : parseFloat(percentageDifference.toFixed(2)),
+      : Number.parseFloat(percentageDifference.toFixed(2)),
     percentageDirection:
       percentageDifference > 0
         ? DirectionIndicators.UP
@@ -501,13 +501,13 @@ export async function avgCompletionTimeStats(
   return {
     avgCurrentPeriodTime: Number.isInteger(avgCurrentPeriodTime)
       ? avgCurrentPeriodTime
-      : parseFloat(avgCurrentPeriodTime.toFixed(2)),
+      : Number.parseFloat(avgCurrentPeriodTime.toFixed(2)),
     avgPreviousPeriodTime: Number.isInteger(avgPreviousPeriodTime)
       ? avgPreviousPeriodTime
-      : parseFloat(avgPreviousPeriodTime.toFixed(2)),
+      : Number.parseFloat(avgPreviousPeriodTime.toFixed(2)),
     percentageDifference: Number.isInteger(percentageDifference)
       ? percentageDifference
-      : parseFloat(percentageDifference.toFixed(2)),
+      : Number.parseFloat(percentageDifference.toFixed(2)),
     percentageDirection:
       percentageDifference > 0
         ? DirectionIndicators.UP
@@ -587,13 +587,13 @@ export async function overdueRateStats(
   return {
     currentPeriodOverdueRate: Number.isInteger(currentPeriodOverdueRate)
       ? currentPeriodOverdueRate
-      : parseFloat(currentPeriodOverdueRate.toFixed(2)),
+      : Number.parseFloat(currentPeriodOverdueRate.toFixed(2)),
     previousPeriodOverdueRate: Number.isInteger(previousPeriodOverdueRate)
       ? previousPeriodOverdueRate
-      : parseFloat(previousPeriodOverdueRate.toFixed(2)),
+      : Number.parseFloat(previousPeriodOverdueRate.toFixed(2)),
     percentageDifference: Number.isInteger(percentageDifference)
       ? percentageDifference
-      : parseFloat(percentageDifference.toFixed(2)),
+      : Number.parseFloat(percentageDifference.toFixed(2)),
     percentageDirection:
       percentageDifference > 0
         ? DirectionIndicators.UP
@@ -643,7 +643,7 @@ export async function totalInprogressTaskStats(
     previousPeriodCount,
     percentageDifference: Number.isInteger(percentageDifference)
       ? percentageDifference
-      : parseFloat(percentageDifference.toFixed(2)),
+      : Number.parseFloat(percentageDifference.toFixed(2)),
     percentageDirection:
       percentageDifference > 0
         ? DirectionIndicators.UP
@@ -694,7 +694,7 @@ export async function totalOverDueTaskStats(
     previousPeriodCount,
     percentageDifference: Number.isInteger(percentageDifference)
       ? percentageDifference
-      : parseFloat(percentageDifference.toFixed(2)),
+      : Number.parseFloat(percentageDifference.toFixed(2)),
     percentageDirection:
       percentageDifference > 0
         ? DirectionIndicators.UP

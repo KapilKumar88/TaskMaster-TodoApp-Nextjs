@@ -45,29 +45,17 @@ export default function RegisterForm() {
     });
   };
 
+  const getFirstError = (field: string[] | string | undefined) =>
+    Array.isArray(field) && field.length > 0 ? field[0] : undefined;
+
   useEffect(() => {
     if (state?.errors) {
       setFormErrors({
         ...formErrors,
-        fullName:
-          Array.isArray(state?.errors?.fullName) &&
-          state.errors.fullName?.length > 0
-            ? state.errors.fullName[0]
-            : undefined,
-        email:
-          Array.isArray(state?.errors?.email) && state.errors.email?.length > 0
-            ? state.errors.email[0]
-            : undefined,
-        confirmPassword:
-          Array.isArray(state?.errors?.confirmPassword) &&
-          state.errors.confirmPassword?.length > 0
-            ? state.errors.confirmPassword[0]
-            : undefined,
-        password:
-          Array.isArray(state?.errors?.password) &&
-          state.errors.password?.length > 0
-            ? state.errors.password[0]
-            : undefined,
+        fullName: getFirstError(state.errors.fullName),
+        email: getFirstError(state.errors.email),
+        confirmPassword: getFirstError(state.errors.confirmPassword),
+        password: getFirstError(state.errors.password),
       });
 
       if (state.errors?.general) {

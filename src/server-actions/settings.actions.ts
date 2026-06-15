@@ -1,6 +1,7 @@
 'use server';
 import 'server-only';
 
+import z from 'zod';
 import { auth } from '@/auth';
 import {
   AppearanceSettingsFormState,
@@ -33,7 +34,7 @@ export async function updateUserGeneralSettingsAction(
     const autoArchive = (formData.get('autoArchive') as string) === 'on';
     const tempAutoArchiveTime = formData.get('autoArchiveTime') as string;
     const autoArchiveTime = autoArchive
-      ? parseInt(tempAutoArchiveTime.split(' ')[0])
+      ? Number.parseInt(tempAutoArchiveTime.split(' ')[0])
       : undefined;
     const timeFrequency = autoArchive
       ? tempAutoArchiveTime.split(' ')[1]
@@ -60,7 +61,7 @@ export async function updateUserGeneralSettingsAction(
     if (!validatedFields.success) {
       return {
         ...state,
-        errors: validatedFields.error.flatten().fieldErrors,
+        errors: z.flattenError(validatedFields.error).fieldErrors,
         formValues: {
           timeZone: getFormPayload.timeZone,
           dateFormat: getFormPayload.dateFormat,
@@ -129,7 +130,7 @@ export async function saveAppearanceSettingsAction(
       userId: userSession.user.id,
       theme: formData.get('theme') as AppTheme,
       accentColor: formData.get('accentColor') as string,
-      glassEffectIntensity: parseInt(
+      glassEffectIntensity: Number.parseInt(
         formData.get('glassEffectIntensity') as string,
       ),
     });
@@ -170,7 +171,7 @@ export async function saveNotificationSettingsAction(
       (formData.get('taskDueReminders') as string) === 'on';
     const tempTaskDueTime = formData.get('taskDueTime') as string;
     const taskDueTime = taskDueReminder
-      ? parseInt(tempTaskDueTime.split(' ')[0])
+      ? Number.parseInt(tempTaskDueTime.split(' ')[0])
       : undefined;
     const taskDueTimeFrequency = taskDueReminder
       ? tempTaskDueTime.split(' ')[1]

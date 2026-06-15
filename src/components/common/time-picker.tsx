@@ -35,7 +35,7 @@ export function TimePicker({
   // Parse the time value when it changes
   useEffect(() => {
     if (time) {
-      const match = time.match(/(\d+):(\d+):(\d+)/);
+      const match = /(\d+):(\d+):(\d+)/.exec(time);
       if (match) {
         setHours(match[1]);
         setMinutes(match[2]);
@@ -45,7 +45,7 @@ export function TimePicker({
   }, [time]);
 
   const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let val = e.target.value.replace(/\D/g, '');
+    let val = e.target.value.replaceAll(/\D/g, '');
     if (val) {
       const num = Number.parseInt(val, 10);
       if (num > 24) val = '24';
@@ -55,7 +55,7 @@ export function TimePicker({
   };
 
   const handleMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let val = e.target.value.replace(/\D/g, '');
+    let val = e.target.value.replaceAll(/\D/g, '');
     if (val) {
       const num = Number.parseInt(val, 10);
       if (num > 59) val = '59';
@@ -64,7 +64,7 @@ export function TimePicker({
   };
 
   const handleSecondsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let val = e.target.value.replace(/\D/g, '');
+    let val = e.target.value.replaceAll(/\D/g, '');
     if (val) {
       const num = Number.parseInt(val, 10);
       if (num > 59) val = '59';

@@ -1,6 +1,7 @@
 'use server';
 import 'server-only';
 
+import z from 'zod';
 import {
   CreateTaskFormState,
   UpdateTaskFormState,
@@ -45,7 +46,7 @@ export async function createTaskServerAction(
     const validatedFields = createTaskSchema.safeParse({
       title: getFormPayload.title,
       description: getFormPayload.description,
-      categoryId: parseInt(getFormPayload.categoryId),
+      categoryId: Number.parseInt(getFormPayload.categoryId),
       priority: getFormPayload.priority,
       dueDate: new Date(getFormPayload.dueDate),
       dueTime: getFormPayload.dueTime,
@@ -54,7 +55,7 @@ export async function createTaskServerAction(
     if (!validatedFields.success) {
       return {
         ...state,
-        errors: validatedFields.error.flatten().fieldErrors,
+        errors: z.flattenError(validatedFields.error).fieldErrors,
         formValues: getFormPayload,
         success: false,
         message: 'Validation error',
@@ -68,9 +69,9 @@ export async function createTaskServerAction(
 
     const dueTime = validatedFields.data.dueTime.split(':');
     const taskDueDateTime = moment(validatedFields.data.dueDate).set({
-      hour: parseInt(dueTime[0] ?? '23'),
-      minute: parseInt(dueTime[1] ?? '59'),
-      second: parseInt(dueTime[2] ?? '59'),
+      hour: Number.parseInt(dueTime[0] ?? '23'),
+      minute: Number.parseInt(dueTime[1] ?? '59'),
+      second: Number.parseInt(dueTime[2] ?? '59'),
     });
 
     const task = await createTask({
@@ -152,10 +153,10 @@ export async function updateTaskServerAction(
     };
 
     const validatedFields = updateTaskSchema.safeParse({
-      taskId: parseInt(getFormPayload.taskId),
+      taskId: Number.parseInt(getFormPayload.taskId),
       title: getFormPayload.title,
       description: getFormPayload.description,
-      categoryId: parseInt(getFormPayload.categoryId),
+      categoryId: Number.parseInt(getFormPayload.categoryId),
       priority: getFormPayload.priority,
       status: getFormPayload.status,
       dueDate: new Date(getFormPayload.dueDate),
@@ -165,7 +166,7 @@ export async function updateTaskServerAction(
     if (!validatedFields.success) {
       return {
         ...state,
-        errors: validatedFields.error.flatten().fieldErrors,
+        errors: z.flattenError(validatedFields.error).fieldErrors,
         success: false,
         message: 'Validation error',
       };
@@ -219,7 +220,7 @@ export async function makeTaskCompleted(
       throw new Error('User not found');
     }
     const getFormPayload = {
-      taskId: parseInt(formData.get('taskId') as string),
+      taskId: Number.parseInt(formData.get('taskId') as string),
       markAsCompleted: formData.get('markAsCompleted') as string,
     };
 
@@ -262,7 +263,7 @@ export async function markTaskImportant(
       throw new Error('User not found');
     }
     const getFormPayload = {
-      taskId: parseInt(formData.get('taskId') as string),
+      taskId: Number.parseInt(formData.get('taskId') as string),
       markAsImportant: (formData.get('markAsImportant') as string) === 'true',
     };
 
@@ -303,7 +304,7 @@ export async function deleteTask(
       throw new Error('User not found');
     }
     const getFormPayload = {
-      taskId: parseInt(formData.get('taskId') as string),
+      taskId: Number.parseInt(formData.get('taskId') as string),
     };
     await deleteTaskQuery(getFormPayload.taskId, userSession?.user.id);
     revalidatePath('/dashboard');

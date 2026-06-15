@@ -61,7 +61,7 @@ export default class CustomErrorBoundary extends React.Component<
           </CardContent>
           <CardFooter>
             <Button
-              onClick={() => window.location.reload()}
+              onClick={() => globalThis.location.reload()}
               className="w-full bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"
             >
               <RefreshCw className="h-4 w-4 mr-2" />

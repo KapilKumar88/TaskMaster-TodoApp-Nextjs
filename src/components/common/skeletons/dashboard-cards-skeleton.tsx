@@ -6,7 +6,7 @@ export function DashboardCardsSkeleton() {
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       {Array.from({ length: 4 }).map((_, index) => (
         <Card
-          key={index}
+          key={`dashboard-card-skeleton-${index}`}
           className="border border-white/30 bg-white/30 backdrop-blur-xl shadow-md"
         >
           <CardHeader className="pb-2">

@@ -47,7 +47,7 @@ export const UserSettingProvider = ({
   }, [settings]);
 
   useEffect(() => {
-    const root = window.document.documentElement;
+    const root = globalThis.document.documentElement;
 
     const handleThemeChange = (theme: AppTheme) => {
       if (!root) {
@@ -55,7 +55,8 @@ export const UserSettingProvider = ({
       }
       let tempTheme = theme;
       if (theme === AppTheme.system) {
-        tempTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+        tempTheme = globalThis.matchMedia('(prefers-color-scheme: dark)')
+          .matches
           ? AppTheme.dark
           : AppTheme.light;
       }

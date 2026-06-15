@@ -75,46 +75,26 @@ export default function GeneralSettingsForm() {
     timeFrequency: userSettings?.autoArchiveTimeFrequency ?? TimeFrequency.day,
   });
 
+  const getFirstError = (field: string[] | string | undefined) =>
+    Array.isArray(field) && field.length > 0 ? field[0] : undefined;
+
   useEffect(() => {
     if (generalSettingsState?.errors) {
+      const errors = generalSettingsState.errors;
       setFormErrors({
         ...formErrors,
-        timeZone:
-          Array.isArray(generalSettingsState?.errors?.timeZone) &&
-          generalSettingsState.errors.timeZone?.length > 0
-            ? generalSettingsState.errors.timeZone[0]
-            : undefined,
-        dateFormat:
-          Array.isArray(generalSettingsState?.errors?.dateFormat) &&
-          generalSettingsState.errors.dateFormat?.length > 0
-            ? generalSettingsState.errors.dateFormat[0]
-            : undefined,
-        weekStartDay:
-          Array.isArray(generalSettingsState?.errors?.weekStartDay) &&
-          generalSettingsState.errors.weekStartDay?.length > 0
-            ? generalSettingsState.errors.weekStartDay[0]
-            : undefined,
-        autoArchive:
-          Array.isArray(generalSettingsState?.errors?.autoArchive) &&
-          generalSettingsState.errors.autoArchive?.length > 0
-            ? generalSettingsState.errors.autoArchive[0]
-            : undefined,
-        autoArchiveTime:
-          Array.isArray(generalSettingsState?.errors?.autoArchiveTime) &&
-          generalSettingsState.errors.autoArchiveTime?.length > 0
-            ? generalSettingsState.errors.autoArchiveTime[0]
-            : undefined,
-        timeFrequency:
-          Array.isArray(generalSettingsState?.errors?.timeFrequency) &&
-          generalSettingsState.errors.timeFrequency?.length > 0
-            ? generalSettingsState.errors.timeFrequency[0]
-            : undefined,
+        timeZone: getFirstError(errors.timeZone),
+        dateFormat: getFirstError(errors.dateFormat),
+        weekStartDay: getFirstError(errors.weekStartDay),
+        autoArchive: getFirstError(errors.autoArchive),
+        autoArchiveTime: getFirstError(errors.autoArchiveTime),
+        timeFrequency: getFirstError(errors.timeFrequency),
       });
 
-      if (generalSettingsState.errors?.general) {
+      if (errors.general) {
         toast({
           variation: ToastVariation.ERROR,
-          message: generalSettingsState.errors.general,
+          message: errors.general,
         });
         return;
       }
@@ -336,7 +316,7 @@ export default function GeneralSettingsForm() {
                   const temp = e.split(' ');
                   return {
                     ...previousState,
-                    autoArchiveTime: parseInt(temp[0]),
+                    autoArchiveTime: Number.parseInt(temp[0]),
                     timeFrequency: temp[1] as TimeFrequency,
                   };
                 });

@@ -12,7 +12,7 @@ export default async function ResetPasswordPage({
 }: Readonly<{
   searchParams: Promise<{ token: string }>;
 }>) {
-  const [queryParams] = await Promise.all([searchParams]);
+  const queryParams = await searchParams;
   if (!queryParams.token) {
     throw new Error('Invalid Link');
   }

@@ -36,7 +36,7 @@ export default function ProfilePage() {
       </div>
 
       <div className="flex h-screen overflow-hidden">
-        <DashboardSidebar open={sidebarOpen} setOpen={setSidebarOpen} />
+        <DashboardSidebar open={sidebarOpen} />
 
         <div className="flex-1 overflow-auto">
           <DashboardHeader
@@ -50,16 +50,7 @@ export default function ProfilePage() {
                 Profile
               </h1>
 
-              {!editing ? (
-                <Button
-                  variant="outline"
-                  className="border-white/30 bg-white/40"
-                  onClick={() => setEditing(true)}
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit Profile
-                </Button>
-              ) : (
+              {editing ? (
                 <div className="flex gap-2">
                   <Button
                     variant="outline"
@@ -76,6 +67,15 @@ export default function ProfilePage() {
                     Save Changes
                   </Button>
                 </div>
+              ) : (
+                <Button
+                  variant="outline"
+                  className="border-white/30 bg-white/40"
+                  onClick={() => setEditing(true)}
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Profile
+                </Button>
               )}
             </div>
 

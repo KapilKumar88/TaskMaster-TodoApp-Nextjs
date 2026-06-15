@@ -12,7 +12,7 @@ export default async function EmailVerificationPage({
 }: Readonly<{
   searchParams: Promise<{ token: string }>;
 }>) {
-  const [queryParams] = await Promise.all([searchParams]);
+  const queryParams = await searchParams;
   const decryptedObject = JSON.parse(await decryptHelper(queryParams.token));
   const response = await verifyUserEmail(
     decryptedObject?.userId,

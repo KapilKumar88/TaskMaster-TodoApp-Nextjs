@@ -1,18 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-// import serverSideConfig from './config/server.config';
 import { cookies } from 'next/headers';
 
-const authPaths = [
+const authPaths = new Set([
   '/login',
   '/register',
   '/forgot-password',
   '/reset-password',
-];
-// const COOKIES_NAME =
-//   serverSideConfig.NODE_ENV === 'production'
-//     ? '__Secure-next-auth.session-token'
-//     : 'authjs.session-token';
+]);
 const COOKIES_NAME = 'authjs.session-token';
 
 export default async function proxy(request: NextRequest) {
@@ -20,7 +15,7 @@ export default async function proxy(request: NextRequest) {
   const cookieToken = c?.get(COOKIES_NAME)?.value;
   if (
     !cookieToken &&
-    !authPaths.includes(request.nextUrl.pathname) &&
+    !authPaths.has(request.nextUrl.pathname) &&
     request.nextUrl.pathname !== '/'
   ) {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -28,7 +23,7 @@ export default async function proxy(request: NextRequest) {
 
   if (
     cookieToken &&
-    authPaths.includes(request.nextUrl.pathname) &&
+    authPaths.has(request.nextUrl.pathname) &&
     request.nextUrl.pathname !== '/'
   ) {
     return NextResponse.redirect(new URL('/dashboard', request.url));

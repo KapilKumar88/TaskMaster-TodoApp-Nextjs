@@ -1,6 +1,5 @@
 'use client';
 
-// import { useRef } from 'react';
 import { Check } from 'lucide-react';
 import { capitalizeFirstLetters, cn } from '@/lib/utils';
 
@@ -59,29 +58,6 @@ export function ColorPicker({
           {value === color.value && <Check className="h-3 w-3 text-white" />}
         </button>
       ))}
-      {/* <Button
-        variant="ghost"
-        size="icon"
-        type="button"
-        className="w-6 h-6 rounded-full flex items-center justify-center transition-all hover:scale-110"
-        onClick={() => {
-          colorPickerRef?.current.click();
-        }}
-        title="Color Picker">
-        <PinIcon className="h-4 w-4" />
-        <input
-          ref={colorPickerRef}
-          type="color"
-          name="colorPicker"
-          id="colorPicker"
-          style={{
-            visibility: 'hidden',
-          }}
-          onChange={(e) => {
-            onChange(e.target.value);
-          }}
-        />
-      </Button> */}
     </div>
   );
 }

@@ -11,13 +11,13 @@ import {
 
 export default function WeeklyProgressChart({
   weeklyProgressChatData,
-}: {
+}: Readonly<{
   weeklyProgressChatData: Array<{
     day: string;
     completed: number;
     created: number;
   }>;
-}) {
+}>) {
   return (
     <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">

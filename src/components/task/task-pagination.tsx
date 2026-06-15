@@ -37,7 +37,7 @@ export default function TaskPagination({
           </PaginationItem>
         )}
 
-        {[...Array(totalPages)].map((_, index) => {
+        {[...new Array(totalPages)].map((_, index) => {
           const pageNumber = index + 1;
 
           // Show first page, last page, and pages around current page

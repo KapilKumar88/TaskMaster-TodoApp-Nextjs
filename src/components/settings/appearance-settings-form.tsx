@@ -75,7 +75,13 @@ export default function AppearanceSettingsForm() {
                   ? 'bg-white/50 ring-2 ring-indigo-500'
                   : 'bg-white/20 hover:bg-white/30'
               }`}
+              role="button"
+              tabIndex={0}
               onClick={() => setTheme(AppTheme.light)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ')
+                  setTheme(AppTheme.light);
+              }}
             >
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
                 <Sun className="h-6 w-6 text-amber-500" />
@@ -94,7 +100,12 @@ export default function AppearanceSettingsForm() {
                   ? 'bg-white/50 ring-2 ring-indigo-500'
                   : 'bg-white/20 hover:bg-white/30'
               }`}
+              role="button"
+              tabIndex={0}
               onClick={() => setTheme(AppTheme.dark)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') setTheme(AppTheme.dark);
+              }}
             >
               <div className="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center">
                 <Moon className="h-6 w-6 text-slate-200" />
@@ -113,7 +124,13 @@ export default function AppearanceSettingsForm() {
                   ? 'bg-white/50 ring-2 ring-indigo-500'
                   : 'bg-white/20 hover:bg-white/30'
               }`}
+              role="button"
+              tabIndex={0}
               onClick={() => setTheme(AppTheme.system)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ')
+                  setTheme(AppTheme.system);
+              }}
             >
               <div className="w-12 h-12 bg-gradient-to-br from-white to-slate-800 rounded-full flex items-center justify-center">
                 <Palette className="h-6 w-6 text-indigo-500" />

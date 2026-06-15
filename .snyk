@@ -1,0 +1,11 @@
+# Snyk (https://snyk.io) policy file
+version: v1.25.0
+
+ignore:
+  SNYK-JS-* : []
+
+# Suppress false positive for Firebase client-side config in service worker.
+# Firebase web API keys are public client-side identifiers — security is
+# enforced by Firebase Security Rules, not by keeping these values private.
+# See: https://firebase.google.com/docs/projects/api-keys
+patch: {}

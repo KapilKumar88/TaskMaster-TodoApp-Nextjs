@@ -85,7 +85,7 @@ export const generateRandomNumber = (min: number, max: number) => {
   if (min > max) throw new Error('Min must be less than or equal to Max');
   const range = max - min + 1;
   const array = new Uint32Array(10);
-  window.crypto?.getRandomValues(array);
+  globalThis.crypto?.getRandomValues(array);
   return (array[0] % range) + 1;
 };
 

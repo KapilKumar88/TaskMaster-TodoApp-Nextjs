@@ -18,7 +18,9 @@ interface NotificationPanelProps {
   onClose: () => void;
 }
 
-export function NotificationPanel({ onClose }: NotificationPanelProps) {
+export function NotificationPanel({
+  onClose,
+}: Readonly<NotificationPanelProps>) {
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: '1',

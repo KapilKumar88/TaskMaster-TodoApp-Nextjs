@@ -1,6 +1,7 @@
 'use server';
 import 'server-only';
 
+import z from 'zod';
 import { auth, signIn, signOut } from '@/auth';
 import {
   changePasswordSchema,
@@ -53,7 +54,7 @@ export async function registerUserServerAction(
     if (!validatedFields.success) {
       return {
         ...state,
-        errors: validatedFields.error.flatten().fieldErrors,
+        errors: z.flattenError(validatedFields.error).fieldErrors,
         formValues: {
           fullName: getFormPayload.fullName,
           email: getFormPayload.email,
@@ -108,7 +109,7 @@ export async function loginUserServerAction(
     if (!validatedFields.success) {
       return {
         ...state,
-        errors: validatedFields.error.flatten().fieldErrors,
+        errors: z.flattenError(validatedFields.error).fieldErrors,
         formValues: {
           email: getFormPayload.email,
         },
@@ -185,7 +186,7 @@ export async function changePasswordAction(
     if (!validatedFields.success) {
       return {
         ...state,
-        errors: validatedFields.error.flatten().fieldErrors,
+        errors: z.flattenError(validatedFields.error).fieldErrors,
         success: false,
         message: 'Validation error',
       };
@@ -282,7 +283,7 @@ export async function forgotPasswordServerAction(
     if (!validatedFields.success) {
       return {
         ...state,
-        errors: validatedFields.error.flatten().fieldErrors,
+        errors: z.flattenError(validatedFields.error).fieldErrors,
         formValues: {
           email: getFormPayload.email,
         },
@@ -332,7 +333,7 @@ export async function resetPasswordServerAction(
     if (!validatedFields.success) {
       return {
         ...state,
-        errors: validatedFields.error.flatten().fieldErrors,
+        errors: z.flattenError(validatedFields.error).fieldErrors,
         formValues: {
           password: getFormPayload.password,
           confirmPassword: getFormPayload.confirmPassword,

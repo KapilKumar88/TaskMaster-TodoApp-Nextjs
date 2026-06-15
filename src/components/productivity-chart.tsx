@@ -11,9 +11,9 @@ import {
 
 export function ProductivityChart({
   data,
-}: {
+}: Readonly<{
   data: Array<{ day: string; Tasks: number }>;
-}) {
+}>) {
   return (
     <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">

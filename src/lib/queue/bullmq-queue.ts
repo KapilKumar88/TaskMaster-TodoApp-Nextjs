@@ -5,7 +5,7 @@ import { WORKER_QUEUE } from '../constants';
 
 const connection = {
   host: serverSideConfig.REDIS.HOST,
-  port: parseInt(serverSideConfig.REDIS.PORT),
+  port: Number.parseInt(serverSideConfig.REDIS.PORT),
 };
 
 export const processTaskQueue = new Queue(

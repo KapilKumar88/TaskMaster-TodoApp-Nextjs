@@ -1,6 +1,7 @@
 'use server';
 import 'server-only';
 
+import z from 'zod';
 import { auth } from '@/auth';
 import { AddCategoryFormState } from '@/lib/interfaces/server-action.interface';
 import { createCategory } from '@/services/category.service';
@@ -28,7 +29,7 @@ export async function addNewCategoryAction(
     if (!validatedFields.success) {
       return {
         ...state,
-        errors: validatedFields.error.flatten().fieldErrors,
+        errors: z.flattenError(validatedFields.error).fieldErrors,
         success: false,
         message: 'Validation error',
       };

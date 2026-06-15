@@ -55,8 +55,6 @@ export function CategoryDialog({
               name="categoryName"
               placeholder="Enter category name"
               className="bg-white/40 border-white/30 text-slate-900 dark:text-white"
-              // value={title}
-              // onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
@@ -71,8 +69,6 @@ export function CategoryDialog({
               id="description"
               placeholder="Enter task description"
               className="min-h-[80px] bg-white/40 border-white/30 text-slate-900 dark:text-white"
-              // value={description}
-              // onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
@@ -84,9 +80,7 @@ export function CategoryDialog({
               >
                 Category
               </Label>
-              <Select
-              // value={category} onValueChange={setCategory}
-              >
+              <Select>
                 <SelectTrigger
                   id="category"
                   className="bg-white/40 border-white/30 text-slate-900 dark:text-white"
@@ -109,9 +103,7 @@ export function CategoryDialog({
               >
                 Priority
               </Label>
-              <Select
-              // value={priority} onValueChange={setPriority}
-              >
+              <Select>
                 <SelectTrigger
                   id="priority"
                   className="bg-white/40 border-white/30 text-slate-900 dark:text-white"
@@ -136,24 +128,12 @@ export function CategoryDialog({
             </Label>
             <Popover>
               <PopoverTrigger asChild>
-                <Button
-                  id="due-date"
-                  variant="outline"
-                  // className={cn(
-                  //   "w-full justify-start text-left font-normal border-white/30 bg-white/40",
-                  //   !date && "text-muted-foreground",
-                  // )}
-                >
+                <Button id="due-date" variant="outline">
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {/* {date ? format(date, "PPP") : <span>Pick a date</span>} */}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 bg-white/90 backdrop-blur-xl border-white/30">
-                <Calendar
-                  mode="single"
-                  // selected={date} onSelect={setDate}
-                  autoFocus
-                />
+                <Calendar mode="single" autoFocus />
               </PopoverContent>
             </Popover>
           </div>
@@ -167,10 +147,7 @@ export function CategoryDialog({
           >
             Cancel
           </Button>
-          <Button
-            className="bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white"
-            // onClick={handleCreateTask}
-          >
+          <Button className="bg-gradient-to-r from-teal-500 to-indigo-600 hover:from-teal-600 hover:to-indigo-700 text-white">
             Create Task
           </Button>
         </DialogFooter>

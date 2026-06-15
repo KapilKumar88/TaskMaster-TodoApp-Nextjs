@@ -24,7 +24,10 @@ export function ProfileSkeleton() {
 
               <div className="flex justify-center gap-2">
                 {Array.from({ length: 4 }).map((_, index) => (
-                  <Skeleton key={index} className="h-8 w-8 rounded-full" />
+                  <Skeleton
+                    key={`profile-avatar-skeleton-${index}`}
+                    className="h-8 w-8 rounded-full"
+                  />
                 ))}
               </div>
             </div>
@@ -33,7 +36,7 @@ export function ProfileSkeleton() {
 
             <div className="space-y-3">
               {Array.from({ length: 3 }).map((_, index) => (
-                <div key={index}>
+                <div key={`profile-progress-skeleton-${index}`}>
                   <div className="flex justify-between mb-1">
                     <Skeleton className="h-4 w-32" />
                     <Skeleton className="h-4 w-8" />
@@ -55,7 +58,10 @@ export function ProfileSkeleton() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Array.from({ length: 2 }).map((_, index) => (
-                <div key={index} className="space-y-2">
+                <div
+                  key={`profile-field-skeleton-${index}`}
+                  className="space-y-2"
+                >
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-10 w-full" />
                 </div>

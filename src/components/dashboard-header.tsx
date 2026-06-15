@@ -12,7 +12,7 @@ interface DashboardHeaderProps {
 export function DashboardHeader({
   sidebarOpen,
   setSidebarOpen,
-}: DashboardHeaderProps) {
+}: Readonly<DashboardHeaderProps>) {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-white/30 bg-white/30 backdrop-blur-xl px-6">
       <Button

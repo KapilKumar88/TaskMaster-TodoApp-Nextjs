@@ -1,5 +1,5 @@
 'use client';
 
-export default function Error({ error }: Readonly<{ error: Error }>) {
+export default function DashboardError({ error }: Readonly<{ error: Error }>) {
   return <h1>{error?.message ?? 'Error page'}</h1>;
 }

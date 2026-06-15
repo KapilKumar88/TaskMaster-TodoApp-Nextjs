@@ -99,33 +99,24 @@ export default function AnalyticsFilter() {
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {customDateRange?.from ? (
-              customDateRange.to ? (
-                <>
-                  {format(customDateRange.from, 'LLL dd, y')} -{' '}
-                  {format(customDateRange.to, 'LLL dd, y')}
-                </>
-              ) : (
-                format(customDateRange.from, 'LLL dd, y')
-              )
-            ) : (
-              <span>Pick a date range</span>
-            )}
+            {(() => {
+              if (!customDateRange?.from) return <span>Pick a date range</span>;
+              if (customDateRange.to) {
+                return (
+                  <>
+                    {format(customDateRange.from, 'LLL dd, y')} -{' '}
+                    {format(customDateRange.to, 'LLL dd, y')}
+                  </>
+                );
+              }
+              return format(customDateRange.from, 'LLL dd, y');
+            })()}
           </Button>
         </PopoverTrigger>
         <PopoverContent
           className="w-auto p-0 bg-white/90 backdrop-blur-xl border-white/30"
           align="end"
         >
-          {/* <Calendar
-            autoFocus
-            mode="range"
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setCustomDateRange}
-            numberOfMonths={1}
-            className="bg-transparent md:hidden"
-          /> */}
           <Calendar
             autoFocus
             mode="range"

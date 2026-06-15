@@ -1,10 +1,14 @@
-importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
 importScripts(
+  'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js',
   'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js',
 );
 
+// Firebase client config values are public identifiers, not secrets.
+// Security is enforced by Firebase Security Rules, not key secrecy.
+// See https://firebase.google.com/docs/projects/api-keys
+// snyk:ignore:javascript/HardcodedNonCryptoSecret
 const firebaseConfig = {
-  apiKey: 'AIzaSyASXV-gSXDVPMR2EMNjNknru6Houp2A0KI',
+  apiKey: 'AIzaSyASXV-gSXDVPMR2EMNjNknru6Houp2A0KI', // snyk:ignore:javascript/HardcodedNonCryptoSecret
   authDomain: 'taskmaster-nextjs.firebaseapp.com',
   projectId: 'taskmaster-nextjs',
   storageBucket: 'taskmaster-nextjs.appspot.com',
@@ -26,10 +30,13 @@ messaging.onBackgroundMessage((payload) => {
     icon: './app-icon.png',
     data: { url: link },
   };
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  globalThis.registration.showNotification(
+    notificationTitle,
+    notificationOptions,
+  );
 });
 
-self.addEventListener('notificationclick', function (event) {
+globalThis.addEventListener('notificationclick', function (event) {
   event.notification.close();
 
   event.waitUntil(

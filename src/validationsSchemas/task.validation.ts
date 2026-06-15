@@ -1,7 +1,6 @@
 import { TaskPriority, TaskStatus } from '@prisma/client';
 import { startOfToday } from 'date-fns';
-import { object, string } from 'zod';
-import z from 'zod';
+import z, { object, string } from 'zod';
 
 export const alphaNumericRegex = /^[a-zA-Z0-9 _-]+$/; // it will allow the alphanumeric character, spaces, underscore, hyphens
 

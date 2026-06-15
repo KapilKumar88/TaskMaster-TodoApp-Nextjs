@@ -15,10 +15,9 @@ import { usePathname } from 'next/navigation';
 
 interface DashboardSidebarProps {
   open: boolean;
-  setOpen: (open: boolean) => void;
 }
 
-export function DashboardSidebar({ open }: DashboardSidebarProps) {
+export function DashboardSidebar({ open }: Readonly<DashboardSidebarProps>) {
   const pathname = usePathname();
 
   const routes = [

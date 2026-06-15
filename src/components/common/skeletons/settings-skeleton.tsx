@@ -12,7 +12,7 @@ export function SettingsSkeleton() {
           </CardHeader>
           <CardContent className="space-y-6">
             {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="space-y-4">
+              <div key={`settings-skeleton-${index}`} className="space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                   <div>
                     <Skeleton className="h-5 w-32 mb-1" />

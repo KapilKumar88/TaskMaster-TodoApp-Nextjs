@@ -6,7 +6,7 @@ import moment, { DurationInputArg2 } from 'moment-timezone';
 
 const connection = {
   host: process.env.REDIS_HOST!,
-  port: process.env.REDIS_PORT ? parseInt(process.env.REDIS_PORT) : 6379,
+  port: process.env.REDIS_PORT ? Number.parseInt(process.env.REDIS_PORT) : 6379,
   maxRetriesPerRequest: null,
 };
 
