@@ -23,11 +23,8 @@ export function ProfileSkeleton() {
               <Skeleton className="h-5 w-40 mx-auto" />
 
               <div className="flex justify-center gap-2">
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <Skeleton
-                    key={`profile-avatar-skeleton-${index}`}
-                    className="h-8 w-8 rounded-full"
-                  />
+                {(['link1', 'link2', 'link3', 'link4'] as const).map((id) => (
+                  <Skeleton key={id} className="h-8 w-8 rounded-full" />
                 ))}
               </div>
             </div>
@@ -35,15 +32,17 @@ export function ProfileSkeleton() {
             <div className="my-4 h-px bg-white/30" />
 
             <div className="space-y-3">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <div key={`profile-progress-skeleton-${index}`}>
-                  <div className="flex justify-between mb-1">
-                    <Skeleton className="h-4 w-32" />
-                    <Skeleton className="h-4 w-8" />
+              {(['productivity', 'completion', 'delivery'] as const).map(
+                (metric) => (
+                  <div key={metric}>
+                    <div className="flex justify-between mb-1">
+                      <Skeleton className="h-4 w-32" />
+                      <Skeleton className="h-4 w-8" />
+                    </div>
+                    <Skeleton className="h-2 w-full rounded-full" />
                   </div>
-                  <Skeleton className="h-2 w-full rounded-full" />
-                </div>
-              ))}
+                ),
+              )}
             </div>
           </CardContent>
         </Card>
@@ -57,11 +56,8 @@ export function ProfileSkeleton() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Array.from({ length: 2 }).map((_, index) => (
-                <div
-                  key={`profile-field-skeleton-${index}`}
-                  className="space-y-2"
-                >
+              {(['name', 'email'] as const).map((field) => (
+                <div key={field} className="space-y-2">
                   <Skeleton className="h-4 w-24" />
                   <Skeleton className="h-10 w-full" />
                 </div>

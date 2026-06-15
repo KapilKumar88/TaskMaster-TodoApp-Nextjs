@@ -1,20 +1,16 @@
-import { object, string } from 'zod';
+import { email, object, string } from 'zod';
 
 export const loginSchema = object({
-  email: string({ error: 'Email is required' })
-    .trim()
-    .min(1, 'Email is required')
-    .email('Invalid email'),
+  email: email('Invalid email').trim().min(1, 'Email is required'),
   password: string({ error: 'Password is required' })
     .trim()
     .min(1, 'Password is required'),
 });
 
 export const registerSchema = object({
-  email: string({ error: 'Email is required' })
+  email: email('Invalid email')
     .trim()
     .min(1, 'Email is required')
-    .email('Invalid email')
     .default('Invalid Email'),
   fullName: string({ error: 'Full Name is required' })
     .trim()
@@ -31,14 +27,13 @@ export const registerSchema = object({
     .max(32, 'Confirm Password must be less than 32 characters'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
-  path: ['confirmPassword'], // path of error
+  path: ['confirmPassword'],
 });
 
 export const forgotPasswordSchema = object({
-  email: string({ error: 'Email is required' })
+  email: email('Invalid email')
     .trim()
     .min(1, 'Email is required')
-    .email('Invalid email')
     .default('Invalid Email'),
 });
 
@@ -61,7 +56,7 @@ export const resetPasswordSchema = object({
     .max(32, 'Confirm Password must be less than 32 characters'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
-  path: ['confirmPassword'], // path of error
+  path: ['confirmPassword'],
 });
 
 export const changePasswordSchema = object({
@@ -80,5 +75,5 @@ export const changePasswordSchema = object({
     .max(32, 'Confirm Password must be less than 32 characters'),
 }).refine((data) => data.newPassword === data.confirmPassword, {
   message: "Passwords don't match",
-  path: ['confirmPassword'], // path of error
+  path: ['confirmPassword'],
 });

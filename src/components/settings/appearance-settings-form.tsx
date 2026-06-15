@@ -69,19 +69,14 @@ export default function AppearanceSettingsForm() {
             Theme
           </h3>
           <div className="flex flex-wrap gap-4">
-            <div
+            <button
+              type="button"
               className={`flex flex-col items-center gap-2 cursor-pointer p-3 rounded-lg ${
                 theme === 'light'
                   ? 'bg-white/50 ring-2 ring-indigo-500'
                   : 'bg-white/20 hover:bg-white/30'
               }`}
-              role="button"
-              tabIndex={0}
               onClick={() => setTheme(AppTheme.light)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ')
-                  setTheme(AppTheme.light);
-              }}
             >
               <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
                 <Sun className="h-6 w-6 text-amber-500" />
@@ -92,20 +87,16 @@ export default function AppearanceSettingsForm() {
               {theme === 'light' && (
                 <Check className="h-4 w-4 text-indigo-500" />
               )}
-            </div>
+            </button>
 
-            <div
+            <button
+              type="button"
               className={`flex flex-col items-center gap-2 cursor-pointer p-3 rounded-lg ${
                 theme === 'dark'
                   ? 'bg-white/50 ring-2 ring-indigo-500'
                   : 'bg-white/20 hover:bg-white/30'
               }`}
-              role="button"
-              tabIndex={0}
               onClick={() => setTheme(AppTheme.dark)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') setTheme(AppTheme.dark);
-              }}
             >
               <div className="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center">
                 <Moon className="h-6 w-6 text-slate-200" />
@@ -116,21 +107,16 @@ export default function AppearanceSettingsForm() {
               {theme === 'dark' && (
                 <Check className="h-4 w-4 text-indigo-500" />
               )}
-            </div>
+            </button>
 
-            <div
+            <button
+              type="button"
               className={`flex flex-col items-center gap-2 cursor-pointer p-3 rounded-lg ${
                 theme === 'system'
                   ? 'bg-white/50 ring-2 ring-indigo-500'
                   : 'bg-white/20 hover:bg-white/30'
               }`}
-              role="button"
-              tabIndex={0}
               onClick={() => setTheme(AppTheme.system)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ')
-                  setTheme(AppTheme.system);
-              }}
             >
               <div className="w-12 h-12 bg-gradient-to-br from-white to-slate-800 rounded-full flex items-center justify-center">
                 <Palette className="h-6 w-6 text-indigo-500" />
@@ -141,7 +127,7 @@ export default function AppearanceSettingsForm() {
               {theme === 'system' && (
                 <Check className="h-4 w-4 text-indigo-500" />
               )}
-            </div>
+            </button>
           </div>
         </div>
 

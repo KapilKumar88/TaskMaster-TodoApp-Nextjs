@@ -13,65 +13,12 @@ import {
   Text,
 } from '@react-email/components';
 import EmailTemplateAppLogo from './email-template-app-logo';
+import { emailStyles } from './email-styles';
 
 interface WelcomeEmailProps {
   username: string;
   userEmail: string;
 }
-
-// Styles
-const main = {
-  backgroundColor: '#f9f9f9',
-  fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
-};
-
-const container = {
-  margin: '0 auto',
-  padding: '20px',
-  backgroundColor: 'rgba(255, 255, 255, 0.8)',
-  borderRadius: '10px',
-  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-  backdropFilter: 'blur(10px)',
-  maxWidth: '600px',
-};
-
-const heading = {
-  fontSize: '24px',
-  fontWeight: 'bold',
-  textAlign: 'center' as const,
-  margin: '30px 0',
-  color: '#6366f1',
-};
-
-const paragraph = {
-  fontSize: '16px',
-  lineHeight: '26px',
-  color: '#404040',
-};
-
-const buttonContainer = {
-  textAlign: 'center' as const,
-  margin: '30px 0',
-};
-
-const button = {
-  backgroundColor: '#6366f1',
-  borderRadius: '5px',
-  color: '#fff',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  textDecoration: 'none',
-  textAlign: 'center' as const,
-  display: 'block',
-  padding: '12px 20px',
-  backgroundImage: 'linear-gradient(to right, #14b8a6, #6366f1)',
-};
-
-const hr = {
-  borderColor: '#e6e6e6',
-  margin: '30px 0',
-};
 
 const list = {
   color: '#404040',
@@ -88,12 +35,6 @@ const link = {
   textDecoration: 'underline',
 };
 
-const footer = {
-  color: '#8c8c8c',
-  fontSize: '14px',
-  lineHeight: '24px',
-};
-
 function WelcomeEmailTemplate({
   username,
   userEmail,
@@ -101,24 +42,24 @@ function WelcomeEmailTemplate({
   return (
     <Html>
       <Head />
-      <Body style={main}>
-        <Container style={container}>
+      <Body style={emailStyles.main}>
+        <Container style={emailStyles.container}>
           <EmailTemplateAppLogo />
-          <Heading style={heading}>
+          <Heading style={emailStyles.heading}>
             Welcome to {serverSideConfig.APP_NAME}!
           </Heading>
-          <Text style={paragraph}>Hi {username},</Text>
-          <Text style={paragraph}>
+          <Text style={emailStyles.paragraph}>Hi {username},</Text>
+          <Text style={emailStyles.paragraph}>
             Thank you for joining {serverSideConfig.APP_NAME}! We&apos;re
             excited to help you stay organized and boost your productivity with
             our beautiful task management app.
           </Text>
-          <Section style={buttonContainer}>
-            <Button style={button} href={serverSideConfig.APP_URL}>
+          <Section style={emailStyles.buttonContainer}>
+            <Button style={emailStyles.button} href={serverSideConfig.APP_URL}>
               Get Started
             </Button>
           </Section>
-          <Text style={paragraph}>
+          <Text style={emailStyles.paragraph}>
             Here are a few things you can do with {serverSideConfig.APP_NAME}:
           </Text>
           <ul style={list}>
@@ -133,12 +74,12 @@ function WelcomeEmailTemplate({
               Track your productivity with beautiful analytics
             </li>
           </ul>
-          <Text style={paragraph}>
+          <Text style={emailStyles.paragraph}>
             If you have any questions, feel free to reply to this email or
             contact our support team.
           </Text>
-          <Hr style={hr} />
-          <Text style={footer}>
+          <Hr style={emailStyles.hr} />
+          <Text style={emailStyles.footer}>
             This email was sent to {userEmail}. If you&apos;d prefer not to
             receive these emails, you can{' '}
             <Link href={`${serverSideConfig.APP_URL}/unsubscribe`} style={link}>

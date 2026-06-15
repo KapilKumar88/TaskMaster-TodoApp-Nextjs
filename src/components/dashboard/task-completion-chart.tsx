@@ -1,12 +1,5 @@
 'use client';
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
+import { PieChart, Pie, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function TaskCompletionChart({
   data,
@@ -17,23 +10,21 @@ export default function TaskCompletionChart({
     color: string;
   }>;
 }>) {
+  const pieData = data.map((entry) => ({ ...entry, fill: entry.color }));
+
   return (
     <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={data}
+            data={pieData}
             cx="50%"
             cy="50%"
             innerRadius={60}
             outerRadius={80}
             paddingAngle={5}
             dataKey="value"
-          >
-            {data?.map((entry) => (
-              <Cell key={`cell-${entry?.name}-yg`} fill={entry.color} />
-            ))}
-          </Pie>
+          />
           <Tooltip
             contentStyle={{
               backgroundColor: 'rgba(255, 255, 255, 0.8)',

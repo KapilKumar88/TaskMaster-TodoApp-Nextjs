@@ -37,49 +37,52 @@ export default function TaskPagination({
           </PaginationItem>
         )}
 
-        {[...new Array(totalPages)].map((_, index) => {
-          const pageNumber = index + 1;
+        {Array.from({ length: totalPages }, (_, index) => index).map(
+          (index) => {
+            const pageNumber = index + 1;
 
-          // Show first page, last page, and pages around current page
-          if (
-            pageNumber === 1 ||
-            pageNumber === totalPages ||
-            (pageNumber >= pagination.page - 1 &&
-              pageNumber <= pagination.page + 1)
-          ) {
-            return (
-              <PaginationItem key={pageNumber}>
-                <PaginationLink
-                  isActive={pageNumber === pagination.page}
-                  onClick={() =>
-                    setPagination((previousState) => {
-                      return {
-                        ...previousState,
-                        page: pageNumber,
-                      };
-                    })
-                  }
-                >
-                  {pageNumber}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          }
+            // Show first page, last page, and pages around current page
+            if (
+              pageNumber === 1 ||
+              pageNumber === totalPages ||
+              (pageNumber >= pagination.page - 1 &&
+                pageNumber <= pagination.page + 1)
+            ) {
+              return (
+                <PaginationItem key={pageNumber}>
+                  <PaginationLink
+                    isActive={pageNumber === pagination.page}
+                    onClick={() =>
+                      setPagination((previousState) => {
+                        return {
+                          ...previousState,
+                          page: pageNumber,
+                        };
+                      })
+                    }
+                  >
+                    {pageNumber}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            }
 
-          // Show ellipsis for gaps
-          if (
-            (pageNumber === 2 && pagination.page > 3) ||
-            (pageNumber === totalPages - 1 && pagination.page < totalPages - 2)
-          ) {
-            return (
-              <PaginationItem key={pageNumber}>
-                <PaginationEllipsis />
-              </PaginationItem>
-            );
-          }
+            // Show ellipsis for gaps
+            if (
+              (pageNumber === 2 && pagination.page > 3) ||
+              (pageNumber === totalPages - 1 &&
+                pagination.page < totalPages - 2)
+            ) {
+              return (
+                <PaginationItem key={pageNumber}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              );
+            }
 
-          return null;
-        })}
+            return null;
+          },
+        )}
 
         {pagination.page < totalPages && (
           <PaginationItem>

@@ -14,8 +14,6 @@ export function ColorPicker({
   onChange,
   className,
 }: Readonly<ColorPickerProps>) {
-  // const colorPickerRef = useRef(null);
-
   const colors = [
     { name: 'slate', value: '#64748b' },
     { name: 'gray', value: '#6b7280' },

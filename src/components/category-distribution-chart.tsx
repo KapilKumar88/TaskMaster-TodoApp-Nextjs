@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
 } from 'recharts';
 
 export function CategoryDistributionChart({
@@ -19,11 +18,13 @@ export function CategoryDistributionChart({
     color: string;
   }>;
 }>) {
+  const chartData = data.map((entry) => ({ ...entry, fill: entry.color }));
+
   return (
     <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={data}
+          data={chartData}
           margin={{ top: 10, right: 10, bottom: 30, left: 10 }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -37,14 +38,7 @@ export function CategoryDistributionChart({
               borderRadius: '0.5rem',
             }}
           />
-          <Bar dataKey="value" radius={4}>
-            {data?.map((entry, index) => (
-              <Cell
-                key={`cell-${index}-yg-${entry?.value}`}
-                fill={entry.color}
-              />
-            ))}
-          </Bar>
+          <Bar dataKey="value" radius={4} />
         </BarChart>
       </ResponsiveContainer>
     </div>

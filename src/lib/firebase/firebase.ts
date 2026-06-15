@@ -1,6 +1,10 @@
 import clientSideConfig from '@/config/client.config';
 import { getApp, getApps, initializeApp } from 'firebase/app';
-import { getMessaging, getToken, isSupported } from 'firebase/messaging';
+import {
+  getMessaging,
+  getToken, // NOSONAR — getToken is deprecated in firebase@12 (use register/onRegistered), but migrating requires architectural backend changes
+  isSupported,
+} from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: clientSideConfig.FIREBASE.API_KEY,

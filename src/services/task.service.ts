@@ -905,16 +905,16 @@ export async function getTaskCompletionRate(
           format(curr.createdAt, 'MMM').toLowerCase(),
       );
 
-      if (findIndex !== -1) {
-        acc[findIndex] = {
-          ...acc[findIndex],
-          rate: acc[findIndex].rate + 1,
-        };
-      } else {
+      if (findIndex === -1) {
         acc.push({
           month: format(curr.createdAt, 'MMM').toLowerCase(),
           rate: 1,
         });
+      } else {
+        acc[findIndex] = {
+          ...acc[findIndex],
+          rate: acc[findIndex].rate + 1,
+        };
       }
 
       return acc;

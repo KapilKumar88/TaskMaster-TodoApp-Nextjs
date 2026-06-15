@@ -12,7 +12,7 @@ function getAdminApp() {
       projectId: serverSideConfig.FIREBASE.FIREBASE_PROJECT_ID,
       clientEmail: serverSideConfig.FIREBASE.FIREBASE_CLIENT_EMAIL,
       privateKey: serverSideConfig.FIREBASE.FIREBASE_PRIVATE_KEY?.replaceAll(
-        '\\n',
+        String.raw`\n`,
         '\n',
       ),
     }),
