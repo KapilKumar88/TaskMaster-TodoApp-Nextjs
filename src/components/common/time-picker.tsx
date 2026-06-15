@@ -35,7 +35,7 @@ export function TimePicker({
   // Parse the time value when it changes
   useEffect(() => {
     if (time) {
-      const match = /(\d+):(\d+):(\d+)/.exec(time);
+      const match = /^(\d{1,2}):(\d{1,2}):(\d{1,2})$/.exec(time);
       if (match) {
         setHours(match[1]);
         setMinutes(match[2]);

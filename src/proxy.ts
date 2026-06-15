@@ -40,7 +40,6 @@ export const config = {
    * - _next/image (image optimization files)
    * - favicon.ico, sitemap.xml, robots.txt (metadata files)
    */
-  // NOSONAR — Next.js requires a plain string here (template literals not parsed by the build system for middleware matcher)
   matcher:
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|data|.*\\.(?:png|jpg|jpeg|gif|webp|avif|svg)).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|data|.*\\.(?:png|jpg|jpeg|gif|webp|avif|svg)).*)', // NOSONAR — Next.js requires a plain string literal here; template literals break the build system's static middleware-matcher parsing
 };
