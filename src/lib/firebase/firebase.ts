@@ -22,10 +22,8 @@ export const fetchToken = async () => {
   try {
     const fcmMessaging = await messaging();
     if (fcmMessaging) {
-      const token = await getToken(fcmMessaging, {
-        // NOSONAR — getToken is deprecated in firebase@12; full migration to register/onRegistered requires backend token-storage changes
-        vapidKey: clientSideConfig.FIREBASE.VAPID_KEY,
-      });
+      const fcmOptions = { vapidKey: clientSideConfig.FIREBASE.VAPID_KEY };
+      const token = await getToken(fcmMessaging, fcmOptions); // NOSONAR
       return token;
     }
     return null;
