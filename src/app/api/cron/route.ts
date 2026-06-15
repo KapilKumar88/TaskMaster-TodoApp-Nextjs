@@ -162,7 +162,7 @@ export async function GET(req: NextRequest) {
       message: 'Successfully executed cron job',
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (jobId) {
       prisma.jobs.update({
         where: {

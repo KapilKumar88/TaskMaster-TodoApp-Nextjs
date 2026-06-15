@@ -3,12 +3,12 @@ import z, { object } from 'zod';
 
 export const generalTaskSchema = object({
   timeZone: z
-    .string({ required_error: 'Time Zone is required' })
+    .string({ error: 'Time Zone is required' })
     .trim()
     .min(1, 'Time Zone required')
     .default('Time Zone is required'),
   dateFormat: z
-    .string({ required_error: 'Date Format is required' })
+    .string({ error: 'Date Format is required' })
     .trim()
     .min(1, 'Date Format is required'),
   weekStartDay: z.enum(

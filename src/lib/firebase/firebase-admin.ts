@@ -2,8 +2,11 @@ import 'server-only';
 import admin from 'firebase-admin';
 import serverSideConfig from '@/config/server.config';
 
-if (!admin.apps.length) {
-  admin.initializeApp({
+function getAdminApp() {
+  if (admin.apps.length) {
+    return admin.apps[0]!;
+  }
+  return admin.initializeApp({
     credential: admin.credential.cert({
       projectId: serverSideConfig.FIREBASE.FIREBASE_PROJECT_ID,
       clientEmail: serverSideConfig.FIREBASE.FIREBASE_CLIENT_EMAIL,
@@ -15,4 +18,5 @@ if (!admin.apps.length) {
   });
 }
 
+export { getAdminApp };
 export default admin;

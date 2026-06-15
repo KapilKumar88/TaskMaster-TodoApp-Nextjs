@@ -2,7 +2,7 @@ import 'server-only';
 import { Task } from '@prisma/client';
 import { sendDueTaskEmailNotification } from '@/lib/helpers/email-helper';
 import { EMAIL_NOTIFICATION_TEMPLATE } from '@/lib/enums';
-import admin from '@/lib/firebase/firebase-admin';
+import admin, { getAdminApp } from '@/lib/firebase/firebase-admin';
 import serverSideConfig from '@/config/server.config';
 
 export const fcmNotification = async (
@@ -10,7 +10,7 @@ export const fcmNotification = async (
   task: Task & { category: { name: string } },
 ) => {
   try {
-    await admin.messaging().send({
+    await admin.messaging(getAdminApp()).send({
       token: userFCMToken,
       notification: {
         title: task.title,

@@ -10,7 +10,7 @@ import {
 export default async function ResetPasswordPage({
   searchParams,
 }: Readonly<{
-  searchParams: { token: string };
+  searchParams: Promise<{ token: string }>;
 }>) {
   const [queryParams] = await Promise.all([searchParams]);
   if (!queryParams.token) {

@@ -19,7 +19,7 @@ import {
 export default async function TopSectionAnalytics({
   searchParams,
 }: Readonly<{
-  searchParams: { startDate: string; endDate: string };
+  searchParams: Promise<{ startDate: string; endDate: string }>;
 }>) {
   const [userSession, queryParams] = await Promise.all([auth(), searchParams]);
   const defaultDateTime = getDefaultDateTime();

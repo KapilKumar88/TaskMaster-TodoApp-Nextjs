@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default async function EmailVerificationPage({
   searchParams,
 }: Readonly<{
-  searchParams: { token: string };
+  searchParams: Promise<{ token: string }>;
 }>) {
   const [queryParams] = await Promise.all([searchParams]);
   const decryptedObject = JSON.parse(await decryptHelper(queryParams.token));

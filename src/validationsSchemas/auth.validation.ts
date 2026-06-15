@@ -1,30 +1,30 @@
 import { object, string } from 'zod';
 
 export const loginSchema = object({
-  email: string({ required_error: 'Email is required' })
+  email: string({ error: 'Email is required' })
     .trim()
     .min(1, 'Email is required')
     .email('Invalid email'),
-  password: string({ required_error: 'Password is required' })
+  password: string({ error: 'Password is required' })
     .trim()
     .min(1, 'Password is required'),
 });
 
 export const registerSchema = object({
-  email: string({ required_error: 'Email is required' })
+  email: string({ error: 'Email is required' })
     .trim()
     .min(1, 'Email is required')
     .email('Invalid email')
     .default('Invalid Email'),
-  fullName: string({ required_error: 'Full Name is required' })
+  fullName: string({ error: 'Full Name is required' })
     .trim()
     .min(1, 'Full Name is required'),
-  password: string({ required_error: 'Password is required' })
+  password: string({ error: 'Password is required' })
     .trim()
     .min(1, 'Password is required')
     .min(8, 'Password must be more than 8 characters')
     .max(32, 'Password must be less than 32 characters'),
-  confirmPassword: string({ required_error: 'Confirm Password is required' })
+  confirmPassword: string({ error: 'Confirm Password is required' })
     .trim()
     .min(1, 'Confirm Password is required')
     .min(8, 'Confirm Password must be more than 8 characters')
@@ -35,7 +35,7 @@ export const registerSchema = object({
 });
 
 export const forgotPasswordSchema = object({
-  email: string({ required_error: 'Email is required' })
+  email: string({ error: 'Email is required' })
     .trim()
     .min(1, 'Email is required')
     .email('Invalid email')
@@ -44,17 +44,17 @@ export const forgotPasswordSchema = object({
 
 export const resetPasswordSchema = object({
   token: string({
-    required_error: 'Token is required',
+    error: 'Token is required',
     message: 'Token is required',
   })
     .trim()
     .min(1, 'Token is required'),
-  password: string({ required_error: 'Password is required' })
+  password: string({ error: 'Password is required' })
     .trim()
     .min(1, 'Password is required')
     .min(8, 'Password must be more than 8 characters')
     .max(32, 'Password must be less than 32 characters'),
-  confirmPassword: string({ required_error: 'Confirm Password is required' })
+  confirmPassword: string({ error: 'Confirm Password is required' })
     .trim()
     .min(1, 'Confirm Password is required')
     .min(8, 'Confirm Password must be more than 8 characters')
@@ -65,15 +65,15 @@ export const resetPasswordSchema = object({
 });
 
 export const changePasswordSchema = object({
-  currentPassword: string({ required_error: 'Confirm Password is required' })
+  currentPassword: string({ error: 'Confirm Password is required' })
     .trim()
     .min(1, 'Confirm Password is required'),
-  newPassword: string({ required_error: 'Password is required' })
+  newPassword: string({ error: 'Password is required' })
     .trim()
     .min(1, 'Password is required')
     .min(8, 'Password must be more than 8 characters')
     .max(32, 'Password must be less than 32 characters'),
-  confirmPassword: string({ required_error: 'Confirm Password is required' })
+  confirmPassword: string({ error: 'Confirm Password is required' })
     .trim()
     .min(1, 'Confirm Password is required')
     .min(8, 'Confirm Password must be more than 8 characters')

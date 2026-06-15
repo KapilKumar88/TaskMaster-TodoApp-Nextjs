@@ -84,7 +84,7 @@ export function TaskEditForm({
       categoryId: tempTask.categoryId?.toString() ?? '0',
       priority: tempTask.priority,
       status: tempTask.status,
-      dueDate: tempTask?.dueDate?.toString(),
+      dueDate: tempTask?.dueDateTime?.toString(),
       markAsImportant: tempTask.markAsImportant,
       markAsCompleted: tempTask.status === TaskStatus.COMPLETED,
     },
@@ -166,7 +166,7 @@ export function TaskEditForm({
         formData.append('taskId', tempTask.id.toString());
         formData.append('markAsImportant', tempTask.markAsImportant.toString());
         formData.append('categoryId', tempTask.categoryId.toString());
-        formData.append('dueDate', tempTask.dueDate.toString());
+        formData.append('dueDate', tempTask.dueDateTime.toString());
         updateTaskAction(formData);
       }}
     >
@@ -356,8 +356,8 @@ export function TaskEditForm({
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {tempTask?.dueDate ? (
-                  format(tempTask?.dueDate, 'PPP')
+                {tempTask?.dueDateTime ? (
+                  format(new Date(tempTask?.dueDateTime), 'PPP')
                 ) : (
                   <span>Pick a date</span>
                 )}
@@ -366,12 +366,16 @@ export function TaskEditForm({
             <PopoverContent className="w-auto p-0 bg-white/90 backdrop-blur-xl border-white/30">
               <Calendar
                 mode="single"
-                selected={tempTask?.dueDate}
+                selected={
+                  tempTask?.dueDateTime
+                    ? new Date(tempTask.dueDateTime)
+                    : undefined
+                }
                 onSelect={(payload) => {
                   setTempTask((previousState) => {
                     return {
                       ...previousState,
-                      dueDate: payload ?? tempTask?.dueDate,
+                      dueDateTime: payload ?? new Date(tempTask?.dueDateTime),
                     };
                   });
                 }}

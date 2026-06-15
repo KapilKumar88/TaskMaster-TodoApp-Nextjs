@@ -14,7 +14,7 @@ import { getDefaultDateTime } from '@/lib/utils';
 export default async function BottomSectionAnalytics({
   searchParams,
 }: Readonly<{
-  searchParams: { startDate: string; endDate: string };
+  searchParams: Promise<{ startDate: string; endDate: string }>;
 }>) {
   const [userSession, queryParams] = await Promise.all([auth(), searchParams]);
   const defaultDateTime = getDefaultDateTime();

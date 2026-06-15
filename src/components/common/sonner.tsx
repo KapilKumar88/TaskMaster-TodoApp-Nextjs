@@ -107,11 +107,11 @@ const toast = ({
       description: description,
       action: {
         label: 'Delete',
-        onClick: () => console.log('Deleted'),
+        onClick: () => console.info('Deleted'),
       },
       cancel: {
         label: 'Cancel',
-        onClick: () => console.log('Canceled'),
+        onClick: () => console.info('Canceled'),
       },
       style: {
         border: '1px solid rgba(255, 255, 255, 0.3)',

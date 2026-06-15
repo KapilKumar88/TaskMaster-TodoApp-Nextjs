@@ -6,7 +6,7 @@ import z from 'zod';
 export const alphaNumericRegex = /^[a-zA-Z0-9 _-]+$/; // it will allow the alphanumeric character, spaces, underscore, hyphens
 
 export const createTaskSchema = object({
-  title: string({ required_error: 'Title is required' })
+  title: string({ error: 'Title is required' })
     .trim()
     .min(1, 'Title is required')
     .regex(
@@ -14,7 +14,7 @@ export const createTaskSchema = object({
       'Only Alphabets, Numbers, spaces, underscore, hyphens are allowed',
     )
     .default('Title is required'),
-  description: string({ required_error: 'Description is required' })
+  description: string({ error: 'Description is required' })
     .trim()
     .min(1, 'Description is required')
     .regex(
@@ -22,7 +22,7 @@ export const createTaskSchema = object({
       'Only Alphabets, Numbers, spaces, underscore, hyphens are allowed',
     ),
   categoryId: z
-    .number({ required_error: 'Category is required' })
+    .number({ error: 'Category is required' })
     .min(1, 'Category is required'),
   priority: z.enum([TaskPriority.HIGH, TaskPriority.MEDIUM, TaskPriority.LOW], {
     message: 'Priority is required',
@@ -37,7 +37,7 @@ export const updateTaskSchema = object({
   taskId: z
     .number({ message: 'Task Id is required' })
     .min(1, 'Task Id is required'),
-  title: string({ required_error: 'Title is required' })
+  title: string({ error: 'Title is required' })
     .trim()
     .min(1, 'Title is required')
     .regex(
@@ -45,7 +45,7 @@ export const updateTaskSchema = object({
       'Only Alphabets, Numbers, spaces, underscore, hyphens are allowed',
     )
     .default('Title is required'),
-  description: string({ required_error: 'Description is required' })
+  description: string({ error: 'Description is required' })
     .trim()
     .min(1, 'Description is required')
     .regex(
@@ -53,7 +53,7 @@ export const updateTaskSchema = object({
       'Only Alphabets, Numbers, spaces, underscore, hyphens are allowed',
     ),
   categoryId: z
-    .number({ required_error: 'Category is required' })
+    .number({ error: 'Category is required' })
     .min(1, 'Category is required'),
   priority: z.enum([TaskPriority.HIGH, TaskPriority.MEDIUM, TaskPriority.LOW], {
     message: 'Priority is required',

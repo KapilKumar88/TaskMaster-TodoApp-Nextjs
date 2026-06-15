@@ -195,8 +195,8 @@ export function TaskDetail({
             </h3>
             <div className="flex items-center text-sm text-slate-700 dark:text-slate-300">
               <Clock className="h-4 w-4 mr-2" />
-              {task.dueDate
-                ? format(new Date(task.dueDate), 'PPP')
+              {task.dueDateTime
+                ? format(new Date(task.dueDateTime), 'PPP')
                 : 'No due date'}
             </div>
           </div>

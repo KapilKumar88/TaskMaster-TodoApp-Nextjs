@@ -29,7 +29,7 @@ export default function SortButton() {
             setTaskSorting((previousState) => {
               return {
                 ...previousState,
-                sortBy: 'dueDate',
+                sortBy: 'dueDateTime',
                 sortDirection: 'asc',
               };
             })
@@ -42,7 +42,7 @@ export default function SortButton() {
             setTaskSorting((previousState) => {
               return {
                 ...previousState,
-                sortBy: 'dueDate',
+                sortBy: 'dueDateTime',
                 sortDirection: 'desc',
               };
             })
