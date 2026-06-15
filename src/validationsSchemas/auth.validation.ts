@@ -38,10 +38,7 @@ export const forgotPasswordSchema = object({
 });
 
 export const resetPasswordSchema = object({
-  token: string({
-    error: 'Token is required',
-    message: 'Token is required',
-  })
+  token: string({ error: 'Token is required' })
     .trim()
     .min(1, 'Token is required'),
   password: string({ error: 'Password is required' })
