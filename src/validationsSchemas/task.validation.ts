@@ -24,17 +24,17 @@ export const createTaskSchema = object({
     .number({ error: 'Category is required' })
     .min(1, 'Category is required'),
   priority: z.enum([TaskPriority.HIGH, TaskPriority.MEDIUM, TaskPriority.LOW], {
-    message: 'Priority is required',
+    error: 'Priority is required',
   }),
   dueDate: z
-    .date({ message: 'Due Date is required' })
+    .date({ error: 'Due Date is required' })
     .min(startOfToday(), 'Date must be in the future'),
   dueTime: z.iso.time({ error: 'Due Time is required' }),
 });
 
 export const updateTaskSchema = object({
   taskId: z
-    .number({ message: 'Task Id is required' })
+    .number({ error: 'Task Id is required' })
     .min(1, 'Task Id is required'),
   title: string({ error: 'Title is required' })
     .trim()
@@ -55,7 +55,7 @@ export const updateTaskSchema = object({
     .number({ error: 'Category is required' })
     .min(1, 'Category is required'),
   priority: z.enum([TaskPriority.HIGH, TaskPriority.MEDIUM, TaskPriority.LOW], {
-    message: 'Priority is required',
+    error: 'Priority is required',
   }),
   status: z.enum(
     [
@@ -65,11 +65,11 @@ export const updateTaskSchema = object({
       TaskStatus.OVERDUE,
     ],
     {
-      message: 'Status is required',
+      error: 'Status is required',
     },
   ),
   dueDate: z
-    .date({ message: 'Due Date is required' })
+    .date({ error: 'Due Date is required' })
     .min(startOfToday(), 'Date must be in the future'),
   dueTime: z.iso.time(),
   markTaskImportant: z.boolean(),

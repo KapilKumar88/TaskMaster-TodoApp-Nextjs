@@ -14,17 +14,17 @@ export const generalTaskSchema = object({
   weekStartDay: z.enum(
     [WeekStartDay.monday, WeekStartDay.sunday, WeekStartDay.saturday],
     {
-      message: 'Week Start Day is required',
+      error: 'Week Start Day is required',
     },
   ),
-  autoArchive: z.boolean({ message: 'Auto Archive is required' }),
+  autoArchive: z.boolean({ error: 'Auto Archive is required' }),
   autoArchiveTime: z
-    .number({ message: 'Auto Archive Time is required' })
+    .number({ error: 'Auto Archive Time is required' })
     .min(1)
     .optional(),
   timeFrequency: z
     .enum([TimeFrequency.day, TimeFrequency.hour, TimeFrequency.min], {
-      message: 'Time Frequency is required',
+      error: 'Time Frequency is required',
     })
     .optional(),
 }).refine(

@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { cookies } from 'next/headers';
 
 const authPaths = new Set([
   '/login',
@@ -10,9 +9,11 @@ const authPaths = new Set([
 ]);
 const COOKIES_NAME = 'authjs.session-token';
 
-export default async function proxy(request: NextRequest) {
-  const c = await cookies();
-  const cookieToken = c?.get(COOKIES_NAME)?.value;
+export default async function middleware(request: NextRequest) {
+  // NextAuth uses __Secure- prefix on HTTPS (production) and no prefix on HTTP (local)
+  const cookieToken =
+    request.cookies.get('__Secure-' + COOKIES_NAME)?.value ??
+    request.cookies.get(COOKIES_NAME)?.value;
   if (
     !cookieToken &&
     !authPaths.has(request.nextUrl.pathname) &&
